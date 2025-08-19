@@ -45,13 +45,14 @@ namespace PowerupsLite.When {
 
         [ImportingConstructor]
         public WhenSwitch(ISafetyMonitorMediator safetyMediator, ISequenceMediator sequenceMediator, IApplicationStatusMediator applicationStatusMediator, ISwitchMediator switchMediator,
-                IWeatherDataMediator weatherMediator, ICameraMediator cameraMediator)
-            : base(safetyMediator, sequenceMediator, applicationStatusMediator, switchMediator, weatherMediator, cameraMediator) {
+                IWeatherDataMediator weatherMediator, ICameraMediator cameraMediator, ITelescopeMediator telescopeMediator)
+            : base(safetyMediator, sequenceMediator, applicationStatusMediator, switchMediator, weatherMediator, cameraMediator, telescopeMediator) {
         }
 
         public ICameraConsumer cameraConsumer {  get; set; } 
 
-        protected WhenSwitch(WhenSwitch cloneMe) : base(cloneMe.safetyMediator, cloneMe.sequenceMediator, cloneMe.applicationStatusMediator, cloneMe.switchMediator, cloneMe.weatherMediator, cloneMe.cameraMediator) {
+        protected WhenSwitch(WhenSwitch cloneMe) : base(cloneMe.safetyMediator, cloneMe.sequenceMediator, cloneMe.applicationStatusMediator, cloneMe.switchMediator, cloneMe.weatherMediator, cloneMe.cameraMediator,
+                cloneMe.telescopeMediator) {
             if (cloneMe != null) {
                 CopyMetaData(cloneMe);
                 Instructions = (IfContainer)cloneMe.Instructions.Clone();

@@ -99,7 +99,7 @@ namespace PowerupsLite.When {
             
             VExprExpression.Evaluate();
 
-            object val = VExprExpression.Value == double.NegativeInfinity ? VExprExpression.ValueString : VExprExpression.Value;
+            object val = VExprExpression.Value == double.NegativeInfinity ? "'" + VExprExpression.ValueString + "'" : VExprExpression.Value;
             try {
                 arr[IExprExpression.ValueString] = val;
             } catch (Exception ex) {

@@ -37,6 +37,7 @@ using NINA.ViewModel.Sequencer;
 using NINA.WPF.Base.Interfaces.Mediator;
 using NINA.Core.Model;
 using NINA.Astrometry;
+using NINA.Equipment.Equipment.MyTelescope;
 
 namespace PowerupsLite.When {
 
@@ -53,16 +54,18 @@ namespace PowerupsLite.When {
         protected ISwitchMediator switchMediator;
         protected IWeatherDataMediator weatherMediator;
         protected ICameraMediator cameraMediator;
+        protected ITelescopeMediator telescopeMediator;
 
         [ImportingConstructor]
         public When(ISafetyMonitorMediator safetyMediator, ISequenceMediator sequenceMediator, IApplicationStatusMediator applicationStatusMediator, ISwitchMediator switchMediator,
-                IWeatherDataMediator weatherMediator, ICameraMediator cameraMediator) {
+                IWeatherDataMediator weatherMediator, ICameraMediator cameraMediator, ITelescopeMediator telescopeMediator) {
             this.safetyMediator = safetyMediator;
             this.sequenceMediator = sequenceMediator;
             this.applicationStatusMediator = applicationStatusMediator;
             this.switchMediator = switchMediator;
             this.weatherMediator = weatherMediator;
             this.cameraMediator = cameraMediator;
+            this.telescopeMediator = telescopeMediator;
             ConditionWatchdog = new ConditionWatchdog(InterruptWhen, TimeSpan.FromSeconds(5));
             Instructions = new IfContainer();
             Instructions.AttachNewParent(Parent);
@@ -77,7 +80,7 @@ namespace PowerupsLite.When {
                 }
             }
         }
-        protected When(When cloneMe) : this(cloneMe.safetyMediator, cloneMe.sequenceMediator, cloneMe.applicationStatusMediator, cloneMe.switchMediator, cloneMe.weatherMediator, cloneMe.cameraMediator) {
+        protected When(When cloneMe) : this(cloneMe.safetyMediator, cloneMe.sequenceMediator, cloneMe.applicationStatusMediator, cloneMe.switchMediator, cloneMe.weatherMediator, cloneMe.cameraMediator, cloneMe.telescopeMediator) {
             if (cloneMe != null) {
                 CopyMetaData(cloneMe);
                 Instructions = (IfContainer)cloneMe.Instructions.Clone();
@@ -240,6 +243,29 @@ namespace PowerupsLite.When {
             return canContinue;
         }
 
+        private void CheckSlewing() {
+            TelescopeInfo info = telescopeMediator.GetInfo();
+
+            Logger.Warning("CheckSlewing, WhenUnsafe = " + (this is WhenUnsafe) + ", Connected = " + info.Connected + ", CanSlew = " + info.CanSlew + ", info.Slewing = " + info.Slewing);
+            if (this is WhenUnsafe && info.Connected && info.CanSlew && info.Slewing) {
+                try {
+                    Logger.Warning("WBU, mount slewing; attempting to stop the slew");
+                    telescopeMediator.StopSlew();
+                    int timeout = 10;
+                    while (info.Slewing && --timeout > 0) {
+                        Thread.Sleep(1000);
+                        info = telescopeMediator.GetInfo();
+                    }
+                    if (info.Slewing) {
+                        Logger.Warning("WBU, timeout out after continuing to slew for 10 seconds");
+                    }
+                } catch (Exception e) {
+                    Logger.Warning("WBU, can't stop telescope slew: " + e);
+                }
+            }
+
+        }
+
         private async Task InterruptWhen() {
             Logger.Trace("*When Interrupt*");
             if (!sequenceMediator.Initialized) return;
@@ -288,7 +314,9 @@ namespace PowerupsLite.When {
                             Logger.Info("InterruptWhen: Delay 1000");
                             await Task.Delay(1000);
                         }
-                        Logger.Info("InterruptWhen: Sequence longer running");
+                        Logger.Info("Sequence longer running");
+                        CheckSlewing();
+
                     } finally {
                         Critical = false;
                     }
@@ -355,6 +383,8 @@ namespace PowerupsLite.When {
                     InFlight = true;
                     Triggered = false;
                     token.ThrowIfCancellationRequested();
+                    Logger.Info("When: running TriggerRunner, InFlight -> true, Triggered -> false");
+                    CheckSlewing();
                     await TriggerRunner.Run(progress, token);
                     token.ThrowIfCancellationRequested();
                     if (!(this is WhenUnsafe) || Check()) {
@@ -365,6 +395,10 @@ namespace PowerupsLite.When {
             } finally {
                 InFlight = false;
                 Triggered = false;
+                if (this is WhenSwitch w && w.OnceOnly) {
+                    Logger.Info("When: Execute done; InFlight -> false, Triggered false, DISABLED");
+                    w.Disabled = true;
+                }
                 Logger.Info("When: Execute done; InFlight -> false, Triggered false");
             }
         }

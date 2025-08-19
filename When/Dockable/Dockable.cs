@@ -95,11 +95,16 @@ namespace PowerupsLite.When {
 
         private static Symbol[] RoofConstants = new Symbol[] { new Symbol("RoofNotOpen", 0), new Symbol("RoofOpen", 1), new Symbol("RoofCannotOpenOrRead", 2) };
 
+        private static int lastValidRoofStatus = -1;
+        private static int invalidRoofStatusCount = 0;
+
         public static Task UpdateData() {
 
             // Handle RoofStatus here
             string roofStatus = WhenPlugin.Plugin.RoofStatus;
             string roofOpenString = WhenPlugin.Plugin.RoofOpenString;
+
+
             if (roofStatus?.Length > 0 && roofOpenString?.Length > 0) {
                 // It's actually a file name..
                 int status = 0;
@@ -108,13 +113,23 @@ namespace PowerupsLite.When {
                     if (lastLine.ToLower().Contains(roofOpenString.ToLower())) {
                         status = 1;
                     }
+                    lastValidRoofStatus = status;
+                    invalidRoofStatusCount = 0;
                 } catch (Exception e) {
-                    LogOnce("Roof status, error: " + e.Message);
-                    status = 2;
+                    Logger.Warning("Roof status, error: " + e.Message);
+                    if (++invalidRoofStatusCount > 4) {
+                        Logger.Warning("Four consecutive roof status errors, reporting status 2");
+                        status = 2;
+                    } else {
+                        Logger.Warning("Roof status error #" + invalidRoofStatusCount + ", reporting status " + lastValidRoofStatus + " for now");
+                        status = lastValidRoofStatus;
+                    }
                 }
                 WhenPlugin.SymbolProvider.AddSymbol("RoofStatus", status, RoofConstants);
+                Logger.Trace("RoofStatus: " + status);
+            } else {
+                Logger.Info("RoofStatus UNKNOWN");
             }
-
 
             ISequenceItem? runningItem = null;
 
