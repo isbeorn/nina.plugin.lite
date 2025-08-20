@@ -45,6 +45,10 @@ using NINA.Equipment.Interfaces;
 using NINA.PlateSolving.Interfaces;
 using NINA.Core.Utility.WindowService;
 using NINA.Sequencer.SequenceItem.Utility;
+using NINA.Profile;
+using NINA.Equipment.Equipment.MyTelescope;
+using NINA.Core.Utility.Notification;
+using NINA.Core.Locale;
 
 namespace PowerupsLite.When {
 
@@ -242,13 +246,29 @@ namespace PowerupsLite.When {
             }
         }
 
+        MeridianFlipSettings MFSettings = new();
+
         public virtual double TimeToMeridianFlip {
             get {
-                return telescopeMediator.GetInfo().TimeToMeridianFlip;
+                TelescopeInfo info = telescopeMediator.GetInfo();
+                try {
+                    if (info.TrackingEnabled) {
+                        MFSettings.MinutesAfterMeridian = MinutesAfterMeridian;
+                        MFSettings.MaxMinutesAfterMeridian = MaxMinutesAfterMeridian;
+                        MFSettings.PauseTimeBeforeMeridian = PauseTimeBeforeMeridian;
+                        return NINA.Astrometry.MeridianFlip.TimeToMeridianFlip(
+                            settings: MFSettings,
+                            coordinates: info.Coordinates,
+                            localSiderealTime: Angle.ByHours(info.SiderealTime),
+                            currentSideOfPier: info.SideOfPier).TotalHours;
+                    }
+                } catch (Exception ex) {
+                    Logger.Error(ex);
+                    Notification.ShowExternalError(ex.Message, Loc.Instance["LblASCOMDriverError"]);
+                }
+                return 24;
             }
-            set { }
-        }
-
+:
         public override void AfterParentChanged() {
             lastFlipTime = DateTime.MinValue;
             lastFlipCoordiantes = null;

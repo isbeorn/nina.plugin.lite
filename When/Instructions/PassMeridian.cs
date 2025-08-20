@@ -108,10 +108,15 @@ namespace PowerupsLite.When {
 
         public virtual double TimeToMeridianFlip {
             get {
-                return telescopeMediator.GetInfo().TimeToMeridianFlip;
+                DIYMeridianFlipTrigger diymf = FindTrigger();
+                if (diymf != null) {
+                    return diymf.TimeToMeridianFlip;
+                }
+                Logger.Error("Can't find DIYMF");
+                return 0;
             }
             set { }
-        
+
         }
         protected virtual TimeSpan CalculateMaximumTimeRemainaing() {
             return TimeSpan.FromHours(TimeToMeridianFlip);
@@ -175,7 +180,7 @@ namespace PowerupsLite.When {
             var i = new List<string>();
 
             if (!(IsInsideMeridianFlipEvent())) {
-                    return false;
+                return false;
             }
 
             var telescopeInfo = telescopeMediator.GetInfo();
