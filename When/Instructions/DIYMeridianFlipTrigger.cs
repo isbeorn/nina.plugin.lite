@@ -268,7 +268,8 @@ namespace PowerupsLite.When {
                 }
                 return 24;
             }
-:
+        }
+
         public override void AfterParentChanged() {
             lastFlipTime = DateTime.MinValue;
             lastFlipCoordiantes = null;
