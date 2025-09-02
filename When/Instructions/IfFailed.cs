@@ -111,6 +111,10 @@ namespace PowerupsLite.When {
             }
         }
 
+        public override void ResetAll() {
+            base.ResetAll();
+            Condition.ResetAll();
+        }
         public override bool Validate() {
             CommonValidate();
             return true;
