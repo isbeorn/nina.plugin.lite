@@ -24,7 +24,7 @@ using NINA.Core.MyMessageBox;
 using System.Runtime.Serialization;
 using System.Windows.Navigation;
 
-namespace PowerupsLite.When {
+namespace PowerupsLite.When {\
     [ExportMetadata("Name", "Template by Reference")]
     [ExportMetadata("Description", "Incorporate a template by reference.  Please read the description on the plugin page.")]
     [ExportMetadata("Icon", "BoxClosedSVG")]
@@ -221,7 +221,6 @@ namespace PowerupsLite.When {
 
         public override void ResetProgress() {
             base.ResetProgress();
-            Instructions.ResetAll();
             Status = NINA.Core.Enum.SequenceEntityStatus.DISABLED;
             ShowMenu = false;
         }
