@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PowerupsLite.When
+namespace WhenPlugin.When
 {
     public class Array : Dictionary<object, object> {
 

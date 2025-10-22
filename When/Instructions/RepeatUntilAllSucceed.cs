@@ -32,7 +32,7 @@ using System.Runtime.CompilerServices;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.Generators;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Repeat Until All Succeed")]
     [ExportMetadata("Description", "Retry the included instructions until all of them have finished successfully.")]

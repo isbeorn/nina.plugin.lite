@@ -31,7 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Wait Until Safe +")]
     [ExportMetadata("Description", "Waits until the Safety Monitor reports safe; delete this instruction to end the current sequence.")]

@@ -11,7 +11,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "")]
     [ExportMetadata("Description", "Executes an instruction set if the predicate, based on the results of the previous instruction, is true")]

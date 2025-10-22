@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Foo")]
     [ExportMetadata("Description", "")]

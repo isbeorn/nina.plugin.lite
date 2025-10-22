@@ -50,7 +50,7 @@ using NINA.Equipment.Equipment.MyTelescope;
 using NINA.Core.Utility.Notification;
 using NINA.Core.Locale;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "DIY Meridian Flip Trigger")]
     [ExportMetadata("Description", "Trigger for DYI Meridian Flip")]

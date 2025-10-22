@@ -27,7 +27,7 @@ using System.Text;
 using Accord;
 using NINA.Sequencer.SequenceItem.Expressions;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Assign Variables")]
     [ExportMetadata("Description", "Assign Variables in For Each loop")]

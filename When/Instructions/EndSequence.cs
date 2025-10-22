@@ -16,7 +16,7 @@ using NINA.Core.Utility;
 using NINA.Sequencer.Container;
 using NINA.Core.Enum;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "End Sequence")]
     [ExportMetadata("Description", "Ends the currenty running sequence; the End Sequence instructions will run")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]

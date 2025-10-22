@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Autofocus Trigger")]
     [ExportMetadata("Description", "This trigger will run an Autofocus operation after the currently running instruction finishes.")]

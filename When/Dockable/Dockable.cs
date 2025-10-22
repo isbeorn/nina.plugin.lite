@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     /// <summary>
     /// This Class shows the basic principle on how to add a new panel to N.I.N.A. Imaging tab via the plugin interface
     /// In this example an altitude chart is added to the imaging tab that shows the altitude chart based on the position of the telescope    
@@ -38,7 +38,7 @@ namespace PowerupsLite.When {
     public class WhenPluginDockable : DockableVM {
 
         [ImportingConstructor]
-        public WhenPluginDockable(IProfileService profileService, ISymbolBrokerVM symbolBroker) : base(profileService) {
+        public WhenPluginDockable(IProfileService profileService, ISymbolBroker symbolBroker) : base(profileService) {
             Title = "Powerups Lite Panel";
 
             SymbolBroker = symbolBroker;
@@ -50,7 +50,7 @@ namespace PowerupsLite.When {
             ConditionWatchdog.Start();
         }
 
-        private static ISymbolBrokerVM SymbolBroker;
+        private static ISymbolBroker SymbolBroker;
         
         private static ConditionWatchdog ConditionWatchdog;
 
@@ -125,7 +125,7 @@ namespace PowerupsLite.When {
                         status = lastValidRoofStatus;
                     }
                 }
-                WhenPlugin.SymbolProvider.AddSymbol("RoofStatus", status, RoofConstants);
+                WhenPlugin.SymbolProvider.AddOrUpdateSymbol("RoofStatus", status, RoofConstants);
                 Logger.Trace("RoofStatus: " + status);
             } else {
                 Logger.Info("RoofStatus UNKNOWN");

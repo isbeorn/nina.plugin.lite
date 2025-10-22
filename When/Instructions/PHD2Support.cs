@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using NINA.Equipment.Interfaces.Mediator;
 using NINA.Profile.Interfaces;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     public class PHD2Support {
         private static object lockobj = new object();
 

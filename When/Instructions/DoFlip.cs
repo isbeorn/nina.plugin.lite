@@ -17,7 +17,7 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Flip Scope")]
     [ExportMetadata("Description", "Performs the actual meridian flip. Stops tracking, flips the scope by slewing, and restarts tracking.")]
     [ExportMetadata("Icon", "MeridianFlipSVG")]

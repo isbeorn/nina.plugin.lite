@@ -9,7 +9,7 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Rotate Image")]
     [ExportMetadata("Description", "Rotates the image in the Imaging pane by 180 degrees")]
     [ExportMetadata("Icon", "MeridianFlipSVG")]

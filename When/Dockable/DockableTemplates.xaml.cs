@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     /// <summary>
     /// Interaction logic for DockableTemplates.xaml
     ///

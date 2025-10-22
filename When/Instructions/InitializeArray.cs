@@ -13,7 +13,7 @@ using Antlr.Runtime;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Initialize Array")]
     [ExportMetadata("Description", "Creates or re-initializes an Array")]
     [ExportMetadata("Icon", "ArraySVG")]

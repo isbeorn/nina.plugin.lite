@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PowerupsLite.When.Properties {
+namespace WhenPlugin.When.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

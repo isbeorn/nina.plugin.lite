@@ -122,22 +122,19 @@
   <ItemGroup>
     <PackageReference Include="Antlr3.Runtime" Version="3.5.1" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.60.0" />
-    <PackageReference Include="Namotion.Reflection" Version="3.3.0" />
+    <PackageReference Include="Namotion.Reflection" Version="3.4.2" />
     <PackageReference Include="NCalcSync" Version="5.2.11" />
     <PackageReference Include="NINA.Accord.Imaging" Version="3.5.3" />
-    <PackageReference Include="NINA.Astrometry" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Core" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.CustomControlLibrary" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Equipment" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Image" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.MGEN" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.nikoncswrapper" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.PlateSolving" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Plugin" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Profile" Version="3.2.0.1018-nightly" />
-    <PackageReference Include="NINA.Sequencer" Version="3.3.0.1002-nightly" />
-    <PackageReference Include="NINA.Sequencer.Generators" Version="1.0.3" />
-    <PackageReference Include="NINA.WPF.Base" Version="3.2.0.1018-nightly" />
+    <PackageReference Include="NINA.Core" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.CustomControlLibrary" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.Equipment" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.Image" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.MGEN" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.nikoncswrapper" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.PlateSolving" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.Plugin" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.Profile" Version="3.3.0.1000-nightly" />
+    <PackageReference Include="NINA.WPF.Base" Version="3.3.0.1000-nightly" />
     <PackageReference Include="Parlot" Version="1.3.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />

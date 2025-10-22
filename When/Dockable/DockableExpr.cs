@@ -10,10 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     public class DockableExpr : Expression {
 
-        public DockableExpr (string definition, ISymbolBrokerVM symbolBroker) : base(definition, (Variable)new Variable().Clone()) {
+        public DockableExpr (string definition, ISymbolBroker symbolBroker) : base(definition, (Variable)new Variable().Clone()) {
             Context.AttachNewParent(PseudoRoot);
             SymbolBroker = symbolBroker;
         }

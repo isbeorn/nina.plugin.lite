@@ -2,17 +2,17 @@
 using System.Runtime.InteropServices;
 
 // [MANDATORY] The following GUID is used as a unique identifier of the plugin. Generate a fresh one for your plugin!
-[assembly: Guid("e7e5a557-7481-4e4e-89c7-39cc68621b07")]
+[assembly: Guid("9075c999-dacb-4c24-9e14-b696a1ac9e89")]
 
 // [MANDATORY] The assembly versioning
 //Should be incremented for each new release build of a plugin
 
 // Odd minor releases for Beta
-[assembly: AssemblyVersion("0.1.6.0")]
-[assembly: AssemblyFileVersion("0.1.6.0")]
+[assembly: AssemblyVersion("3.99.0.1")]
+[assembly: AssemblyFileVersion("3.99.0.1")]
 
 // [MANDATORY] The name of your plugingit st
-[assembly: AssemblyTitle("Powerups Lite")]
+[assembly: AssemblyTitle("Sequencer Powerups")]
 // [MANDATORY] A short description of your plugin
 //[assembly: AssemblyDescription("*** BETA RELEASE ***")]
 [assembly: AssemblyDescription("Get the most out of the Advanced Sequencer!")]
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © 2025 Marc Blank")]
 
 // The minimum Version of N.I.N.A. that this plugin is compatible withq
-[assembly: AssemblyMetadata("MinimumApplicationVersion", "3.1.2.9001")]
+[assembly: AssemblyMetadata("MinimumApplicationVersion", "3.2.0.0")]
 
 // The license your plugin code is using
 [assembly: AssemblyMetadata("License", "MPL-2.0")]

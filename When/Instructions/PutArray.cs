@@ -12,7 +12,7 @@ using System.Reflection;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Put into Array")]
     [ExportMetadata("Description", "Puts a value into an Array at the specified index")]
     [ExportMetadata("Icon", "ArraySVG")]

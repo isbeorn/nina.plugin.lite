@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [Export(typeof(ResourceDictionary))]
     public partial class WhenTemplates : ResourceDictionary {

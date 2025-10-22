@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     public interface IDSOTargetProxy {
         public InputTarget DSOProxyTarget();
         public InputTarget FindTarget(ISequenceContainer c);

@@ -39,7 +39,7 @@ using NINA.Core.Model;
 using NINA.Astrometry;
 using NINA.Equipment.Equipment.MyTelescope;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "When Becomes Unsafe")]
     [ExportMetadata("Description", "Runs a customizable set of instructions within seconds of an 'Unsafe' condition being recognized.")]

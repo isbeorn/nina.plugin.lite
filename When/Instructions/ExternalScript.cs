@@ -27,7 +27,7 @@ using NINA.Core.Utility;
 using NINA.Sequencer.Utility;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "External Script +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Utility_ExternalScript_Description")]

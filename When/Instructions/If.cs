@@ -14,7 +14,7 @@ using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Container;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "If")]
     [ExportMetadata("Description", "Executes an instruction set if the Expression is True (or 1)")]
     [ExportMetadata("Icon", "IfSVG")]

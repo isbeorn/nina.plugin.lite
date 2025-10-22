@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [Export(typeof(ResourceDictionary))]
     partial class Options : ResourceDictionary {

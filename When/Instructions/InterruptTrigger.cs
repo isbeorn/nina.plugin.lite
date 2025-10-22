@@ -19,7 +19,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Interrupt Trigger")]
     [ExportMetadata("Description", "This trigger will stop execution after the currently running instruction, allowing you to add whatever instructions you want before proceeding.")]

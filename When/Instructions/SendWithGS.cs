@@ -14,7 +14,7 @@ using Google.Protobuf.WellKnownTypes;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.Generators;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Send via Ground Station")]
     [ExportMetadata("Description", "Send a message via Ground Station, including Powerups Expressions.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]

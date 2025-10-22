@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     public abstract class Conditional : SequenceContainer, IValidatable {
 
         protected Conditional(IExecutionStrategy strategy) : base(strategy) {

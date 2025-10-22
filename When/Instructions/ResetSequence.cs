@@ -16,7 +16,7 @@ using NINA.Core.Utility;
 using NINA.Sequencer.Container;
 using NINA.Core.Enum;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Reset Sequence")]
     [ExportMetadata("Description", "Resets the running sequence")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]

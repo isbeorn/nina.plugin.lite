@@ -18,7 +18,7 @@ using NINA.Equipment.Interfaces.Mediator;
 using NINA.Equipment.Equipment.MySafetyMonitor;
 using NINA.Core.Enum;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
  
     [ExportMetadata("Name", "Safe Trigger")]
     [ExportMetadata("Description", "The specified trigger will run ONLY if the safety monitor reports 'Safe' conditions.")]

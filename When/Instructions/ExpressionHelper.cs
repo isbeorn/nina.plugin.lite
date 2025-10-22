@@ -1,11 +1,11 @@
 ﻿using NINA.Sequencer.Container;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When
+namespace WhenPlugin.When
 {
     public class ExpressionHelper {
 
-        public static Expression Expr (string definition, ISequenceContainer parent, ISymbolBrokerVM broker, int? def) {
+        public static Expression Expr (string definition, ISequenceContainer parent, ISymbolBroker broker, int? def) {
             Expression e = new Expression(definition, parent);
             if (def != null) {
                 e.Default = (int)def;

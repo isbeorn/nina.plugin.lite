@@ -24,7 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Wait Indefinitely")]
     [ExportMetadata("Description", "Wait indefinitely (until instruction is stopped or deleted)")]

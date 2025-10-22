@@ -13,7 +13,7 @@ using NINA.Core.Utility.Notification;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.Generators;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Add Image Pattern")]
     [ExportMetadata("Description", "Add an image pattern for file naming")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]

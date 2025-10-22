@@ -7,24 +7,16 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Core.Enum;
-using NINA.Core.Utility;
 using System.Text.RegularExpressions;
 using NINA.Sequencer.Container;
-using NINA.Core.Utility.Converters;
-using System.Diagnostics;
 using NINA.Sequencer.Conditions;
-using System.Runtime.Serialization;
-using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Accord.IO;
 using System.Text;
-using Antlr.Runtime;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "For Each in Array")]
     [ExportMetadata("Description", "Iterates over the elements of an Array, executing the embedded instructions for each")]
     [ExportMetadata("Icon", "ArraySVG")]
@@ -127,13 +119,13 @@ namespace PowerupsLite.When {
                     throw new SequenceEntityFailedException("An Array must be specified and must have been initialized");
                 }
 
-                if (!PowerupsLite.When.Array.Arrays.ContainsKey(NameExprExpression.StringValue)) {
-                    throw new SequenceEntityFailedException("The Array specified does not exist");
-                }
+                //if (!Array.Arrays.ContainsKey(NameExprExpression.StringValue)) {
+                //    throw new SequenceEntityFailedException("The Array specified does not exist");
+                //}
 
-                if (!PowerupsLite.When.Array.Arrays.TryGetValue(NameExprExpression.StringValue, out a)) {
-                    throw new SequenceEntityFailedException("Huh?  Key exists but not Array??");
-                }
+                //if (!Array.Arrays.TryGetValue(NameExprExpression.StringValue, out a)) {
+                //    throw new SequenceEntityFailedException("Huh?  Key exists but not Array??");
+                //}
             }
 
             ETokens = new string[a.Count];

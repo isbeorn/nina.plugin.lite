@@ -26,7 +26,7 @@ using System.Text.RegularExpressions;
 using NINA.Core.Utility;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Annotation +")]
     [ExportMetadata("Description", "Add the specified text to the log, expanding any expressions within {}'s")]

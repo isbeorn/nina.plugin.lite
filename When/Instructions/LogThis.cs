@@ -23,7 +23,7 @@ using System.ComponentModel.Composition;
 using NINA.Core.Utility;
 using System.Windows.Input;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "Log On Click")]
     [ExportMetadata("Description", "Add your own entry into NINA's log")]

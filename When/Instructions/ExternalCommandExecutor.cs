@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using NINA.Core.Utility.Extensions;
 using NINA.Core.Utility;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     public class ExternalCommandExecutor {
         private IProgress<ApplicationStatus> progress;

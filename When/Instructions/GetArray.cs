@@ -15,7 +15,7 @@ using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem.Expressions;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Get from Array")]
     [ExportMetadata("Description", "Gets a value from an Array at the specified index into a Variable")]
     [ExportMetadata("Icon", "ArraySVG")]

@@ -32,7 +32,7 @@ using System.Runtime.CompilerServices;
 using NINA.Sequencer.Conditions;
 using NINA.Astrometry;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Once Safe")]
     [ExportMetadata("Description", "Waits for Safe condition, then executes the specified instructions.")]
     [ExportMetadata("Icon", "ShieldSVG")]

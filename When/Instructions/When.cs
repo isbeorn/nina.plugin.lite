@@ -31,7 +31,7 @@ using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
 
     [ExportMetadata("Name", "When")]
     [ExportMetadata("Description", "Runs a customizable set of instructions when the specified Expression is true.")]

@@ -11,7 +11,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Settings = PowerupsLite.When.Properties.Settings;
+using Settings = WhenPlugin.When.Properties.Settings;
 using NINA.Sequencer.Container;
 using System.Reflection;
 using System.Windows.Media;
@@ -24,7 +24,7 @@ using NINA.Sequencer.SequenceItem;
 using NINA.ViewModel.Sequencer;
 using NINA.Sequencer.Logic;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     /// <summary>
     /// This class exports the IPluginManifest interface and will be used for the general plugin information and options
     /// The base class "PluginBase" will populate all the necessary Manifest Meta Data out of the AssemblyInfo attributes. Please fill these accoringly
@@ -40,7 +40,7 @@ namespace PowerupsLite.When {
         public static IFilterWheelMediator FilterWheelMediator;
         static protected ISequenceNavigationVM sequenceNavigationVM;
         private static protected ISequence2VM s2vm;
-        private static ISymbolBrokerVM SymbolBrokerVM;
+        private static ISymbolBroker SymbolBrokerVM;
 
         // Implementing a file pattern
         private GeometryGroup ConstantsIcon = (GeometryGroup)Application.Current.Resources["Pen_NoFill_SVG"];
@@ -50,7 +50,7 @@ namespace PowerupsLite.When {
             ISwitchMediator switchMediator, IWeatherDataMediator weatherDataMediator, ICameraMediator cameraMediator, IDomeMediator domeMediator,
                 IFlatDeviceMediator flatMediator, IFilterWheelMediator filterWheelMediator, IRotatorMediator rotatorMediator, ISafetyMonitorMediator safetyMonitorMediator,
                 IFocuserMediator focuserMediator, ITelescopeMediator telescopeMediator, IImagingMediator imagingMediator, ISequenceMediator sequenceMediator, IMessageBroker messageBroker,
-                IGuiderMediator guiderMediator, ISymbolBrokerVM symbolBroker) {
+                IGuiderMediator guiderMediator, ISymbolBroker symbolBroker) {
             if (Settings.Default.UpdateSettings) {
                 Settings.Default.Upgrade();
                 Settings.Default.UpdateSettings = false;
@@ -70,7 +70,7 @@ namespace PowerupsLite.When {
             OpenRoofFilePathDiagCommand = new RelayCommand(OpenRoofFilePathDiag);
 
             Plugin = this;
-            SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups Lite", "PL");
+            SymbolProvider = symbolBroker.RegisterSymbolProvider("Sequencer Powerups", "SP");
             //sp.AddSymbol("Foo", 10);
             //sp.AddSymbol("Bar", 20);
             //sp.AddSymbol("Bletch", "Fooble");
