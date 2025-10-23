@@ -24,7 +24,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "For Each")]
     [ExportMetadata("Description", "Iterates over a list of Variables and Expressions, executing the embedded instructions for each")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]

@@ -39,7 +39,7 @@ namespace WhenPlugin.When {
 
         [ImportingConstructor]
         public WhenPluginDockable(IProfileService profileService, ISymbolBroker symbolBroker) : base(profileService) {
-            Title = "Powerups Lite Panel";
+            Title = "Powerups Panel";
 
             SymbolBroker = symbolBroker;
 

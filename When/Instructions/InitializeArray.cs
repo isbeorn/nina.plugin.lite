@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using NINA.Sequencer.Validations;
 using System.Collections.Generic;
-using System.Reflection;
-using Antlr.Runtime;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 
@@ -17,7 +15,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Initialize Array")]
     [ExportMetadata("Description", "Creates or re-initializes an Array")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]

@@ -17,7 +17,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "If Timed Out")]
     [ExportMetadata("Description", "Executes an instruction set if the predicate instruction failed.")]
     [ExportMetadata("Icon", "IfSVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class IfTimeout : IfCommand, IValidatable {

@@ -28,7 +28,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Autofocus Trigger")]
     [ExportMetadata("Description", "This trigger will run an Autofocus operation after the currently running instruction finishes.")]
     [ExportMetadata("Icon", "AutoFocusSVG")]
-    [ExportMetadata("Category", "Powerups Lite (Triggers)")]
+    [ExportMetadata("Category", "Powerups (Triggers)")]
     [Export(typeof(ISequenceTrigger))]
     
     [JsonObject(MemberSerialization.OptIn)]

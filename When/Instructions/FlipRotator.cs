@@ -30,7 +30,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "FlipRotator")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Rotator_MoveRotatorMechanical_Description")]
     [ExportMetadata("Icon", "RotatorSVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class FlipRotator : SequenceItem, IValidatable {

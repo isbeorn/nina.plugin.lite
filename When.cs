@@ -70,12 +70,10 @@ namespace WhenPlugin.When {
             OpenRoofFilePathDiagCommand = new RelayCommand(OpenRoofFilePathDiag);
 
             Plugin = this;
-            SymbolProvider = symbolBroker.RegisterSymbolProvider("Sequencer Powerups", "SP");
-            //sp.AddSymbol("Foo", 10);
-            //sp.AddSymbol("Bar", 20);
-            //sp.AddSymbol("Bletch", "Fooble");
-
-            //sp.RemoveSymbol("Foo");
+            
+            ISymbolProvider sp = symbolBroker.RegisterSymbolProvider("Powerups");
+            sp.AddOrUpdateSymbol("MoonAltitude", 10);
+            sp.AddOrUpdateSymbol("Bar", 20);
 
         }
 

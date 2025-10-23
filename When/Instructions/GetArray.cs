@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using NINA.Sequencer.Validations;
 using System.Collections.Generic;
-using System.Reflection;
-using Antlr.Runtime;
 using NINA.Core.Utility;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
@@ -19,7 +17,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Get from Array")]
     [ExportMetadata("Description", "Gets a value from an Array at the specified index into a Variable")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]

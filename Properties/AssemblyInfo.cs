@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 //Should be incremented for each new release build of a plugin
 
 // Odd minor releases for Beta
-[assembly: AssemblyVersion("3.99.0.1")]
-[assembly: AssemblyFileVersion("3.99.0.1")]
+[assembly: AssemblyVersion("3.99.0.2")]
+[assembly: AssemblyFileVersion("3.99.0.2")]
 
 // [MANDATORY] The name of your plugingit st
 [assembly: AssemblyTitle("Sequencer Powerups")]
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © 2025 Marc Blank")]
 
 // The minimum Version of N.I.N.A. that this plugin is compatible withq
-[assembly: AssemblyMetadata("MinimumApplicationVersion", "3.2.0.0")]
+[assembly: AssemblyMetadata("MinimumApplicationVersion", "3.3.0.1000")]
 
 // The license your plugin code is using
 [assembly: AssemblyMetadata("License", "MPL-2.0")]
@@ -38,7 +38,7 @@ using System.Runtime.InteropServices;
 // The following attributes are optional for the official manifest meta data
 
 //[Optional] Common tags that quickly describe your plugin
-[assembly: AssemblyMetadata("Tags", "Sequencer,Utility,Powerups,Constants,Variables,Expressions,Safety,Interrupt,If,When")]
+[assembly: AssemblyMetadata("Tags", "Sequencer,Utility,Powerups,Conditionals,Safety,Interrupt,If,When")]
 
 //[Optional] The url to a featured logo that will be displayed in the plugin list next to the name
 [assembly: AssemblyMetadata("FeaturedImageURL", "https://bitbucket.org/zorkmid/nina.plugin.when/downloads/Powerups.png")]

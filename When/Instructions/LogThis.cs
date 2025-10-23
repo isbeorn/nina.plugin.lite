@@ -28,7 +28,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Log On Click")]
     [ExportMetadata("Description", "Add your own entry into NINA's log")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class LogThis : SequenceItem {

@@ -13,7 +13,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Rotate Image")]
     [ExportMetadata("Description", "Rotates the image in the Imaging pane by 180 degrees")]
     [ExportMetadata("Icon", "MeridianFlipSVG")]
-    [ExportMetadata("Category", "Powerups Lite (Triggers)")]
+    [ExportMetadata("Category", "Powerups (Triggers)")]
     [Export(typeof(ISequenceItem))]
 
     [JsonObject(MemberSerialization.OptIn)]

@@ -29,7 +29,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "When Becomes Unsafe")]
     [ExportMetadata("Description", "Runs a customizable set of instructions within seconds of an 'Unsafe' condition being recognized.")]
     [ExportMetadata("Icon", "ShieldSVG")]
-    [ExportMetadata("Category", "Powerups Lite")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceTrigger))]
 
     public class WhenUnsafe : When { 
