@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows8.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <RootNamespace>PowerupsLite.When</RootNamespace>
-    <AssemblyName>PowerupsLite</AssemblyName>
+    <RootNamespace>WhenPlugin.When</RootNamespace>
+    <AssemblyName>WhenPlugin</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
@@ -48,6 +48,9 @@
     <Compile Remove="When\CVE\SymControl.xaml.cs" />
     <Compile Remove="When\CVE\ValConverter.cs" />
     <Compile Remove="When\CVE\ValidityConverter.cs" />
+    <Compile Remove="When\Dockable\Dockable.cs" />
+    <Compile Remove="When\Dockable\DockableExpr.cs" />
+    <Compile Remove="When\Dockable\DockableTemplates.xaml.cs" />
     <Compile Remove="When\Expression.cs" />
     <Compile Remove="When\IfResults.cs" />
     <Compile Remove="When\Instructions\AutofocusAfterInstructions.cs" />
@@ -109,6 +112,7 @@
     <Page Remove="When\CVE\ExprHintControl.xaml" />
     <Page Remove="When\CVE\GlobalConstantView.xaml" />
     <Page Remove="When\CVE\SymControl.xaml" />
+    <Page Remove="When\Dockable\DockableTemplates.xaml" />
     <Page Remove="When\Instructions\SequenceBlockView.xaml" />
     <Page Remove="When\SetConstantView.xaml" />
     <Page Remove="When\UserControl1.xaml" />
@@ -149,10 +153,15 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="When\Dockable\" />
+    <Folder Include="When\PowerupsCVE\" />
+    <Folder Include="When\PowerupsPlusInstructions\" />
+  </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="&#xD;&#xA;if not exist &quot;%25localappdata%25\NINA\Plugins\3.0.0&quot; (&#xD;&#xA;  echo &quot;Creating $(PlatformName) Plugins folder&quot;&#xD;&#xA;  mkdir &quot;%25localappdata%25\NINA\Plugins\3.0.0&quot;&#xD;&#xA;)&#xD;&#xA;if not exist &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; (&#xD;&#xA;  echo &quot;Creating $(PlatformName) Plugins $(TargetName) folder&quot;&#xD;&#xA;  mkdir &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot;&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;echo &quot;Copying $(PlatformName) $(TargetFileName)&quot;&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/i/c/k/e/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)NCalc.Sync.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\PowerupsLite&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)NCalc.Core.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\PowerupsLite&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)Parlot.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\PowerupsLite&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)ExtendedNumerics.BigDecimal.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\PowerupsLite&quot; /h/k/r/y&#xD;&#xA;" />
+    <Exec Command="&#xD;&#xA;if not exist &quot;%25localappdata%25\NINA\Plugins\3.0.0&quot; (&#xD;&#xA;  echo &quot;Creating $(PlatformName) Plugins folder&quot;&#xD;&#xA;  mkdir &quot;%25localappdata%25\NINA\Plugins\3.0.0&quot;&#xD;&#xA;)&#xD;&#xA;if not exist &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; (&#xD;&#xA;  echo &quot;Creating $(PlatformName) Plugins $(TargetName) folder&quot;&#xD;&#xA;  mkdir &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot;&#xD;&#xA;)&#xD;&#xA;&#xD;&#xA;echo &quot;Copying $(PlatformName) $(TargetFileName)&quot;&#xD;&#xA;xcopy &quot;$(TargetPath)&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/i/c/k/e/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)NCalc.Sync.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)NCalc.Core.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)Parlot.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/k/r/y&#xD;&#xA;xcopy &quot;$(TargetDir)ExtendedNumerics.BigDecimal.dll&quot; &quot;%25localappdata%25\NINA\Plugins\3.0.0\$(TargetName)&quot; /h/k/r/y&#xD;&#xA;" />
   </Target>
 </Project>

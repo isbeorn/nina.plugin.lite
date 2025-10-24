@@ -71,9 +71,9 @@ namespace WhenPlugin.When {
 
             Plugin = this;
             
-            ISymbolProvider sp = symbolBroker.RegisterSymbolProvider("Powerups");
-            sp.AddOrUpdateSymbol("MoonAltitude", 10);
-            sp.AddOrUpdateSymbol("Bar", 20);
+            //ISymbolProvider sp = symbolBroker.RegisterSymbolProvider("Powerups");
+            //sp.AddOrUpdateSymbol("MoonAltitude", 10);
+            //sp.AddOrUpdateSymbol("Bar", 20);
 
         }
 
