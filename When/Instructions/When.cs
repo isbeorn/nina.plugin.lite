@@ -36,7 +36,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "When")]
     [ExportMetadata("Description", "Runs a customizable set of instructions when the specified Expression is true.")]
     [ExportMetadata("Icon", "ShieldSVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Triggers)")]
     [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]

@@ -16,7 +16,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Put into Array")]
     [ExportMetadata("Description", "Puts a value into an Array at the specified index")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Arrays)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]

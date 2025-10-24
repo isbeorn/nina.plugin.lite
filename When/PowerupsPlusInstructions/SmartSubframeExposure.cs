@@ -52,9 +52,9 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Smart Subframe Exposure +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Imaging_SmartSubframeExposure_Description")]
     [ExportMetadata("Icon", "CameraSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
-    //[Export(typeof(ISequenceContainer))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SmartSubframeExposure : SequentialContainer, IImmutableContainer {
 

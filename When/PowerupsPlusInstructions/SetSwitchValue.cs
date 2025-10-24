@@ -37,8 +37,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Set Switch Value +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Switch_SetSwitchValue_Description")]
     [ExportMetadata("Icon", "ButtonSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SetSwitchValue : SequenceItem, IValidatable {
         private ISwitchMediator switchMediator;

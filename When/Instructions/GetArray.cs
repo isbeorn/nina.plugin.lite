@@ -17,7 +17,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Get from Array")]
     [ExportMetadata("Description", "Gets a value from an Array at the specified index into a Variable")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Arrays)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]

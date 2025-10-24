@@ -29,8 +29,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Wait for Time Span +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Utility_WaitForTimeSpan_Description")]
     [ExportMetadata("Icon", "HourglassSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class WaitForTimeSpan : SequenceItem, IValidatable {
 

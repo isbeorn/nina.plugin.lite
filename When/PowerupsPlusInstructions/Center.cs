@@ -46,8 +46,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Slew to RA/Dec and Center +")]
     [ExportMetadata("Description", "Slew to the decimal RA and Dec coordinates and center on them")]
     [ExportMetadata("Icon", "PlatesolveSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class Center : SequenceItem, IValidatable {
         protected IProfileService profileService;

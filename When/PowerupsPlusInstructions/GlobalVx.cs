@@ -14,8 +14,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Global Variable")]
     [ExportMetadata("Description", "Creates a global Variable whose numeric value can be used in various instructions")]
     [ExportMetadata("Icon", "VariableSVG")]
-    //[ExportMetadata("Category", "Powerups (Expressions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 
     public class SetGlobalVariable : SetVariable {

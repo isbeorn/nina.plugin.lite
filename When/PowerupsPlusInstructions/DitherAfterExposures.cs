@@ -41,8 +41,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Dither After Exposures +")]
     [ExportMetadata("Description", "Lbl_SequenceTrigger_Guider_DitherAfterExposures_Description")]
     [ExportMetadata("Icon", "DitherSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceTrigger))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
     public class DitherAfterExposures : SequenceTrigger, IValidatable {
         private IGuiderMediator guiderMediator;

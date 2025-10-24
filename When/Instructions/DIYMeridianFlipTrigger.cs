@@ -55,7 +55,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "DIY Meridian Flip Trigger")]
     [ExportMetadata("Description", "Trigger for DYI Meridian Flip")]
     [ExportMetadata("Icon", "MeridianFlipSVG")]
-    [ExportMetadata("Category", "Powerups (Triggers)")]
+    [ExportMetadata("Category", "Powerups (Meridian Flip)")]
     [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
 

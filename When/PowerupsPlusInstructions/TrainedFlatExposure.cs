@@ -41,9 +41,9 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Trained Flat Exposure +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_FlatDevice_TrainedFlatExposure_Description")]
     [ExportMetadata("Icon", "BrainBulbSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
-    //[Export(typeof(ISequenceContainer))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class TrainedFlatExposure : SequentialContainer, IImmutableContainer {
 

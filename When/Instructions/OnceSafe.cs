@@ -36,7 +36,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Once Safe")]
     [ExportMetadata("Description", "Waits for Safe condition, then executes the specified instructions.")]
     [ExportMetadata("Icon", "ShieldSVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Safety)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     

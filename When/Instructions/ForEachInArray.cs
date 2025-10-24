@@ -20,7 +20,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "For Each in Array")]
     [ExportMetadata("Description", "Iterates over the elements of an Array, executing the embedded instructions for each")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Arrays)")]
     [Export(typeof(ISequenceItem))]
     [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]

@@ -38,8 +38,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Switch Filter +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_FilterWheel_SwitchFilter_Description")]
     [ExportMetadata("Icon", "FW_NoFill_SVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SwitchFilter : SequenceItem, IValidatable {
 

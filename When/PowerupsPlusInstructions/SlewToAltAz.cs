@@ -37,8 +37,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Slew to Alt/Az +")]
     [ExportMetadata("Description", "Lbl_SequenceItem_Telescope_SlewScopeToAltAz_Description")]
     [ExportMetadata("Icon", "SlewToAltAzSVG")]
-    //[ExportMetadata("Category", "Powerups (Enhanced Instructions)")]
-    //[Export(typeof(ISequenceItem))]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
+    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SlewToAltAz : SequenceItem, IValidatable {
 

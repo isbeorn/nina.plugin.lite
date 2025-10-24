@@ -15,7 +15,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Initialize Array")]
     [ExportMetadata("Description", "Creates or re-initializes an Array")]
     [ExportMetadata("Icon", "ArraySVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Arrays)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
