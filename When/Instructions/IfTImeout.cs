@@ -12,6 +12,7 @@ using NINA.Sequencer.Conditions;
 using NINA.Core.Utility;
 using NINA.Core.Utility.Notification;
 using NINA.Sequencer;
+using NINA.Sequencer.Generators;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If Timed Out")]
@@ -20,7 +21,9 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups (Conditionals)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class IfTimeout : IfCommand, IValidatable {
+    [UsesExpressions]
+
+    public partial class IfTimeout : IfCommand, IValidatable {
 
         [ImportingConstructor]
         public IfTimeout() {
@@ -34,24 +37,11 @@ namespace WhenPlugin.When {
                 Condition = (IfContainer)copyMe.Condition.Clone();
                 Instructions = (IfContainer)copyMe.Instructions.Clone();
                 Condition.AttachNewParent(Instructions.Parent);
-                Time = copyMe.Time;
             }
         }
 
-        public override object Clone() {
-            return new IfTimeout(this) {
-            };
-        }
-
-        private int iTime = 10;
-        [JsonProperty]
-        public int Time {
-            get => iTime;
-            set {
-                iTime = value;
-                RaisePropertyChanged("Time");
-            }
-        }
+        [IsExpression]
+        private int time;
 
         public ICommand DropIntoIfCommand { get; set; }
 

@@ -1608,8 +1608,7 @@
                                     <ItemsControl ItemsSource="{Binding Issues}" />
                                 </Border.ToolTip>
                             </Border>
-                            <TextBox Margin="0,2,0,0" VerticalAlignment="Center" Text="{Binding Time}" />
-                            <TextBlock VerticalAlignment="Center" Text=" s" />
+                            <logic:ExprControl Exp="{Binding TimeExpression}" Unit="s" />
 
                             <Border
                                MinHeight="35"
