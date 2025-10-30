@@ -82,5 +82,12 @@ namespace WhenPlugin.When {
             }
             return Task.CompletedTask;
         }
+
+        // 3.3 Upgrade
+        [JsonProperty]
+        public Expr iNameExpr {  get; set; }
+        public bool ShouldSerializeiNameExpr() {
+            return false; // Always return false to prevent serialization
+        }
     }
 }

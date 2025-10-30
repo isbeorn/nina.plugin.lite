@@ -710,7 +710,37 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
- 
+
+    <DataTemplate DataType="{x:Type local:ConditionalTrigger}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <Border MinHeight="35"
+                      BorderBrush="{StaticResource BorderBrush}"
+                      BorderThickness="1">
+                    <StackPanel Orientation="Vertical" Background="{StaticResource BackgroundBrush}">
+                        <logic:ExprControl Label="Enabling Expression:" Exp="{Binding Path=PredicateExpression, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ItemsControl MinHeight="35" ItemsSource="{Binding TriggerRunner.Triggers}"/>
+                            <TextBlock
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Left"
+                               FontStyle="Italic"
+                               Opacity="0.4"
+                               Text="Drop the Trigger here"
+                               Visibility="{Binding TriggerRunner.Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}"
+                               MinWidth="200"/>
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Trigger.SequenceTrigger" OnDropCommand="DropIntoDIYTriggersCommand" />
+                            </i:Interaction.Behaviors>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type local:SafeTrigger}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
@@ -1152,7 +1182,7 @@
                                 Foreground="White"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Text="If Failed: " />
+                                Text="{Binding Name}" />
 
                             <Border
                               Width="20"
@@ -1546,8 +1576,14 @@
                                 Foreground="White"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Text="If Timed Out  @" />
-
+                                Text="{Binding Name}" />
+                            <TextBlock 
+                                MinHeight="25"
+                                Margin="10,10,10,0"
+                                Foreground="White"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text=" @" />
                             <Border
                               Width="20"
                               Height="20"

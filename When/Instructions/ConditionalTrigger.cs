@@ -3,7 +3,9 @@ using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.DragDrop;
+using NINA.Sequencer.Generators;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Trigger;
 using NINA.Sequencer.Validations;
 using System;
@@ -15,15 +17,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using WhenPlugin.When;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Conditional Trigger")]
     [ExportMetadata("Description", "The specified trigger will only be active when the Expression is true.")]
     [ExportMetadata("Icon", "WandSVG")]
-    [ExportMetadata("Category", "Powerups (Misc)")]
+    [ExportMetadata("Category", "Powerups (Triggers)")]
     [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class ConditionalTrigger : SequenceTrigger, IValidatable, ITrueFalse {
+    [UsesExpressions]
+
+    public partial class ConditionalTrigger : SequenceTrigger, IValidatable, ITrueFalse {
 
 
         [ImportingConstructor]
@@ -44,13 +49,11 @@ namespace PowerupsLite.When {
             }
         }
 
-        public override object Clone() {
-            return new ConditionalTrigger(this) {
-            };
-        }
-
         private static object lockObj = new object();
         public bool InFlight { get; set; }
+
+        [IsExpression]
+        public string predicate;
 
         private Expr _IfExpr;
 
@@ -119,7 +122,6 @@ namespace PowerupsLite.When {
         }
 
         private bool SkipTrigger() {
-            Symbol.UpdateSwitchWeatherData();
             IfExpr.Evaluate();
             return string.Equals(IfExpr.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (IfExpr.Error == null);
         }
@@ -179,6 +181,13 @@ namespace PowerupsLite.When {
         }
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(DIYTrigger)}";
+        }
+ 
+        // 3.3 Upgrade
+        [JsonProperty]
+        public Expr iIfExpr { get; set; }
+        public bool ShouldSerializeiIfExpr() {
+            return false;
         }
     }
 }

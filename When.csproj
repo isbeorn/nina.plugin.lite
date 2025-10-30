@@ -57,7 +57,6 @@
     <Compile Remove="When\Instructions\Call.cs" />
     <Compile Remove="When\Instructions\CameraTemperatureConverter.cs" />
     <Compile Remove="When\Instructions\Center.cs" />
-    <Compile Remove="When\Instructions\ConditionalTrigger.cs" />
     <Compile Remove="When\Instructions\CoolCamera.cs" />
     <Compile Remove="When\Instructions\Cx.cs" />
     <Compile Remove="When\Instructions\DAF.cs" />
@@ -156,7 +155,6 @@
   <ItemGroup>
     <Folder Include="When\Dockable\" />
     <Folder Include="When\PowerupsCVE\" />
-    <Folder Include="When\PowerupsPlusInstructions\" />
   </ItemGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>

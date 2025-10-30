@@ -44,29 +44,29 @@ namespace WhenPlugin.When {
         }
 
         [JsonProperty]
-        public string Identifier {  get; set; } = string.Empty;
+        public string Identifier { get; set; } = string.Empty;
 
         public override string ToString() {
             return $"AddImagePattern: {Identifier}, Expr: {Expr}";
 
         }
 
-        public IList<String> Issues {  get; set; }
+        public IList<String> Issues { get; set; }
 
         public static readonly String VALID_SYMBOL = "^[A-Z]+$";
 
         private string ImagePatternAdded = String.Empty;
 
         [JsonProperty]
-        public string PatternDescription {  get; set; } = String.Empty;
+        public string PatternDescription { get; set; } = String.Empty;
 
         public class ImagePatternExpr {
 
-            public ImagePatternExpr (ImagePattern p, Expression e) {
+            public ImagePatternExpr(ImagePattern p, Expression e) {
                 Pattern = p;
                 Expr = e;
             }
-            
+
             public ImagePattern Pattern;
             public Expression Expr;
         }
@@ -105,5 +105,11 @@ namespace WhenPlugin.When {
             return Task.CompletedTask;
         }
 
-     }
+        // 3.3 Upgrade
+        [JsonProperty]
+        public Expr iExpr { get; set; }
+        public bool ShouldSerializeiExpr() {
+            return false;
+        }
+    }
 }

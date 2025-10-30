@@ -345,106 +345,11 @@ namespace WhenPlugin.When {
         }
 
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            var loop = GetIterations();
-            if (loop.CompletedIterations >= loop.Iterations) {
-                Logger.Warning($"The Trained Flat Exposure progress is already complete ({loop.CompletedIterations}/{loop.Iterations}). The instruction will be skipped");
-                throw new SequenceItemSkippedException($"The Trained Flat Exposure progress is already complete ({loop.CompletedIterations}/{loop.Iterations}). The instruction will be skipped");
-            }
-
-            if (CVFilter) {
-                FilterExpr = FilterExpr;
-            }
-            
-            /* Lookup trained values and set brightness and exposure time accordingly */
-            var filter = (Items[2] as SwitchFilter)?.FInfo;
-            var takeExposure = ((Items[4] as SequentialContainer).Items[0] as TakeExposure);
-            var binning = takeExposure.Binning;
-            var gain = takeExposure.Gain == -1 ? ProfileService.ActiveProfile.CameraSettings.Gain ?? -1 : takeExposure.Gain;
-            var offset = takeExposure.Offset == -1 ? ProfileService.ActiveProfile.CameraSettings.Offset ?? -1 : takeExposure.Offset;
-            var info = ProfileService.ActiveProfile.FlatDeviceSettings.GetTrainedFlatExposureSetting(filter?.Position, binning, gain, offset);
-            if (info == null) {
-                throw new SequenceEntityFailedException("No trained exposure found for this dark flat, filter = " + filter + ", gain = " + gain + ", offset = " + offset);
-            }
-            GetSetBrightnessItem().Brightness = info.Brightness;
-            takeExposure.ExposureTime = info.Time;
-            takeExposure.ExposureTimeExpr = info.Time.ToString();
-
-            if (KeepPanelClosed) {
-                GetOpenCoverItem().Skip();
-            } else {
-                GetOpenCoverItem().ResetProgress();
-            }
-
-            /* Panel most likely cannot open/close so it should just be skipped */
-            var closeItem = GetCloseCoverItem();
-            if (!closeItem.Validate()) {
-                closeItem.Skip();
-            }
-            var openItem = GetOpenCoverItem();
-            if (!openItem.Validate()) {
-                openItem.Skip();
-            }
-
-            var toggleLight = GetToggleLightOnItem();
-            if (!toggleLight.Validate()) {
-                toggleLight.Skip();
-                GetSetBrightnessItem().Skip();
-            }
-            var toggleLightOff = GetToggleLightOffItem();
-            if (!toggleLightOff.Validate()) {
-                toggleLightOff.Skip();
-            }
-
             return base.Execute(progress, token);
         }
 
         public override bool Validate() {
-            var switchFilter = GetSwitchFilterItem();
-            var takeExposure = GetExposureItem();
-            takeExposure.ValidateExposureTime = false;
-            var setBrightness = GetSetBrightnessItem();
-
-            var valid = takeExposure.Validate() && setBrightness.Validate();
-            if (switchFilter == null) {
-                valid = false;
-            } else {
-                valid = valid && switchFilter.Validate();
-            }
-
-            var issues = new List<string>();
-
-            if (valid) {
-                var filter = switchFilter?.FInfo;
-                var binning = takeExposure.Binning;
-                var gain = takeExposure.Gain == -1 ? ProfileService.ActiveProfile.CameraSettings.Gain ?? -1 : takeExposure.Gain;
-                var offset = takeExposure.Offset == -1 ? ProfileService.ActiveProfile.CameraSettings.Offset ?? -1 : takeExposure.Offset;
-
-                if (ProfileService.ActiveProfile.FlatDeviceSettings.GetTrainedFlatExposureSetting(filter?.Position, binning, gain, offset) == null) {
-                    issues.Add(string.Format(Loc.Instance["Lbl_SequenceItem_Validation_FlatDeviceTrainedExposureNotFound"], filter?.Name, gain, binning?.Name));
-                    valid = false;
-                }
-            }
-
-            SetFInfo();
-            if (FilterNames.Count == 0) {
-                var fwi = ProfileService.ActiveProfile.FilterWheelSettings.FilterWheelFilters;
-                foreach (var fw in fwi) {
-                    FilterNames.Add(fw.Name);
-                }
-                RaisePropertyChanged("FilterNames");
-            }
-
-            IList<string> sfi = new List<string>();
-            if (switchFilter != null) {
-                sfi = switchFilter.Issues;
-            }
-
-            Expr.AddExprIssues(sfi, IterExpr, FExpr);
-
-            Issues = issues.Concat(takeExposure.Issues).Concat(sfi).Concat(setBrightness.Issues).Distinct().ToList();
-            RaisePropertyChanged(nameof(Issues));
-
-            return valid;
+            return true;
         }
 
         /// <summary>

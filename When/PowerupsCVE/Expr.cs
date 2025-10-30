@@ -13,6 +13,10 @@ namespace WhenPlugin.When {
     [JsonObject(MemberSerialization.OptIn)]
     public class Expr : BaseINPC {
 
+        public Expr() {
+
+        }
+
         public Expr(string exp, Symbol sym) {
             Symbol = sym;
             SequenceEntity = sym;

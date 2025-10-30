@@ -163,5 +163,12 @@ namespace WhenPlugin.When {
             Issues = i;
             return (i.Count == 0);
         }
+
+        // 3.3 Upgrade
+        [JsonProperty]
+        public Expr iWaitExpr { get; set; }
+        public bool ShouldSerializeiWaitExpr() {
+            return false;
+        }
     }
 }
