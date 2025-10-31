@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 //Should be incremented for each new release build of a plugin
 
 // Odd minor releases for Beta
-[assembly: AssemblyVersion("3.99.0.2")]
-[assembly: AssemblyFileVersion("3.99.0.2")]
+[assembly: AssemblyVersion("4.0.0.1")]
+[assembly: AssemblyFileVersion("4.0.0.1")]
 
 // [MANDATORY] The name of your plugingit st
 [assembly: AssemblyTitle("Sequencer Powerups")]
