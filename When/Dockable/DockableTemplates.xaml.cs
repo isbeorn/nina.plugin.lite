@@ -25,25 +25,25 @@ namespace WhenPlugin.When {
         }
 
         public void OpenTooltip(object sender, ToolTipEventArgs e) {
-            ((DockableExpr)((TextBlock)sender).DataContext).IsOpen = true;
+            ((DockableExpression)((TextBlock)sender).DataContext).IsOpen = true;
             e.Handled = true;
         }
 
         public void CheckDisplay(object sender, RoutedEventArgs e) {
-            DockableExpr expr = (DockableExpr)((RadioButton)sender).DataContext;
+            DockableExpression expr = (DockableExpression)((RadioButton)sender).DataContext;
             String displayType = (string)((RadioButton)sender).Content;
             expr.DisplayType = displayType;
             Logger.Info("Checked display box: " + displayType);
         }
         public void CheckConversion(object sender, RoutedEventArgs e) {
-            DockableExpr expr = (DockableExpr)((RadioButton)sender).DataContext;
+            DockableExpression expr = (DockableExpression)((RadioButton)sender).DataContext;
             String conversionType = (string)((RadioButton)sender).Content;
             expr.ConversionType = conversionType;
             Logger.Info("Checked conversion box: " + conversionType);
         }
 
         public void DeleteExpr(object sender, RoutedEventArgs e) {
-            DockableExpr expr = (DockableExpr)((Button)sender).DataContext;
+            DockableExpression expr = (DockableExpression)((Button)sender).DataContext;
             WhenPluginDockable.RemoveExpr(expr);
         }
 
@@ -90,7 +90,7 @@ namespace WhenPlugin.When {
         }
 
         public void DropExpr(object sender, DragEventArgs e) {
-            if (e.Source is TextBlock tb && tb.DataContext is DockableExpr de) {
+            if (e.Source is TextBlock tb && tb.DataContext is DockableExpression de) {
                 Grid gg = tb.Parent as Grid;
                 if (gg != null) {
                     gg.Opacity = 1;
@@ -98,8 +98,8 @@ namespace WhenPlugin.When {
                 }
             }
 
-            DockableExpr target = ((FrameworkElement)sender).DataContext as DockableExpr;
-            ObservableCollection<DockableExpr> exprs = WhenPluginDockable.ExpressionList;
+            DockableExpression target = ((FrameworkElement)sender).DataContext as DockableExpression;
+            ObservableCollection<DockableExpression> exprs = WhenPluginDockable.ExpressionList;
             if (target == null) return;
             int targetIndex = -1;
 
@@ -116,7 +116,7 @@ namespace WhenPlugin.When {
 
             if (targetIndex == sourceIndex) return;
 
-            DockableExpr source = exprs[sourceIndex];
+            DockableExpression source = exprs[sourceIndex];
             if (targetIndex > sourceIndex) {
                 for (int i = sourceIndex + 1; i <= targetIndex; i++) {
                     exprs[i - 1] = exprs[i];
@@ -127,12 +127,12 @@ namespace WhenPlugin.When {
                 }
             }
             exprs[targetIndex] = source;
-            WhenPluginDockable.SaveDockableExprs();
+            WhenPluginDockable.SaveDockableExpressions();
             Logger.Info("Item " + e.Data.GetData(DataFormats.StringFormat) + " dropped at " + ((FrameworkElement)sender).DataContext);
         }
 
         public void DragEnter(object sender, DragEventArgs e) {
-            if (e.Source is TextBlock tb && tb.DataContext is DockableExpr de) {
+            if (e.Source is TextBlock tb && tb.DataContext is DockableExpression de) {
                 Grid gg = tb.Parent as Grid;
                 if (gg != null) {
                     OldBackground = gg.Background;
@@ -148,7 +148,7 @@ namespace WhenPlugin.When {
         public Brush OldBackground { get; private set; }
 
         public void DragLeave(object sender, DragEventArgs e) {
-            if (e.Source is TextBlock tb && tb.DataContext is DockableExpr de) {
+            if (e.Source is TextBlock tb && tb.DataContext is DockableExpression de) {
                 Grid gg = tb.Parent as Grid;
                 if (gg != null) {
                     gg.Opacity = 1;
@@ -181,7 +181,7 @@ namespace WhenPlugin.When {
 
             bool found = false;
             int i = 0;
-            foreach (DockableExpr expr in WhenPluginDockable.ExpressionList) {
+            foreach (DockableExpression expr in WhenPluginDockable.ExpressionList) {
                 if (expr == g.DataContext) {
                     found = true;
                     break;

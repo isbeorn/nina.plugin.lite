@@ -48,9 +48,6 @@
     <Compile Remove="When\CVE\SymControl.xaml.cs" />
     <Compile Remove="When\CVE\ValConverter.cs" />
     <Compile Remove="When\CVE\ValidityConverter.cs" />
-    <Compile Remove="When\Dockable\Dockable.cs" />
-    <Compile Remove="When\Dockable\DockableExpr.cs" />
-    <Compile Remove="When\Dockable\DockableTemplates.xaml.cs" />
     <Compile Remove="When\Expression.cs" />
     <Compile Remove="When\IfResults.cs" />
     <Compile Remove="When\Instructions\AutofocusAfterInstructions.cs" />
@@ -111,7 +108,6 @@
     <Page Remove="When\CVE\ExprHintControl.xaml" />
     <Page Remove="When\CVE\GlobalConstantView.xaml" />
     <Page Remove="When\CVE\SymControl.xaml" />
-    <Page Remove="When\Dockable\DockableTemplates.xaml" />
     <Page Remove="When\Instructions\SequenceBlockView.xaml" />
     <Page Remove="When\SetConstantView.xaml" />
     <Page Remove="When\UserControl1.xaml" />
@@ -127,7 +123,7 @@
     <PackageReference Include="Namotion.Reflection" Version="3.4.3" />
     <PackageReference Include="NCalcSync" Version="5.2.11" />
     <PackageReference Include="NINA.Accord.Imaging" Version="3.5.3" />
-    <PackageReference Include="NINA.Plugin" Version="3.3.0.1000-preview3" />
+    <PackageReference Include="NINA.Plugin" Version="3.3.0.1000-preview7" />
     <PackageReference Include="Parlot" Version="1.3.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
@@ -153,7 +149,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="When\Dockable\" />
     <Folder Include="When\PowerupsCVE\" />
   </ItemGroup>
   <PropertyGroup>

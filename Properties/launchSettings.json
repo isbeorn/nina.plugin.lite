@@ -2,7 +2,7 @@
   "profiles": {
     "When": {
       "commandName": "Executable",
-      "executablePath": "C:\\Projects\\nina\\NINA\\bin\\Debug\\net8.0-windows\\win-x64\\NINA.exe"
+      "executablePath": "C:\\Projects\\nina\\nina\\bin\\Debug\\net10.0-windows\\win-x64\\NINA.exe"
     }
   }
 }

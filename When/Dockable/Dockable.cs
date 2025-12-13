@@ -43,7 +43,7 @@ namespace WhenPlugin.When {
 
             SymbolBroker = symbolBroker;
 
-            ExpressionString = WhenPlugin.DockableExprs;
+            ExpressionString = WhenPlugin.DockableExpressions;
             BuildExprList();
 
             ConditionWatchdog = new ConditionWatchdog(UpdateData, TimeSpan.FromSeconds(5));
@@ -56,12 +56,12 @@ namespace WhenPlugin.When {
 
         private static bool InhibitSave { get; set; } = false;
 
-        public DockableExpr Exp {  get; set; }
+        public DockableExpression Exp {  get; set; }
 
         private void BuildExprList() {
             InhibitSave = true;
             if (Exp == null) {
-                Exp = new DockableExpr("foo", SymbolBroker);
+                Exp = new DockableExpression("foo", SymbolBroker);
                 Exp.Evaluate();
             }
             try {
@@ -69,7 +69,7 @@ namespace WhenPlugin.When {
                 foreach (string s in l) {
                     if (s.Length > 0) {
                         string[] parts = s.Split(EXPR_INTERNAL_DIVIDER);
-                        DockableExpr expr = new DockableExpr(parts[0], SymbolBroker);
+                        DockableExpression expr = new DockableExpression(parts[0], SymbolBroker);
 
                         // Update radio buttons!
                         if (parts.Length > 1) {
@@ -93,7 +93,8 @@ namespace WhenPlugin.When {
             LoggedOnce.Add(message);
         }
 
-        private static Symbol[] RoofConstants = new Symbol[] { new Symbol("RoofNotOpen", 0), new Symbol("RoofOpen", 1), new Symbol("RoofCannotOpenOrRead", 2) };
+        private static NINA.Sequencer.Logic.Symbol[] RoofConstants = new NINA.Sequencer.Logic.Symbol[] {
+            new NINA.Sequencer.Logic.Symbol("RoofNotOpen", 0), new NINA.Sequencer.Logic.Symbol("RoofOpen", 1), new NINA.Sequencer.Logic.Symbol("RoofCannotOpenOrRead", 2) };
 
         private static int lastValidRoofStatus = -1;
         private static int invalidRoofStatusCount = 0;
@@ -136,7 +137,7 @@ namespace WhenPlugin.When {
             if (ExpressionList.Count > 0) {
                 runningItem = WhenPlugin.GetRunningItem();
             }
-            foreach (DockableExpr e in ExpressionList) {
+            foreach (DockableExpression e in ExpressionList) {
                 ISequenceEntity se = e.Context;
                 if (runningItem != null) {
                     e.Context = runningItem;
@@ -146,10 +147,11 @@ namespace WhenPlugin.When {
                     continue;
                 }
 
-                e.Refresh();
+                e.SymbolBroker = SymbolBroker;
                 if (runningItem != null) {
                     e.Context = se;
                 }
+                e.Evaluate(true);
             }
             return Task.CompletedTask;
         }
@@ -157,11 +159,11 @@ namespace WhenPlugin.When {
         private const char EXPR_DIVIDER = (char)0x0;
         private const char EXPR_INTERNAL_DIVIDER = (char)0x1;
 
-        public static void SaveDockableExprs() {
+        public static void SaveDockableExpressions() {
             if (InhibitSave) return;
             int count = 0;
             StringBuilder sb = new StringBuilder();
-            foreach (DockableExpr e in ExpressionList) {
+            foreach (DockableExpression e in ExpressionList) {
                 sb.Append(e.Definition);
                 sb.Append(EXPR_INTERNAL_DIVIDER);
                 sb.Append(e.DisplayType);
@@ -170,17 +172,17 @@ namespace WhenPlugin.When {
                 sb.Append(EXPR_DIVIDER);
                 count++;
             }
-            Logger.Info("SaveDockableExprs saving " + count + " Exprs");
-            WhenPlugin.DockableExprs = sb.ToString();
+            Logger.Info("SaveDockableExpressions saving " + count + " Exprs");
+            WhenPlugin.DockableExpressions = sb.ToString();
         }
 
         public string ExpressionString { get; private set; }
 
-        public static ObservableCollection<DockableExpr> ExpressionList { get; private set; } = new ObservableCollection<DockableExpr>();
+        public static ObservableCollection<DockableExpression> ExpressionList { get; private set; } = new ObservableCollection<DockableExpression>();
         
-        public static void RemoveExpr (DockableExpr e) {
+        public static void RemoveExpr (DockableExpression e) {
             ExpressionList.Remove(e);
-            SaveDockableExprs();
+            SaveDockableExpressions();
         }
 
         private GalaSoft.MvvmLight.Command.RelayCommand addInstruction;
@@ -188,8 +190,8 @@ namespace WhenPlugin.When {
         public ICommand AddInstruction => addInstruction ??= new GalaSoft.MvvmLight.Command.RelayCommand(PerformAddInstruction);
 
         private void PerformAddInstruction() {
-            ExpressionList.Add(new DockableExpr("New", SymbolBroker));
-            SaveDockableExprs();
+            ExpressionList.Add(new DockableExpression("New", SymbolBroker));
+            SaveDockableExpressions();
         }
     }
 }

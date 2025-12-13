@@ -11,9 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace WhenPlugin.When {
-    public class DockableExpr : Expression {
+    public class DockableExpression : Expression {
 
-        public DockableExpr (string definition, ISymbolBroker symbolBroker) : base(definition, (Variable)new Variable().Clone()) {
+        public DockableExpression (string definition, ISymbolBroker symbolBroker) : base(definition, (Variable)new Variable().Clone()) {
             Context.AttachNewParent(PseudoRoot);
             SymbolBroker = symbolBroker;
         }
@@ -31,7 +31,7 @@ namespace WhenPlugin.When {
                     // Remove it...
                     WhenPluginDockable.RemoveExpr(this);
                 }
-                WhenPluginDockable.SaveDockableExprs();
+                WhenPluginDockable.SaveDockableExpressions();
                 RaisePropertyChanged("IsEditable");
             }
         }
@@ -87,7 +87,7 @@ namespace WhenPlugin.When {
             set {
                 displayType = value;
                 RaisePropertyChanged("DockableValue");
-                WhenPluginDockable.SaveDockableExprs();
+                WhenPluginDockable.SaveDockableExpressions();
             }
         }
 
@@ -97,7 +97,7 @@ namespace WhenPlugin.When {
             set {
                 conversionType = value;
                 RaisePropertyChanged("DockableValue");
-                WhenPluginDockable.SaveDockableExprs();
+                WhenPluginDockable.SaveDockableExpressions();
             }
         }
 
@@ -107,7 +107,7 @@ namespace WhenPlugin.When {
             long start = DateTimeOffset.Now.ToUnixTimeSeconds() - ONE_YEAR;
             long end = start + (2 * ONE_YEAR);
             if (value > start && value < end) {
-                DateTime dt = ConvertFromUnixTimestamp(value).ToLocalTime();
+                DateTime dt = Expr.ConvertFromUnixTimestamp(value).ToLocalTime();
                 if (dt.Day == DateTime.Now.Day + 1) {
                     return dt.ToShortTimeString() + " tomorrow";
                 } else if (dt.Day == DateTime.Now.Day - 1) {

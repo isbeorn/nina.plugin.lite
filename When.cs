@@ -71,7 +71,7 @@ namespace WhenPlugin.When {
 
             Plugin = this;
             
-            //ISymbolProvider sp = symbolBroker.RegisterSymbolProvider("Powerups");
+            SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
             //sp.AddOrUpdateSymbol("MoonAltitude", 10);
             //sp.AddOrUpdateSymbol("Bar", 20);
 
@@ -151,12 +151,12 @@ namespace WhenPlugin.When {
             return dialog;
         }
 
-        public static string DockableExprs {
+        public static string DockableExpressions {
             get {
-                return PluginSettings.GetValueString(nameof(DockableExprs), Settings.Default.DockableExprs);
+                return PluginSettings.GetValueString(nameof(DockableExpressions), Settings.Default.DockableExprs);
             }
             set {
-                PluginSettings.SetValueString(nameof(DockableExprs), value);
+                PluginSettings.SetValueString(nameof(DockableExpressions), value);
             }
         }
 
