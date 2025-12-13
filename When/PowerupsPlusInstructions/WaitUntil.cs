@@ -32,7 +32,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Wait Until")]
     [ExportMetadata("Description", "Waits until the expression is true.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Expressions)")]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
     [Export(typeof(ISequenceItem))]
     public class WaitUntil : SequenceItem, IValidatable, ITrueFalse {
         private ISafetyMonitorMediator safetyMonitorMediator;
