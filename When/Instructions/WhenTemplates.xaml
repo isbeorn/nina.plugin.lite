@@ -1151,6 +1151,35 @@
         </Border>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:RelaxedLoop}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <Border MinHeight="35"
+                      BorderBrush="{StaticResource BorderBrush}"
+                      BorderThickness="1">
+                    <StackPanel Orientation="Vertical" Background="{StaticResource BackgroundBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <ItemsControl MinHeight="35" ItemsSource="{Binding TriggerRunner.Conditions}"/>
+                            <TextBlock
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Left"
+                               FontStyle="Italic"
+                               Opacity="0.4"
+                               Text="Drop the Condition here"
+                               Visibility="{Binding TriggerRunner.Conditions.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}"
+                               MinWidth="200"/>
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Conditions.SequenceCondition" OnDropCommand="DropIntoDIYTriggersCommand" />
+                            </i:Interaction.Behaviors>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type local:IfFailed}">
         <Border>
             <Border.Resources>
