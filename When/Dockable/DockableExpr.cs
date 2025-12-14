@@ -64,10 +64,8 @@ namespace WhenPlugin.When {
                     Context = runningItem;
                 }
 
-                return false;
-
-                //Symbol s = Symbol.FindSymbol(Definition, Context.Parent);
-                //return (s != null);
+                UserSymbol s = UserSymbol.FindSymbol(Definition, Context.Parent);
+                return (s != null);
             }
             set { }
         }

@@ -16,7 +16,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Loop While")]
     [ExportMetadata("Description", "Loops while the specified expression is not false.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Expressions)")]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
     [Export(typeof(ISequenceCondition))]
     [JsonObject(MemberSerialization.OptIn)]
 

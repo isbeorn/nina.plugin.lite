@@ -1,5 +1,6 @@
 ﻿using Accord.Math;
 using NINA.Core.Utility;
+using NINA.Sequencer.Logic;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
@@ -77,12 +78,12 @@ namespace WhenPlugin.When {
                 NINA.Sequencer.Logic.Expression expr = g.DataContext as NINA.Sequencer.Logic.Expression;
                 if (expr == null) return;
                 string text = ((TextBox)sender).Text;
-                //Symbol sym = Symbol.FindSymbol(expr.Definition, expr.Context.Parent);
-                //if (sym != null) {
-                //    sym.Definition = text;
-                //    sym.Expr.Evaluate();
-                //    Logger.Info("Setting " + expr.Definition + " to " + text + " in Powerups Panel");
-                //}
+                UserSymbol sym = UserSymbol.FindSymbol(expr.Definition, expr.Context.Parent);
+                if (sym != null) {
+                    sym.Expr.Definition = text;
+                    sym.Expr.Evaluate();
+                    Logger.Info("Setting " + expr.Definition + " to " + text + " in Powerups Panel");
+                }
             }
         }
 
