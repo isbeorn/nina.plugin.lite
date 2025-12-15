@@ -1151,6 +1151,16 @@
         </Border>
     </DataTemplate>
 
+    <DataTemplate x:Key="WhenPlugin.When.RelaxedLoop_Mini" DataType="{x:Type local:RelaxedLoop}">
+        <mini:MiniContainer DataContext="{Binding TriggerRunner}">
+            <mini:MiniContainer.Content>
+                <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
+                    <ItemsControl MinHeight="35" ItemsSource="{Binding Conditions}" />
+                </Grid>
+            </mini:MiniContainer.Content>
+        </mini:MiniContainer>
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type local:RelaxedLoop}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>

@@ -39,7 +39,7 @@
             </TextBlock>
 
             <TextBox Grid.Column="1" Text="{Binding Definition}" AllowDrop="False" BorderThickness="0" />
-            <TextBlock x:Name="val" Grid.Column="2" Text="{Binding Value}" ToolTip="" ToolTipOpening="OpenTooltip"  AllowDrop="True" Drop="DropExpr" />
+            <TextBlock x:Name="val" Grid.Column="2" Text="{Binding ValueString}" ToolTip="" ToolTipOpening="OpenTooltip"  AllowDrop="True" Drop="DropExpr" />
             <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=val}" Placement="Bottom"  Width="200" Height="25" Margin="0,20,0,0" MouseLeave="PopupMouseLeave">
                 <Border BorderBrush="Black" BorderThickness="0" Background="{StaticResource ButtonBackgroundBrush}">
                     <StackPanel Orientation="Horizontal">
