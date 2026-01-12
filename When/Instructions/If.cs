@@ -13,6 +13,8 @@ using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Container;
+using NINA.Sequencer.Container.ExecutionStrategy;
+using System.Windows.Markup;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If")]
@@ -23,26 +25,10 @@ namespace WhenPlugin.When {
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
 
-    public partial class IfConstant : IfCommand, IValidatable, ITrueFalse {
+    public partial class IfConstant : SequentialContainer, IValidatable, ITrueFalse {
 
         [ImportingConstructor]
-        public IfConstant() {
-            Instructions = new IfContainer();
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            Instructions.Name = Name;
-            Instructions.Icon = Icon;
-        }
-
-        public IfConstant(IfConstant copyMe) : this() {
-            if (copyMe != null) {
-                CopyMetaData(copyMe);
-                Instructions = (IfContainer)copyMe.Instructions.Clone();
-                Instructions.AttachNewParent(Parent);
-                Instructions.PseudoParent = this;
-                Instructions.Name = copyMe.Name;
-                Instructions.Icon = copyMe.Icon;
-            }
+        public IfConstant() : base() {
         }
 
         [IsExpression]
@@ -65,7 +51,7 @@ namespace WhenPlugin.When {
 
                 if (!string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null)) {
                     Logger.Info("Predicate is true, " + PredicateExpression);
-                    await Instructions.Run(progress, token);
+                    await Run(progress, token);
                 } else {
                     Logger.Info("Predicate is false, " + PredicateExpression);
                     return;
@@ -73,14 +59,6 @@ namespace WhenPlugin.When {
             } catch (ArgumentException ex) {
                 Logger.Info("If error: " + ex.Message);
                 Status = SequenceEntityStatus.FAILED;
-            }
-        }
-
-
-        public override void ResetProgress() {
-            base.ResetProgress();
-            foreach (ISequenceItem item in Instructions.Items) {
-                item.ResetProgress();
             }
         }
 
@@ -96,13 +74,8 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
-
-            CommonValidate();
-
             var i = new List<string>();
-
             Expression.ValidateExpressions(i, PredicateExpression);
- 
             Issues = i;
             return i.Count == 0;
         }
