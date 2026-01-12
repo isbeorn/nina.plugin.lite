@@ -3,6 +3,7 @@ using NINA.Profile;
 using NINA.Sequencer;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.Logic;
+using NINA.Sequencer.SequenceItem;
 using NINA.Sequencer.SequenceItem.Expressions;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace WhenPlugin.When {
         public bool IsEditable {
             get {
 
-                ISequenceEntity runningItem = WhenPlugin.GetRunningItem();
+                ISequenceItem? runningItem = WhenPluginManifest.GetRunningItem();
                 if (runningItem != null) {
                     Context = runningItem;
                 }
@@ -140,11 +141,11 @@ namespace WhenPlugin.When {
                 } else if (DisplayType.Equals("Boolean")) {
                     return (Value == 0) ? "False" : "True";
                 } else {
-                    FilterWheelInfo fwi = WhenPlugin.FilterWheelMediator.GetInfo();
+                    FilterWheelInfo fwi = WhenPluginManifest.FilterWheelMediator.GetInfo();
                     if (fwi == null || fwi.Connected == false) {
                         return "Not connected";
                     }
-                    var filters = WhenPlugin.ProfileService.ActiveProfile.FilterWheelSettings.FilterWheelFilters;
+                    var filters = WhenPluginManifest.ProfileService.ActiveProfile.FilterWheelSettings.FilterWheelFilters;
                     if (Value < filters.Count) {
                         return filters[(int)Value].Name;
                     }

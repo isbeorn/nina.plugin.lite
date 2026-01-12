@@ -61,7 +61,8 @@ namespace WhenPlugin.When {
                     parent = parent.Parent;
                 }
 
-                IProfileService profileService = WhenPlugin.ProfileService;
+                IProfileService profileService = WhenPluginManifest.ProfileService;
+                var profile = WhenPluginManifest.ProfileService.ActiveProfile;
                 InputTarget t = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
 
                 ISequenceContainer p = Parent;

@@ -9,31 +9,23 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Settings = WhenPlugin.When.Properties.Settings;
-using NINA.Sequencer.Container;
-using System.Reflection;
-using System.Windows.Media;
 using System.Windows;
-using NINA.Equipment.Interfaces.Mediator;
 using System.Windows.Input;
-using System.IO;
+using System.Windows.Media;
+using NINA.Equipment.Interfaces.Mediator;
+using NINA.Sequencer.Container;
 using NINA.Sequencer.Interfaces.Mediator;
+using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
 using NINA.ViewModel.Sequencer;
-using NINA.Sequencer.Logic;
+using Settings = WhenPlugin.When.Properties.Settings;
 
 namespace WhenPlugin.When {
-    /// <summary>
-    /// This class exports the IPluginManifest interface and will be used for the general plugin information and options
-    /// The base class "PluginBase" will populate all the necessary Manifest Meta Data out of the AssemblyInfo attributes. Please fill these accoringly
-    /// 
-    /// An instance of this class will be created and set as datacontext on the plugin options tab in N.I.N.A. to be able to configure global plugin settings
-    /// The user interface for the settings will be defined by a DataTemplate with the key having the naming convention "When_Options" where When corresponds to the AssemblyTitle - In this template example it is found in the Options.xaml
-    /// </summary>
     [Export(typeof(IPluginManifest))]
-    public class WhenPlugin : PluginBase, INotifyPropertyChanged {
+    public class WhenPluginManifest : PluginBase, INotifyPropertyChanged {
         private static IPluginOptionsAccessor PluginSettings;
         public static IProfileService ProfileService;
         private static ISequenceMediator SequenceMediator;
@@ -46,7 +38,7 @@ namespace WhenPlugin.When {
         private GeometryGroup ConstantsIcon = (GeometryGroup)Application.Current.Resources["Pen_NoFill_SVG"];
 
         [ImportingConstructor]
-        public WhenPlugin(IProfileService profileService, IOptionsVM options, IImageSaveMediator imageSaveMediator,
+        public WhenPluginManifest(IProfileService profileService, IOptionsVM options, IImageSaveMediator imageSaveMediator,
             ISwitchMediator switchMediator, IWeatherDataMediator weatherDataMediator, ICameraMediator cameraMediator, IDomeMediator domeMediator,
                 IFlatDeviceMediator flatMediator, IFilterWheelMediator filterWheelMediator, IRotatorMediator rotatorMediator, ISafetyMonitorMediator safetyMonitorMediator,
                 IFocuserMediator focuserMediator, ITelescopeMediator telescopeMediator, IImagingMediator imagingMediator, ISequenceMediator sequenceMediator, IMessageBroker messageBroker,
@@ -57,10 +49,8 @@ namespace WhenPlugin.When {
                 CoreUtil.SaveSettings(Settings.Default);
             }
 
-            // This helper class can be used to store plugin settings that are dependent on the current profile
             PluginSettings = new PluginOptionsAccessor(profileService, Guid.Parse(this.Identifier));
             ProfileService = profileService;
-            // React on a changed profile
             profileService.ProfileChanged += ProfileService_ProfileChanged;
 
             SequenceMediator = sequenceMediator;
@@ -70,22 +60,19 @@ namespace WhenPlugin.When {
             OpenRoofFilePathDiagCommand = new RelayCommand(OpenRoofFilePathDiag);
 
             Plugin = this;
-            
-            SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
-            //sp.AddOrUpdateSymbol("MoonAltitude", 10);
-            //sp.AddOrUpdateSymbol("Bar", 20);
 
+            SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
         }
 
-        public static WhenPlugin Plugin { get; private set; }
+        public static WhenPluginManifest Plugin { get; private set; }
 
         public static ISymbolProvider SymbolProvider { get; private set; }
 
         public override Task Teardown() {
-            // Make sure to unregister an event when the object is no longer in use. Otherwise garbage collection will be prevented.
             ProfileService.ProfileChanged -= ProfileService_ProfileChanged;
             return base.Teardown();
         }
+
         public static ISequenceItem GetRunningItem() {
             if (sequenceNavigationVM == null) {
                 FieldInfo fi = SequenceMediator.GetType().GetField("sequenceNavigation", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -120,16 +107,12 @@ namespace WhenPlugin.When {
         }
 
         private void ProfileService_ProfileChanged(object sender, EventArgs e) {
-            // Rase the event that this profile specific value has been changed due to the profile switch
             RaisePropertyChanged(nameof(ProfileSpecificNotificationMessage));
         }
-        public static double GetLatitude() {
-            return ProfileService.ActiveProfile.AstrometrySettings.Latitude;
-        }
 
-        public static double GetLongitude() {
-            return ProfileService.ActiveProfile.AstrometrySettings.Longitude;
-        }
+        public static double GetLatitude() => ProfileService.ActiveProfile.AstrometrySettings.Latitude;
+
+        public static double GetLongitude() => ProfileService.ActiveProfile.AstrometrySettings.Longitude;
 
         public ICommand OpenRoofFilePathDiagCommand { get; private set; }
 
@@ -143,8 +126,8 @@ namespace WhenPlugin.When {
         public static Microsoft.Win32.OpenFileDialog GetFilteredFileDialog(string path, string filename, string filter) {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
 
-            if (File.Exists(path)) {
-                dialog.InitialDirectory = Path.GetDirectoryName(path);
+            if (System.IO.File.Exists(path)) {
+                dialog.InitialDirectory = System.IO.Path.GetDirectoryName(path);
             }
             dialog.FileName = filename;
             dialog.Filter = filter;
@@ -152,28 +135,21 @@ namespace WhenPlugin.When {
         }
 
         public static string DockableExpressions {
-            get {
-                return PluginSettings.GetValueString(nameof(DockableExpressions), Settings.Default.DockableExprs);
-            }
-            set {
-                PluginSettings.SetValueString(nameof(DockableExpressions), value);
-            }
+            get => PluginSettings.GetValueString(nameof(DockableExpressions), Settings.Default.DockableExprs);
+            set => PluginSettings.SetValueString(nameof(DockableExpressions), value);
         }
 
         public string RoofStatus {
-            get {
-                return Settings.Default.RoofStatus;
-            }
+            get => Settings.Default.RoofStatus;
             set {
                 Settings.Default.RoofStatus = value;
                 CoreUtil.SaveSettings(Settings.Default);
                 RaisePropertyChanged();
             }
         }
+
         public string RoofOpenString {
-            get {
-                return Settings.Default.RoofOpenString;
-            }
+            get => Settings.Default.RoofOpenString;
             set {
                 Settings.Default.RoofOpenString = value;
                 CoreUtil.SaveSettings(Settings.Default);
@@ -182,18 +158,17 @@ namespace WhenPlugin.When {
         }
 
         public string ProfileSpecificNotificationMessage {
-            get {
-                return PluginSettings.GetValueString(nameof(ProfileSpecificNotificationMessage), string.Empty);
-            }
+            get => PluginSettings.GetValueString(nameof(ProfileSpecificNotificationMessage), string.Empty);
             set {
                 PluginSettings.SetValueString(nameof(ProfileSpecificNotificationMessage), value);
                 RaisePropertyChanged();
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null) {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void RaisePropertyChanged([CallerMemberName] string? propertyName = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

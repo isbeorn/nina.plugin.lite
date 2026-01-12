@@ -359,7 +359,7 @@ namespace WhenPlugin.When {
         }
 
         public ConcurrentDictionary<Expr, byte> Consumers = new ConcurrentDictionary<Expr, byte>();
-        public static WhenPlugin WhenPluginObject { get; set; }
+        public static WhenPluginManifest WhenPluginObject { get; set; }
 
         public ISequenceContainer SParent() {
             if (Parent == null) {

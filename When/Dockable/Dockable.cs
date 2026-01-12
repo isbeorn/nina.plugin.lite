@@ -43,7 +43,7 @@ namespace WhenPlugin.When {
 
             SymbolBroker = symbolBroker;
 
-            ExpressionString = WhenPlugin.DockableExpressions;
+            ExpressionString = WhenPluginManifest.DockableExpressions;
             BuildExprList();
 
             ConditionWatchdog = new ConditionWatchdog(UpdateData, TimeSpan.FromSeconds(5));
@@ -102,8 +102,8 @@ namespace WhenPlugin.When {
         public static Task UpdateData() {
 
             // Handle RoofStatus here
-            string roofStatus = WhenPlugin.Plugin.RoofStatus;
-            string roofOpenString = WhenPlugin.Plugin.RoofOpenString;
+            string roofStatus = WhenPluginManifest.Plugin.RoofStatus;
+            string roofOpenString = WhenPluginManifest.Plugin.RoofOpenString;
 
 
             if (roofStatus?.Length > 0 && roofOpenString?.Length > 0) {
@@ -126,7 +126,7 @@ namespace WhenPlugin.When {
                         status = lastValidRoofStatus;
                     }
                 }
-                WhenPlugin.SymbolProvider.AddOrUpdateSymbol("RoofStatus", status, RoofConstants);
+                WhenPluginManifest.SymbolProvider.AddOrUpdateSymbol("RoofStatus", status, RoofConstants);
                 Logger.Trace("RoofStatus: " + status);
             } else {
                 Logger.Info("RoofStatus UNKNOWN");
@@ -135,7 +135,7 @@ namespace WhenPlugin.When {
             ISequenceItem? runningItem = null;
 
             if (ExpressionList.Count > 0) {
-                runningItem = WhenPlugin.GetRunningItem();
+                runningItem = WhenPluginManifest.GetRunningItem();
             }
             foreach (DockableExpression e in ExpressionList) {
                 ISequenceEntity se = e.Context;
@@ -173,7 +173,7 @@ namespace WhenPlugin.When {
                 count++;
             }
             Logger.Info("SaveDockableExpressions saving " + count + " Exprs");
-            WhenPlugin.DockableExpressions = sb.ToString();
+            WhenPluginManifest.DockableExpressions = sb.ToString();
         }
 
         public string ExpressionString { get; private set; }

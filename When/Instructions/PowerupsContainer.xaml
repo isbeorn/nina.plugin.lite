@@ -32,6 +32,7 @@
     xmlns:utility="clr-namespace:NINA.Core.Utility;assembly=NINA.Core"
     xmlns:wpfutil="clr-namespace:NINA.WPF.Base.Utility;assembly=NINA.WPF.Base"
     Margin="0,0,0,0"
+    x:Name="PowerupsContainerViewRoot"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -572,9 +573,9 @@
                                                 Grid.ColumnSpan="4"
                                                 Margin="5,0,0,0"
                                                 VerticalAlignment="Top"
-                                                Content="{Binding SequenceContainerContent, ElementName=UC}" />
+                                                Content="{Binding SequenceContainerContent, ElementName=PowerupsContainerViewRoot}" />
 
-                                            <Grid Grid.Row="1" Visibility="{Binding ShowDetails, ElementName=UC, Converter={StaticResource VisibilityConverter}}">
+                                            <Grid Grid.Row="1" Visibility="{Binding ShowDetails, ElementName=PowerupsContainerViewRoot, Converter={StaticResource VisibilityConverter}}">
                                                 <ninactrl:HitTestGroupBox
                                                     VerticalAlignment="Stretch"
                                                     VerticalContentAlignment="Top"
@@ -704,14 +705,14 @@
                                                 </ninactrl:HitTestGroupBox>
                                             </Grid>
 
-                                            <Grid Grid.Row="2" Visibility="{Binding ShowDetails, ElementName=UC, Converter={StaticResource VisibilityConverter}}">
+                                            <Grid Grid.Row="2" Visibility="{Binding ShowDetails, ElementName=PowerupsContainerViewRoot, Converter={StaticResource VisibilityConverter}}">
                                                 <Border
                                                     BorderBrush="{StaticResource TertiaryBackgroundBrush}"
                                                     BorderThickness="0,1,0,0"
                                                     Visibility="{Binding Converter={StaticResource StrategyEvaluatesConditionsAndTriggersToVisibilityConverter}}" />
                                             </Grid>
 
-                                            <Grid Grid.Row="3" Visibility="{Binding ShowDetails, ElementName=UC, Converter={StaticResource VisibilityConverter}}">
+                                            <Grid Grid.Row="3" Visibility="{Binding ShowDetails, ElementName=PowerupsContainerViewRoot, Converter={StaticResource VisibilityConverter}}">
                                                 <ninactrl:HitTestGroupBox
                                                     VerticalAlignment="Stretch"
                                                     VerticalContentAlignment="Top"
@@ -847,7 +848,7 @@
                                 <Grid
                                     MinHeight="40"
                                     Background="{StaticResource BackgroundBrush}"
-                                    Visibility="{Binding ShowDetails, ElementName=UC, Converter={StaticResource VisibilityConverter}}">
+                                    Visibility="{Binding ShowDetails, ElementName=PowerupsContainerViewRoot, Converter={StaticResource VisibilityConverter}}">
                                     <i:Interaction.Behaviors>
                                         <!--  Drop area For Instructions  -->
                                         <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TargetSequenceContainer" OnDropCommand="DropIntoCommand" />

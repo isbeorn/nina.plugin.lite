@@ -301,7 +301,7 @@ namespace WhenPlugin.When {
 
                     Critical = true;
                     try {
-                        RunningItem = WhenPlugin.GetRunningItem();
+                        RunningItem = WhenPluginManifest.GetRunningItem();
                         if (this is WhenUnsafe wbu) {
                             WhenUnsafe.RunningItem = RunningItem;
                         }
