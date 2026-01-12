@@ -56,6 +56,22 @@ namespace WhenPlugin.When {
             set => SetValue(ShowDetailsProperty, value);
         }
 
+        public static readonly DependencyProperty HeaderAddonProperty =
+            DependencyProperty.Register(nameof(HeaderAddon), typeof(object), typeof(PowerupsContainerView), new PropertyMetadata(null));
+
+        public object HeaderAddon {
+            get => GetValue(HeaderAddonProperty);
+            set => SetValue(HeaderAddonProperty, value);
+        }
+
+        public static readonly DependencyProperty HeaderAddonTemplateProperty =
+            DependencyProperty.Register(nameof(HeaderAddonTemplate), typeof(DataTemplate), typeof(PowerupsContainerView), new PropertyMetadata(null));
+
+        public DataTemplate HeaderAddonTemplate {
+            get => (DataTemplate)GetValue(HeaderAddonTemplateProperty);
+            set => SetValue(HeaderAddonTemplateProperty, value);
+        }
+
         private void MenuItemTarget_Click(object sender, RoutedEventArgs e) {
             if (sender is Control ctrl) {
                 if (ctrl.DataContext is TargetSequenceContainer target) {

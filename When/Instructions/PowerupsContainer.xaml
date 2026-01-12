@@ -311,19 +311,26 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock
+                            <StackPanel
                                 Grid.Column="0"
                                 MinWidth="200"
-                                Padding="5"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SecondaryBackgroundBrush}"
-                                DockPanel.Dock="Left"
-                                FontSize="10pt"
-                                Foreground="{StaticResource ButtonForegroundBrush}"
-                                IsEnabled="{Binding Status, Converter={StaticResource StatusToEnabledConverter}}"
-                                Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                                TextDecorations="{Binding Status, Converter={StaticResource DisabledStatusToStrikethroughConverter}}" />
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    Padding="5"
+                                    Background="{StaticResource SecondaryBackgroundBrush}"
+                                    DockPanel.Dock="Left"
+                                    FontSize="10pt"
+                                    Foreground="{StaticResource ButtonForegroundBrush}"
+                                    IsEnabled="{Binding Status, Converter={StaticResource StatusToEnabledConverter}}"
+                                    Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                    TextDecorations="{Binding Status, Converter={StaticResource DisabledStatusToStrikethroughConverter}}" />
+                                <ContentControl
+                                    Margin="6,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Content="{Binding ElementName=PowerupsContainerViewRoot, Path=HeaderAddon}"
+                                    ContentTemplate="{Binding ElementName=PowerupsContainerViewRoot, Path=HeaderAddonTemplate}" />
+                            </StackPanel>
                             <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
                                 <ContentPresenter
                                     Margin="2,0,10,0"

@@ -1316,7 +1316,11 @@
     </DataTemplate>
 
     <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
-        <local:PowerupsContainerView />
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <logic:ExprControl Margin="20,0,0,0" Label="Expression: " Exp="{Binding PredicateExpression}" />
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
     </HierarchicalDataTemplate>
 
     <DataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}">
