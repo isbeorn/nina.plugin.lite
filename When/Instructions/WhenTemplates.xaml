@@ -1315,9 +1315,9 @@
         </Border>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type local:IfConstant}">
+    <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView />
-    </DataTemplate>
+    </HierarchicalDataTemplate>
 
     <DataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}">
         <nina:SequenceBlockView DataContext="{Binding}">

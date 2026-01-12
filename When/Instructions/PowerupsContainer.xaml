@@ -848,7 +848,7 @@
                                 <Grid
                                     MinHeight="40"
                                     Background="{StaticResource BackgroundBrush}"
-                                    Visibility="{Binding ShowDetails, ElementName=PowerupsContainerViewRoot, Converter={StaticResource VisibilityConverter}}">
+                                    Visibility="Visible">
                                     <i:Interaction.Behaviors>
                                         <!--  Drop area For Instructions  -->
                                         <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TargetSequenceContainer" OnDropCommand="DropIntoCommand" />
