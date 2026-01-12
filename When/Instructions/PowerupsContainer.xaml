@@ -311,7 +311,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBox
+                            <TextBlock
                                 Grid.Column="0"
                                 MinWidth="200"
                                 Padding="5"
