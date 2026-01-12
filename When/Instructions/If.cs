@@ -13,8 +13,6 @@ using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Container;
-using NINA.Sequencer.Container.ExecutionStrategy;
-using System.Windows.Markup;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If")]
@@ -28,8 +26,17 @@ namespace WhenPlugin.When {
     public partial class IfConstant : SequentialContainer, IValidatable, ITrueFalse {
 
         [ImportingConstructor]
-        public IfConstant() : base() {
+        public IfConstant() {
         }
+
+        public IfConstant(IfConstant copyMe) : this() {
+            if (copyMe != null) {
+                CopyMetaData(copyMe);
+            }
+        }
+
+        [JsonProperty]
+        public IfContainer Instructions { get; protected set; }
 
         [IsExpression]
         private string predicate;
@@ -51,7 +58,7 @@ namespace WhenPlugin.When {
 
                 if (!string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null)) {
                     Logger.Info("Predicate is true, " + PredicateExpression);
-                    await Run(progress, token);
+                    await Instructions.Run(progress, token);
                 } else {
                     Logger.Info("Predicate is false, " + PredicateExpression);
                     return;
@@ -59,6 +66,14 @@ namespace WhenPlugin.When {
             } catch (ArgumentException ex) {
                 Logger.Info("If error: " + ex.Message);
                 Status = SequenceEntityStatus.FAILED;
+            }
+        }
+
+
+        public override void ResetProgress() {
+            base.ResetProgress();
+            foreach (ISequenceItem item in Instructions.Items) {
+                item.ResetProgress();
             }
         }
 
@@ -74,8 +89,13 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
+
+            //CommonValidate();
+
             var i = new List<string>();
+
             Expression.ValidateExpressions(i, PredicateExpression);
+ 
             Issues = i;
             return i.Count == 0;
         }
