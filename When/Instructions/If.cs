@@ -35,9 +35,6 @@ namespace WhenPlugin.When {
             }
         }
 
-        [JsonProperty]
-        public IfContainer Instructions { get; protected set; }
-
         [IsExpression]
         private string predicate;
 
@@ -58,7 +55,7 @@ namespace WhenPlugin.When {
 
                 if (!string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null)) {
                     Logger.Info("Predicate is true, " + PredicateExpression);
-                    await Instructions.Run(progress, token);
+                    await Run(progress, token);
                 } else {
                     Logger.Info("Predicate is false, " + PredicateExpression);
                     return;
@@ -66,14 +63,6 @@ namespace WhenPlugin.When {
             } catch (ArgumentException ex) {
                 Logger.Info("If error: " + ex.Message);
                 Status = SequenceEntityStatus.FAILED;
-            }
-        }
-
-
-        public override void ResetProgress() {
-            base.ResetProgress();
-            foreach (ISequenceItem item in Instructions.Items) {
-                item.ResetProgress();
             }
         }
 
