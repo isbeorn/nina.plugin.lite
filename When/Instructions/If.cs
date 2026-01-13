@@ -35,6 +35,9 @@ namespace WhenPlugin.When {
             }
         }
 
+        [JsonProperty]
+        public SequentialContainer Instructions { get; set; }
+
         [IsExpression]
         private string predicate;
 

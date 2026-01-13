@@ -317,6 +317,8 @@
                                 Orientation="Horizontal"
                                 VerticalAlignment="Center">
                                 <TextBlock
+                                    VerticalAlignment="Center"
+                                    MinWidth="80"
                                     Padding="5"
                                     Background="{StaticResource SecondaryBackgroundBrush}"
                                     DockPanel.Dock="Left"

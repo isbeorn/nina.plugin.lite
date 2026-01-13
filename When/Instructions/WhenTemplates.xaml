@@ -1190,13 +1190,13 @@
         </nina:SequenceBlockView>
     </DataTemplate>
     
-    <DataTemplate DataType="{x:Type local:IfFailed}">
+    <!--<DataTemplate DataType="{x:Type local:IfFailed}">
         <Border>
             <Border.Resources>
                 <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
             </Border.Resources>
             <i:Interaction.Behaviors>
-                <!--  Drop area above and below the Sequence Container  -->
+                --><!--  Drop area above and below the Sequence Container  --><!--
                 <behaviors:DragOverBehavior
                  AllowDragCenter="False"
                  DragAboveSize="25"
@@ -1313,12 +1313,42 @@
                 </StackPanel>
             </ninactrl:DetachingExpander>
         </Border>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <logic:ExprControl Margin="20,0,0,0" Label="Expression: " Exp="{Binding PredicateExpression}" />
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate DataType="{x:Type local:IfFailed}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <Border
+                    MinHeight="30"
+                    Margin="10,1,0,0"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Condition}">
+                        <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Text="Instruction to check goes here"
+                            TextAlignment="Center"
+                            MinWidth="400"
+                            Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
+                    </i:Interaction.Behaviors>
+                </Border>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
     </HierarchicalDataTemplate>
