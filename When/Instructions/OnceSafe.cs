@@ -1,36 +1,38 @@
-﻿using Newtonsoft.Json;
+﻿using Accord.IO;
+using Namotion.Reflection;
+using NCalc;
+using Newtonsoft.Json;
+using NINA.Astrometry;
+using NINA.Core.Enum;
+using NINA.Core.Locale;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Core.Utility.Notification;
+using NINA.Equipment.Equipment.MySwitch;
+using NINA.Equipment.Equipment.MyWeatherData;
+using NINA.Equipment.Interfaces;
+using NINA.Equipment.Interfaces.Mediator;
+using NINA.Sequencer.Conditions;
 using NINA.Sequencer.Container;
+using NINA.Sequencer.Generators;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.SequenceItem.Expressions;
+using NINA.Sequencer.SequenceItem.Utility;
 using NINA.Sequencer.Validations;
+using NINA.WPF.Base.Mediator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
-using NCalc;
-using NINA.Core.Utility.Notification;
-using NINA.Core.Enum;
-using System.Linq;
-using System.Text;
-using Accord.IO;
-using Namotion.Reflection;
-using NINA.Equipment.Interfaces.Mediator;
-using NINA.Equipment.Equipment.MySwitch;
-using NINA.Equipment.Interfaces;
-using NINA.Sequencer.SequenceItem.Utility;
 using System.Windows;
-using NINA.Equipment.Equipment.MyWeatherData;
 using System.Windows.Controls;
-using System.Diagnostics;
-using NINA.Core.Utility;
-using NINA.Core.Locale;
-using NINA.WPF.Base.Mediator;
-using System.Runtime.CompilerServices;
-using NINA.Sequencer.Conditions;
-using NINA.Astrometry;
+using System.Windows.Media;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Once Safe")]
@@ -39,35 +41,27 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups (Safety)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    
-    public class OnceSafe : IfCommand, IValidatable, IDSOTargetProxy {
+
+    public class OnceSafe: SequentialContainer, IValidatable {
+
         private ISafetyMonitorMediator safetyMonitorMediator;
 
         [ImportingConstructor]
-        public OnceSafe(ISafetyMonitorMediator safetyMediator) {
-            Instructions = new IfContainer();
-            Instructions.Add(new LoopCondition() { Iterations = 1 });
-            Instructions.Add(new SafetyMonitorCondition(safetyMediator) { });
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            this.safetyMonitorMediator = safetyMediator;
+        public OnceSafe(ISafetyMonitorMediator safetyMonitorMediator) {
+            this.safetyMonitorMediator = safetyMonitorMediator;
         }
 
         public OnceSafe(OnceSafe copyMe) : this(copyMe.safetyMonitorMediator) {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
-                Instructions = (IfContainer)copyMe.Instructions.Clone();
-                foreach (ISequenceCondition instruction in copyMe.Instructions.Conditions) {
-                    Instructions.Add((ISequenceCondition)instruction.Clone());
-                }
-                Instructions.AttachNewParent(Parent);
-                Instructions.PseudoParent = this;
             }
         }
 
-        public override object Clone() {
-            return new OnceSafe(this) {
-            };
+        [JsonProperty]
+        public SequentialContainer Instructions { get; set; }
+
+        private void CheckItems(ISequenceContainer c) {
+
         }
 
         private bool isSafe;
@@ -109,7 +103,7 @@ namespace WhenPlugin.When {
             }
 
             // Execute instructions now
-            await Instructions.Run(progress, token);
+            await Run(progress, token);
         }
 
         public override string ToString() {
@@ -117,7 +111,7 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
-            CommonValidate();
+            //CommonValidate();
 
             var i = new List<string>();
 
