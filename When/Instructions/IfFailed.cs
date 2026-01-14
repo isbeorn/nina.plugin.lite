@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NINA.Sequencer.DragDrop;
 using System.Windows.Input;
+using NINA.Sequencer.Container;
+using NINA.Core.Utility;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If Fails")]
@@ -15,37 +17,38 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups (Conditionals)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class IfFailed : IfCommand {
+    public class IfFailed : SequentialContainer {
 
         [ImportingConstructor]
         public IfFailed() {
-            Condition = new IfContainer();
-            Condition.AttachNewParent(Parent);
-            Condition.PseudoParent = this;
-            Condition.Name = Name;
-            Condition.Icon = Icon;
-            Instructions = new IfContainer();
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            Instructions.Name = Name;
-            Instructions.Icon = Icon;
             DropIntoIfCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropIntoCondition);
         }
         public IfFailed(IfFailed copyMe) : this() {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
-                Condition = (IfContainer)copyMe.Condition.Clone();
-                Condition.AttachNewParent(Parent);
-                Condition.PseudoParent = this;
-                Condition.Name = Name;
-                Condition.Icon = Icon;
-                Instructions = (IfContainer)copyMe.Instructions.Clone();
-                Instructions.AttachNewParent(Parent);
-                Instructions.PseudoParent = this;
-                Instructions.Name = Name;
-                Instructions.Icon = Icon;
-            }
+             }
         }
+
+        [JsonIgnore]
+        public IfContainer Condition { get; set; }
+
+        [JsonProperty("Condition")]
+        private IfContainer ObsoleteCondition {
+            // get is intentionally omitted here
+            set { Condition = value; }
+        }
+
+        [JsonIgnore]
+        public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
+
+        [JsonProperty]
+        public ISequenceItem? CheckInstruction { get; set; }
 
         public override object Clone() {
             return new IfFailed(this) {
@@ -55,68 +58,54 @@ namespace WhenPlugin.When {
         public ICommand DropIntoIfCommand { get; set; }
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            ISequenceItem condition = Condition.Items[0];
 
-            if (condition == null) {
+            if (CheckInstruction == null) {
                 Status = NINA.Core.Enum.SequenceEntityStatus.FAILED;
                 return;
             }
 
             while (true) {
                 // Execute the conditional
-                condition.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
-                await condition.Run(progress, token);
+                CheckInstruction.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+                await CheckInstruction.Run(progress, token);
 
-                if (condition.Status != NINA.Core.Enum.SequenceEntityStatus.FAILED) {
+                if (CheckInstruction.Status != NINA.Core.Enum.SequenceEntityStatus.FAILED) {
                     return;
                 }
-
-                Log("IfFailed - Triggered by: " + condition.Name);
-
-                await Instructions.Run(progress, token);
-
+                Logger.Info("IfFailed - Triggered by: " + CheckInstruction.Name);
+                
+                // Items won't run unless we reset this to CREATED
+                Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+                await Run(progress, token);
                 return;
             }
         }
 
         // Allow only ONE instruction to be added to Condition
-        public void DropIntoCondition (DropIntoParameters parameters) {
-            lock (lockObj) {
-                ISequenceItem item;
-                var source = parameters.Source as ISequenceItem;
+        public void DropIntoCondition(DropIntoParameters parameters) {
+            ISequenceItem item;
+            var source = parameters.Source as ISequenceItem;
+            if (source == null) return;
 
-                if (source.Parent != null && !parameters.Duplicate) {
-                    item = source;
-                } else {
-                    item = (ISequenceItem)source.Clone();
-                }
-
-                if (item.Parent != Condition) {
-                    item.Parent?.Remove(item);
-                    item.AttachNewParent(Condition);
-                }
-
-                Condition.Items.Clear();
-                Condition.Items.Add(item);
-           }
-        }
-
-        public override void AfterParentChanged() {
-            base.AfterParentChanged();
-            foreach (ISequenceItem item in Condition.Items) {
-                item.AfterParentChanged();
+            if (source.Parent != null && !parameters.Duplicate) {
+                item = source;
+            } else {
+                item = (ISequenceItem)source.Clone();
             }
-            foreach (ISequenceItem item in Instructions.Items) {
-                item.AfterParentChanged();
-            }
+
+            CheckInstruction = item;
+            item.AttachNewParent(this);
+            RaisePropertyChanged("CheckInstruction");
         }
 
         public override void ResetAll() {
             base.ResetAll();
-            Condition.ResetAll();
+            if (CheckInstruction != null) {
+                CheckInstruction.ResetProgress();
+            }
         }
         public override bool Validate() {
-            CommonValidate();
+            //CommonValidate();
             return true;
         }
 
