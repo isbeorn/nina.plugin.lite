@@ -63,6 +63,21 @@ namespace WhenPlugin.When {
             get => GetValue(HeaderAddonProperty);
             set => SetValue(HeaderAddonProperty, value);
         }
+        public static readonly DependencyProperty AllowTriggersProperty =
+            DependencyProperty.Register(nameof(AllowTriggers), typeof(object), typeof(PowerupsContainerView), new PropertyMetadata(true));
+
+        public bool AllowTriggers {
+            get => (bool)GetValue(AllowTriggersProperty);
+            set => SetValue(AllowTriggersProperty, value);
+        }
+
+        public static readonly DependencyProperty AllowConditionsProperty =
+            DependencyProperty.Register(nameof(AllowConditions), typeof(object), typeof(PowerupsContainerView), new PropertyMetadata(true));
+
+        public bool AllowConditions {
+            get => (bool)GetValue(AllowConditionsProperty);
+            set => SetValue(AllowConditionsProperty, value);
+        }
 
         public static readonly DependencyProperty HeaderAddonTemplateProperty =
             DependencyProperty.Register(nameof(HeaderAddonTemplate), typeof(DataTemplate), typeof(PowerupsContainerView), new PropertyMetadata(null));
