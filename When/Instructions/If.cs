@@ -41,10 +41,6 @@ namespace WhenPlugin.When {
         [IsExpression]
         private string predicate;
 
-        private void CheckItems (ISequenceContainer c) {
-
-        }
-
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
 
             Logger.Info("Predicate: " + PredicateExpression.Definition);

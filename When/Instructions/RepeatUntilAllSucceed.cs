@@ -31,6 +31,7 @@ using NINA.Sequencer.Validations;
 using System.Runtime.CompilerServices;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.Generators;
+using NINA.Sequencer.Container;
 
 namespace WhenPlugin.When {
 
@@ -42,47 +43,40 @@ namespace WhenPlugin.When {
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
 
-    public partial class RepeatUntilAllSucceed : IfCommand, IValidatable {
+    public partial class RepeatUntilAllSucceed : NINA.Sequencer.Container.SequentialContainer, IValidatable {
 
         [ImportingConstructor]
-        public RepeatUntilAllSucceed() : base() {
-            Instructions = new IfContainer();
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            Instructions.Name = Name;
-            Instructions.Icon = Icon;
-           
+        public RepeatUntilAllSucceed() {
         }
 
-        private RepeatUntilAllSucceed(RepeatUntilAllSucceed cloneMe) : this() {
-            if (cloneMe != null) {
-                CopyMetaData(cloneMe);
-                Instructions = (IfContainer)cloneMe.Instructions.Clone();
-                Instructions.AttachNewParent(Parent);
-                Instructions.PseudoParent = this;
-                Instructions.Name = Name;
-                Instructions.Icon = Icon;
+        public RepeatUntilAllSucceed(RepeatUntilAllSucceed copyMe) : this() {
+            if (copyMe != null) {
+                CopyMetaData(copyMe);
             }
         }
+
+        [JsonProperty]
+        public SequentialContainer Instructions { get; set; }
 
         [IsExpression (Default = 60)]
         private int wait;
 
-        public override void ResetProgress() {
-            Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
-            Instructions.ResetProgress();
-        }
-
         public override string ToString() {
             return $"Instruction {nameof(RepeatUntilAllSucceed)}";
         }
+
+        private void ResetInstructions() {
+            foreach (ISequenceItem item in Items) {
+                item.ResetProgress();
+            }
+        }  
 
         public async override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
             int attempts = 1;
             while (true) {
                 bool failed = false;
                 ISequenceItem failedItem = null;
-                foreach (ISequenceItem item in Instructions.Items) {
+                foreach (ISequenceItem item in Items) {
                     if (item.Status == SequenceEntityStatus.DISABLED) {
                         continue;
                     }
@@ -98,7 +92,7 @@ namespace WhenPlugin.When {
                             // Clear status of all and start over...
                             Logger.Info(item.Name + ": failed, restarting instructions...");
                             failedItem = item;
-                            Instructions.ResetProgress();
+                            ResetInstructions();
                             attempts++;
                             failed = true;
                             break;
@@ -116,11 +110,11 @@ namespace WhenPlugin.When {
 
                 // It's possible that an instruction was interrupted and is therefore still CREATED
                 // This happens with a PHD2 calibration, for example.
-                foreach (ISequenceItem item in Instructions.Items) {
+                foreach (ISequenceItem item in Items) {
                     if (item.Status == SequenceEntityStatus.CREATED) {
                         Logger.Info(item.Name + ": didn't finish, restarting instructions...");
                         failedItem = item;
-                        Instructions.ResetProgress();
+                        ResetInstructions();
                         attempts++;
                         failed = true;
                         break;
@@ -132,7 +126,7 @@ namespace WhenPlugin.When {
                 }
 
                 if (WaitExpression.Value > 0) {
-                    await NINA.Core.Utility.CoreUtil.Wait(TimeSpan.FromSeconds(WaitExpression.Value), true, token, progress, failedItem.Name + " instruction failed; waiting to repeat");
+                    await CoreUtil.Wait(TimeSpan.FromSeconds(WaitExpression.Value), true, token, progress, failedItem?.Name + " instruction failed; waiting to repeat");
                 }
             }
             Logger.Info("RetryUntilAllSucceed finished after " + attempts + " attempt" + (attempts == 1 ? "." : "s."));
@@ -145,11 +139,7 @@ namespace WhenPlugin.When {
         }
 
         public override bool Validate() {
-            CommonValidate();
-
-            if (Instructions.PseudoParent == null) {
-                Instructions.PseudoParent = this;
-            }
+            //CommonValidate();
 
             var i = new List<string>();
 
