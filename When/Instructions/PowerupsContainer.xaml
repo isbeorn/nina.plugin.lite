@@ -584,7 +584,7 @@
                                                 VerticalAlignment="Top"
                                                 Content="{Binding SequenceContainerContent, ElementName=PowerupsContainerViewRoot}" />
 
-                                            <Grid Grid.Row="1" Visibility="{Binding AllowTriggers, ElementName=PowerupsContainerViewRoot, Converter={StaticResource InverseBooleanToVisibilityCollapsedConverter}}">
+                                            <Grid Grid.Row="1" Visibility="{Binding AllowTriggers, ElementName=PowerupsContainerViewRoot, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                                                 <ninactrl:HitTestGroupBox
                                                     VerticalAlignment="Stretch"
                                                     VerticalContentAlignment="Top"
@@ -714,14 +714,14 @@
                                                 </ninactrl:HitTestGroupBox>
                                             </Grid>
 
-                                            <Grid Grid.Row="2" Visibility="{Binding AllowConditions, ElementName=PowerupsContainerViewRoot, Converter={StaticResource InverseBooleanToVisibilityCollapsedConverter}}">
+                                            <Grid Grid.Row="2" Visibility="{Binding AllowConditions, ElementName=PowerupsContainerViewRoot, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                                                 <Border
                                                     BorderBrush="{StaticResource TertiaryBackgroundBrush}"
                                                     BorderThickness="0,1,0,0"
                                                     Visibility="{Binding Converter={StaticResource StrategyEvaluatesConditionsAndTriggersToVisibilityConverter}}" />
                                             </Grid>
 
-                                            <Grid Grid.Row="3" Visibility="{Binding AllowConditions, ElementName=PowerupsContainerViewRoot, Converter={StaticResource InverseBooleanToVisibilityCollapsedConverter}}">
+                                            <Grid Grid.Row="3" Visibility="{Binding AllowConditions, ElementName=PowerupsContainerViewRoot, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                                                 <ninactrl:HitTestGroupBox
                                                     VerticalAlignment="Stretch"
                                                     VerticalContentAlignment="Top"

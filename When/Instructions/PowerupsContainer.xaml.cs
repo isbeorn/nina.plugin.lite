@@ -63,6 +63,7 @@ namespace WhenPlugin.When {
             get => GetValue(HeaderAddonProperty);
             set => SetValue(HeaderAddonProperty, value);
         }
+        
         public static readonly DependencyProperty AllowTriggersProperty =
             DependencyProperty.Register(nameof(AllowTriggers), typeof(object), typeof(PowerupsContainerView), new PropertyMetadata(true));
 
