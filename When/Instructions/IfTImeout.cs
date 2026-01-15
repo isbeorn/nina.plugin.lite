@@ -1,18 +1,19 @@
 ﻿using Newtonsoft.Json;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Core.Utility.Notification;
+using NINA.Sequencer;
+using NINA.Sequencer.Conditions;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.DragDrop;
+using NINA.Sequencer.Generators;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.Validations;
 using System;
 using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Sequencer.DragDrop;
 using System.Windows.Input;
-using NINA.Sequencer.Validations;
-using NINA.Sequencer.Conditions;
-using NINA.Core.Utility;
-using NINA.Core.Utility.Notification;
-using NINA.Sequencer;
-using NINA.Sequencer.Generators;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If Timed Out")]
@@ -23,22 +24,37 @@ namespace WhenPlugin.When {
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
 
-    public partial class IfTimeout : IfCommand, IValidatable {
+    public partial class IfTimeout : SequentialContainer, IValidatable {
 
-        [ImportingConstructor]
         public IfTimeout() {
-            Condition = new IfContainer();
-            Instructions = new IfContainer();
             DropIntoIfCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropIntoCondition);
         }
         public IfTimeout(IfTimeout copyMe) : this() {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
-                Condition = (IfContainer)copyMe.Condition.Clone();
-                Instructions = (IfContainer)copyMe.Instructions.Clone();
-                Condition.AttachNewParent(Instructions.Parent);
             }
         }
+
+        [JsonIgnore]
+        public IfContainer Condition { get; set; }
+
+        [JsonProperty("Condition")]
+        private IfContainer ObsoleteCondition {
+            // get is intentionally omitted here
+            set { Condition = value; }
+        }
+
+        [JsonIgnore]
+        public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
+
+        [JsonProperty]
+        public ISequenceItem? CheckInstruction { get; set; }
 
         [IsExpression]
         private int time;
@@ -97,9 +113,7 @@ namespace WhenPlugin.When {
         }
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            ISequenceItem condition = Condition.Items[0];
-
-            if (condition == null) {
+            if (CheckInstruction == null) {
                 Status = NINA.Core.Enum.SequenceEntityStatus.FAILED;
                 return;
             }
@@ -119,13 +133,14 @@ namespace WhenPlugin.When {
                 StartTime = DateTime.Now;
                 TimedOut = false;
                 // Execute the conditional
-                condition.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
-                await condition.Run(progress, linkedCts.Token);
+                CheckInstruction.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+                await CheckInstruction.Run(progress, linkedCts.Token);
             } catch (Exception ex) {
                 watch.Cancel();
                 if (TimedOut) {
                     Logger.Info("Timed out; executing instructions...");
-                    await Instructions.Run(progress, token);
+                    Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+                    await Run(progress, token);
                 } else {
                     Logger.Info("Exception: " + ex.Message);
                 }
@@ -140,26 +155,19 @@ namespace WhenPlugin.When {
 
         // Allow only ONE instruction to be added to Condition
         public void DropIntoCondition(DropIntoParameters parameters) {
-            lock (lockObj) {
-                ISequenceEntity item;
-                if (parameters.Source is TemplatedSequenceContainer tsc) {
-                    item = (ISequenceEntity)tsc.Clone();
-                } else {
-                    item = parameters.Source as ISequenceEntity;
-                }
+            ISequenceItem item;
+            var source = parameters.Source as ISequenceItem;
+            if (source == null) return;
 
-                ISequenceItem si = item as ISequenceItem;
-                if (si != null) {
-
-                    if (si.Parent != Condition) {
-                        si.Parent?.Remove(si);
-                        si.AttachNewParent(Condition);
-                    }
-
-                    Condition.Items.Clear();
-                    Condition.Items.Add(si);
-                }
+            if (source.Parent != null && !parameters.Duplicate) {
+                item = source;
+            } else {
+                item = (ISequenceItem)source.Clone();
             }
+
+            CheckInstruction = item;
+            item.AttachNewParent(this);
+            RaisePropertyChanged("CheckInstruction");
         }
 
         public override string ToString() {

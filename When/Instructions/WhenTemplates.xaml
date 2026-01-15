@@ -1088,7 +1088,7 @@
         <local:PowerupsContainerView />
     </HierarchicalDataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}">
+    <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <Border
@@ -1096,8 +1096,10 @@
                     Margin="10,1,0,0"
                     BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1">
-                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Condition}">
-                        <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                            <nina:SequenceBlockView DataContext="{Binding CheckInstruction}"/>
+                        </StackPanel>
                         <TextBlock
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -1105,7 +1107,7 @@
                             Text="Instruction to check goes here"
                             TextAlignment="Center"
                             MinWidth="400"
-                            Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                            Visibility="{Binding CheckInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
                         <i:Interaction.Behaviors>
                             <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                         </i:Interaction.Behaviors>

@@ -60,10 +60,6 @@ namespace WhenPlugin.When {
         [JsonProperty]
         public SequentialContainer Instructions { get; set; }
 
-        private void CheckItems(ISequenceContainer c) {
-
-        }
-
         private bool isSafe;
 
         public bool IsSafe {
