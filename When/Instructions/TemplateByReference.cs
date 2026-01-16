@@ -31,7 +31,8 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class TemplateByReference : IfCommand, IValidatable {
+
+    public class TemplateByReference : SequentialContainer, IValidatable {
 
         static protected ISequenceMediator sequenceMediator;
         static protected ISequenceNavigationVM sequenceNavigationVM;
@@ -41,19 +42,11 @@ namespace WhenPlugin.When {
         private static IProfileService profileService;
         private static ISequencerFactory sequencerFactory;
 
-        public static int instanceNumber = 0;
-
         [ImportingConstructor]
         public TemplateByReference(ISequenceMediator seqMediator, IProfileService pService) {
             sequenceMediator = seqMediator;
             profileService = pService;
-            Instructions = new TemplateContainer();
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            Instructions.Name = Name;
-            Instructions.Icon = Icon;
             Name = Name;
-            Id = ++instanceNumber;
             
             // Get the various NINA components we need
             if (sequenceNavigationVM == null || templateController == null) {
@@ -73,34 +66,20 @@ namespace WhenPlugin.When {
             }
         }
 
-        [OnSerializing]
-        public void OnSerializingMethod(StreamingContext context) {
-            iInstructions = Instructions;
-            Instructions = new TemplateContainer();
-        }
-
-        [OnSerialized]
-        public void OnSerializedMethod(StreamingContext context) {
-            Instructions = iInstructions;
-        }
-
-        private IfContainer iInstructions;
-
         public TemplateByReference(TemplateByReference copyMe) : this(sequenceMediator, profileService) {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
-                try {
-                    Instructions = (TemplateContainer)copyMe.Instructions.Clone();
-                } catch (Exception) {
-                    Instructions = copyMe.Instructions.Clone();
-                }
-                Instructions.PseudoParent = this;
-                Instructions.Name = Name;
-                Instructions.Icon = Icon;
             }
         }
 
-        public int Id { get; set; }
+        [JsonIgnore]
+        public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
 
         private string iTemplateName = null;
         [JsonProperty]
@@ -157,13 +136,13 @@ namespace WhenPlugin.When {
                 }
 
                 selectedTemplate = value;
-                if (Instructions.Items.Count > 0) {
-                    Instructions.Items.Clear();
+                if (Items.Count > 0) {
+                    Items.Clear();
                 }
                 TemplateName = selectedTemplate.Container.Name;
-                Instructions.Items.Add((ISequenceContainer)SelectedTemplate.Container.Clone());
-                foreach (ISequenceItem item in Instructions.Items) {
-                    item.AttachNewParent(Instructions);
+                Items.Add((ISequenceContainer)SelectedTemplate.Container.Clone());
+                foreach (ISequenceItem item in Items) {
+                    item.AttachNewParent(this);
                 }
                 RaisePropertyChanged("SelectedTemplate");
                 RaisePropertyChanged("TemplateNameIsTrue");
@@ -226,7 +205,7 @@ namespace WhenPlugin.When {
         }
 
         public async override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            await Instructions.Run(progress, token);
+            await Run(progress, token);
         }
 
         
@@ -256,18 +235,12 @@ namespace WhenPlugin.When {
                         // Update instruction set if user wants
                         if (MyMessageBox.Show("An instruction set named '" + tbr.Parent.Name + "' includes a reference to template '" + name + "', which has just been changed.  Do you want this instruction set to be updated as well?", "Update instruction set?", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxResult.No) == System.Windows.MessageBoxResult.Yes) {
                             tbr.SelectedTemplate = FindTemplate(name);
-                            tbr.Log("Updated due to '" + name + "' changed, " + tbr.SelectedTemplate.Container.Name);
+                            Logger.Info("Updated due to '" + name + "' changed, " + tbr.SelectedTemplate.Container.Name);
                             Notification.ShowSuccess("The instruction set '" + tbr.Parent.Name + "' has been updated.");
                         }
                     }
                 }
             }
-        }
-
-        public override void AfterParentChanged() {
-            // New; provide link up the chain
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
         }
         
         public override bool Validate() {
@@ -298,7 +271,7 @@ namespace WhenPlugin.When {
                 UpdateChangedTemplates(templateController.UpdatedFile);
             }
 
-            foreach (ISequenceItem item in Instructions.Items) {
+            foreach (ISequenceItem item in Items) {
                 if (item is IValidatable val) {
                     _ = val.Validate();
                 }

@@ -853,7 +853,10 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border BorderBrush="{StaticResource SecondaryBackgroundBrush}" BorderThickness="10,0,0,0">
+                            <Border  
+                                Visibility="{Binding AllowInstructions, ElementName=PowerupsContainerViewRoot, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}" 
+                                BorderBrush="{StaticResource SecondaryBackgroundBrush}" 
+                                BorderThickness="10,0,0,0">
                                 <Grid
                                     MinHeight="40"
                                     Background="{StaticResource BackgroundBrush}"

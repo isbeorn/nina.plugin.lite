@@ -80,6 +80,14 @@ namespace WhenPlugin.When {
             set => SetValue(AllowConditionsProperty, value);
         }
 
+        public static readonly DependencyProperty AllowInstructionsProperty =
+            DependencyProperty.Register(nameof(AllowInstructions), typeof(object), typeof(PowerupsContainerView), new PropertyMetadata(true));
+
+        public bool AllowInstructions {
+            get => (bool)GetValue(AllowInstructionsProperty);
+            set => SetValue(AllowInstructionsProperty, value);
+        }
+
         public static readonly DependencyProperty HeaderAddonTemplateProperty =
             DependencyProperty.Register(nameof(HeaderAddonTemplate), typeof(DataTemplate), typeof(PowerupsContainerView), new PropertyMetadata(null));
 

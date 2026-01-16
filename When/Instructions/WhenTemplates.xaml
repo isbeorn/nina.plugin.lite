@@ -297,99 +297,27 @@
         </Setter>
     </Style>
 
-    <DataTemplate DataType="{x:Type local:TemplateByReference}">
-        <Border>
-            <Border.Resources>
-                <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
-            </Border.Resources>
-            <i:Interaction.Behaviors>
-                <!--  Drop area above and below the Sequence Container  -->
-                <behaviors:DragOverBehavior
-                  AllowDragCenter="False"
-                  DragAboveSize="25"
-                  DragBelowSize="15" />
-            </i:Interaction.Behaviors>
-            <ninactrl:DetachingExpander>
-                <ninactrl:DetachingExpander.Header>
-                    <Grid
-                      MinHeight="35"
-                      Margin="0"
-                      HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
-                      Background="{StaticResource SecondaryBackgroundBrush}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock 
-                                   Foreground="{StaticResource ButtonForegroundBrush}"
-                                MinHeight="30"
-                                 Margin="10,10,10,0"
-                                 HorizontalAlignment="Left"
-                                 VerticalAlignment="Center"
-                                 Text="Template By Reference" />
-                                <TextBlock
-                                  Foreground="{StaticResource ButtonForegroundBrush}"
-                                  MinHeight="30"
-                                  Margin="10,10,10,0"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Center"
-                                  Opacity="0.9"
-                                  Text="Template Name:" />
-                                <ComboBox
-                                  Foreground="{StaticResource ButtonForegroundBrush}"
-                                  Height="24"
-                                  Margin="10,-4,0,0"
-                                  DisplayMemberPath="Container.Name"
-                                  ItemsSource="{Binding SortedTemplates}"
-                                  SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedValuePath="Container.Name" />
-                            </StackPanel>
-                        </Grid>
-                        <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
-                            <ContentPresenter
-                              Margin="2,0,10,0"
-                              HorizontalAlignment="Right"
-                              Content="{Binding}"
-                              DockPanel.Dock="Right"
-                              Style="{StaticResource ProgressPresenter}" />
-                        </Border>
-                        <Border
-                         x:Name="ButtonCommands"
-                         Grid.Column="2"
-                         HorizontalAlignment="Stretch"
-                         Background="{StaticResource SecondaryBackgroundBrush}">
-                            <Control Template="{StaticResource PowerupsButtons}" />
-                        </Border>
-                    </Grid>
-                </ninactrl:DetachingExpander.Header>
-                <StackPanel Grid.Row="1" Orientation="Vertical">
-                    <Border
-                      MinHeight="35"
-                      Margin="0,0,0,0"
-                      BorderBrush="{StaticResource BorderBrush}"
-                      BorderThickness="1">
-                        <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Instructions}">
-                            <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
-                            <TextBlock
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              FontStyle="Italic"
-                              Opacity="0.4"
-                              Text="The specified template will go here..."
-                              Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
-                            <i:Interaction.Behaviors>
-                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                                <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.TemplatedSequenceContainer" OnDropCommand="DropIntoTemplateCommand" />
-                            </i:Interaction.Behaviors>
-                        </Grid>
-                    </Border>
+    <HierarchicalDataTemplate DataType="{x:Type local:TemplateByReference}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
+            <local:PowerupsContainerView.HeaderAddon>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Foreground="{StaticResource ButtonForegroundBrush}"
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="Template Name:" />
+                    <ComboBox
+                        Foreground="{StaticResource ButtonForegroundBrush}"
+                        Margin="10,0,0,0"
+                        DisplayMemberPath="Container.Name"
+                        ItemsSource="{Binding SortedTemplates}"
+                        SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValuePath="Container.Name" />
                 </StackPanel>
-            </ninactrl:DetachingExpander>
-        </Border>
-    </DataTemplate>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
 
     <DataTemplate DataType="{x:Type local:ForEachInArray}">
         <Border>
