@@ -40,6 +40,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Icon", "ShieldSVG")]
     [ExportMetadata("Category", "Powerups (Safety)")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
 
     public class OnceSafe: SequentialContainer, IValidatable {

@@ -1013,7 +1013,7 @@
     </HierarchicalDataTemplate>
 
     <HierarchicalDataTemplate DataType="{x:Type local:OnceSafe}" ItemsSource="{Binding Items}">
-        <local:PowerupsContainerView />
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False"/>
     </HierarchicalDataTemplate>
 
     <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">

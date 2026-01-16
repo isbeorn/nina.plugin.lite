@@ -16,6 +16,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Icon", "IfSVG")]
     [ExportMetadata("Category", "Powerups (Conditionals)")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class IfFailed : SequentialContainer {
 

@@ -40,6 +40,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Icon", "LoopSVG")]
     [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
 
