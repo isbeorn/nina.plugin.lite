@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NINA.Core.Model;
 using NINA.Sequencer.SequenceItem;
 using NINA.Sequencer.Validations;
@@ -18,11 +17,8 @@ using NINA.Core.Utility;
 using System.Linq;
 using Accord.Math;
 using NINA.Profile.Interfaces;
-using NINA.Sequencer.Serialization;
-using System.Diagnostics;
 using NINA.Core.MyMessageBox;
-using System.Runtime.Serialization;
-using System.Windows.Navigation;
+using System.Windows.Forms;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Template by Reference")]
@@ -35,12 +31,9 @@ namespace WhenPlugin.When {
     public class TemplateByReference : SequentialContainer, IValidatable {
 
         static protected ISequenceMediator sequenceMediator;
-        static protected ISequenceNavigationVM sequenceNavigationVM;
-        static protected TemplateController ninaTemplateController;
-        static protected TemplateControllerLite templateController;
-        private static SequenceJsonConverter sequenceJsonConverter;
+        static protected ISequenceNavigationVM? sequenceNavigationVM;
+        static protected TemplateController? ninaTemplateController;
         private static IProfileService profileService;
-        private static ISequencerFactory sequencerFactory;
 
         [ImportingConstructor]
         public TemplateByReference(ISequenceMediator seqMediator, IProfileService pService) {
@@ -49,21 +42,29 @@ namespace WhenPlugin.When {
             Name = Name;
             
             // Get the various NINA components we need
-            if (sequenceNavigationVM == null || templateController == null) {
+            if (sequenceNavigationVM == null || ninaTemplateController == null) {
                 FieldInfo fi = sequenceMediator.GetType().GetField("sequenceNavigation", BindingFlags.Instance | BindingFlags.NonPublic); 
                 if (fi != null) {
                     sequenceNavigationVM = (ISequenceNavigationVM)fi.GetValue(sequenceMediator);
                     ISequence2VM s2vm = sequenceNavigationVM.Sequence2VM;
                     if (s2vm != null) {
-                        sequencerFactory = s2vm.SequencerFactory;
                         PropertyInfo pi = s2vm.GetType().GetRuntimeProperty("TemplateController");
                         ninaTemplateController = (TemplateController)pi.GetValue(s2vm);
-                        fi = ninaTemplateController.GetType().GetField("sequenceJsonConverter", BindingFlags.Instance | BindingFlags.NonPublic);
-                        sequenceJsonConverter = (SequenceJsonConverter)fi.GetValue(ninaTemplateController);
-                        templateController = new TemplateControllerLite(sequenceJsonConverter, profileService);
+
+                        if (ninaTemplateController != null) {
+                            ninaTemplateController.PropertyChanged += (sender, args) => {
+                                if (args.PropertyName == nameof(TemplateController.TemplatesLoading)) {
+                                    TemplatesLoadingHandler(sender, EventArgs.Empty);
+                                }
+                            };
+                        }
                     }
                 }
             }
+        }
+
+        public void TemplatesLoadingHandler(object? sender, EventArgs e) {
+            RaisePropertyChanged("SortedTemplates");
         }
 
         public TemplateByReference(TemplateByReference copyMe) : this(sequenceMediator, profileService) {
@@ -92,21 +93,7 @@ namespace WhenPlugin.When {
                 RaisePropertyChanged("TemplateName");
             }
         }
-
-        public bool TemplateNameIsTrue {
-            get {
-                return TemplateName == null;
-            }
-        }
-        
-        public IList<TemplatedSequenceContainer> Templates {
-            get {
-                lock (TemplateControllerLite.TemplateLock) {
-                    return templateController.TBRTemplates;
-                }
-            }
-        }
-
+    
         private int TemplateCompare (TemplatedSequenceContainer a, TemplatedSequenceContainer b) {
             return String.Compare(a.Container.Name, b.Container.Name);
 
@@ -114,9 +101,9 @@ namespace WhenPlugin.When {
 
         public TemplatedSequenceContainer[] SortedTemplates {
             get {
-                lock (TemplateControllerLite.TemplateLock) {
-                    IList<TemplatedSequenceContainer> l = Templates;
-                    TemplatedSequenceContainer[] lCopy = Templates.ToArray();
+                lock (ninaTemplateController) {
+                    IList<TemplatedSequenceContainer> l = ninaTemplateController.Templates;
+                    TemplatedSequenceContainer[] lCopy = l.ToArray();
                     lCopy.Sort(TemplateCompare);
                     return lCopy;
                 }
@@ -128,7 +115,6 @@ namespace WhenPlugin.When {
             get => selectedTemplate;
             set {
                 if (value == null) {
-                    //RaisePropertyChanged("SelectedTemplate");
                     value = FindTemplate(TemplateName);
                     if (value == null) {
                         return;
@@ -145,7 +131,6 @@ namespace WhenPlugin.When {
                     item.AttachNewParent(this);
                 }
                 RaisePropertyChanged("SelectedTemplate");
-                RaisePropertyChanged("TemplateNameIsTrue");
                 Validate();
             }
         }
@@ -163,12 +148,11 @@ namespace WhenPlugin.When {
 
             TemplateByReference clone = new TemplateByReference(this);
             clone.TemplateName = TemplateName;
-            if (TemplateName != null && templateController != null) {
+            if (TemplateName != null && ninaTemplateController != null) {
                 TemplatedSequenceContainer tc = FindTemplate(TemplateName);
                 if (tc != null) {
                     SelectedTemplate = tc;
                     TemplateName = tc.Container.Name;
-                    RaisePropertyChanged("TemplateNameIsTrue");
                 }
             }
             if (TemplateName != null) {
@@ -181,11 +165,10 @@ namespace WhenPlugin.When {
         private Stack<string> cycleStack = new Stack<string>();
 
         private TemplatedSequenceContainer FindTemplate(string name) {
-
-            lock (TemplateControllerLite.TemplateLock) {
+            lock (ninaTemplateController) {
                 for (int i = 0; i < 4; i++) {
                     try {
-                        foreach (var tmp in Templates) {
+                        foreach (var tmp in SortedTemplates) {
                             if (tmp.Container.Name.Equals(name)) {
                                 return tmp;
                             }
@@ -207,8 +190,7 @@ namespace WhenPlugin.When {
         public async override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
             await Run(progress, token);
         }
-
-        
+                
         private void UpdateChangedTemplates(string name) {
             if (name == null) return;
             ISequenceContainer p = Parent;
@@ -245,7 +227,7 @@ namespace WhenPlugin.When {
         
         public override bool Validate() {
 
-            if (templateController == null) return true;
+            if (ninaTemplateController == null) return true;
 
             //if (!Symbol.IsAttachedToRoot(this)) return true;
 
@@ -264,12 +246,12 @@ namespace WhenPlugin.When {
                 i.Add("The specified template '" + TemplateName + "' was not found.");
             }
 
-            if (templateController.Updated) {
-                SelectedTemplate = FindTemplate(TemplateName);
-                _ = SortedTemplates;
-                RaisePropertyChanged("SortedTemplates");
-                UpdateChangedTemplates(templateController.UpdatedFile);
-            }
+            //if (ninaTemplateController.Updated) {
+            //    SelectedTemplate = FindTemplate(TemplateName);
+            //    _ = SortedTemplates;
+            //    RaisePropertyChanged("SortedTemplates");
+            //    UpdateChangedTemplates(templateController.UpdatedFile);
+            //}
 
             foreach (ISequenceItem item in Items) {
                 if (item is IValidatable val) {

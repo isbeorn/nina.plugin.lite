@@ -92,7 +92,7 @@ namespace WhenPlugin.When {
                     ResetVariable rv = new ResetVariable();
                     rv.AttachNewParent(Parent);
                     rv.Variable = var;
-                    rv.Expr.Definition = expr;
+                    rv.Expr.Expression = expr;
                     Logger.Info("ForEach iteration: Variable = " + var + ", Expression: " + expr);
                     sb.Append(var + " = " + expr + "  ");
                     await rv.Execute(progress, token);

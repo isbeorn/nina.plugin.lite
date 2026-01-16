@@ -21,12 +21,13 @@ using NINA.Astrometry;
 using NINA.Core.Locale;
 using NINA.Sequencer.Utility.DateTimeProvider;
 using System.Linq;
+using WhenPlugin.When;
 
-namespace PowerupsLite.When {
+namespace WhenPlugin.When {
     [ExportMetadata("Name", "Set Variable to Time")]
     [ExportMetadata("Description", "If the variable has been previously defined, its value will become the result of the specified expression")]
     [ExportMetadata("Icon", "VariableSVG")]
-    [ExportMetadata("Category", "Powerups (Expressions)")]
+    [ExportMetadata("Category", "Powerups (Deprecated)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class ResetVariableToDate : SequenceItem, IValidatable {
@@ -102,28 +103,7 @@ namespace PowerupsLite.When {
         }
   
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            // Bunch of reasons the instructiopn might be invalid
-            if (Issues.Count != 0) {
-                throw new SequenceEntityFailedException("The instruction is invalid");
-            }
-            // Find Symbol, make sure it's valid
-            Symbol sym = Symbol.FindSymbol(Variable, Parent);
-            if (sym == null || !(sym is SetVariable)) {
-                throw new SequenceEntityFailedException("The symbol isn't found or isn't a Variable");
-            } else if (Expr.Error != null) {
-                throw new SequenceEntityFailedException("The value of the expression '" + Expr.Expression + "' was invalid");
-            }
-            SetVariable sv = sym as SetVariable;
-            if (sv == null || sv.Executed == false) {
-                throw new SequenceEntityFailedException("The Variable definition has not been executed");
-            }
-
-            // Whew!
-            Symbol.UpdateSwitchWeatherData();
-            Expr.Evaluate();
-            sym.Definition = Expr.Value.ToString();
-
-            return Task.CompletedTask;
+             return Task.CompletedTask;
         }
 
         private bool IsAttachedToRoot() {
@@ -135,12 +115,6 @@ namespace PowerupsLite.When {
                 p = p.Parent;
             }
             return false;
-        }
-
-        public override void AfterParentChanged() {
-            base.AfterParentChanged();
-            UpdateTime();
-            //Expr.Validate();
         }
 
         public override string ToString() {
@@ -177,20 +151,7 @@ namespace PowerupsLite.When {
         private void UpdateTime() {
             try {
                 lastReferenceDate = NighttimeCalculator.GetReferenceDate(DateTime.Now);
-                if (HasFixedTimeProvider) {
-                    DateTime t = SelectedProvider.GetDateTime(this) + TimeSpan.FromMinutes(MinutesOffset);
-                    Hours = t.Hour;
-                    Minutes = t.Minute;
-                    Seconds = t.Second;
-                    Expr.Value = ((DateTimeOffset)t).ToUnixTimeSeconds();
-                    TimeString = Expr.ValueString;
-                    RaisePropertyChanged("Expr.Value");
-                    RaisePropertyChanged("Expr.ValueString");
-                    RaisePropertyChanged("Expr");
-                    RaisePropertyChanged("TimeString");
-                }
-                timeDeterminedSuccessfully = true;
-            } catch (Exception) {
+             } catch (Exception) {
                 timeDeterminedSuccessfully = false;
                 Validate();
             }
@@ -239,47 +200,7 @@ namespace PowerupsLite.When {
         public ICustomDateTime DateTime { get; set; }
 
         public bool Validate() {
-            if (!IsAttachedToRoot()) return true;
-
-            var i = new List<string>();
-            if (Variable == null || Variable.Length == 0) {
-                i.Add("The variable and new value expression must both be specified");
-            } else if (Variable.Length > 0 && !Regex.IsMatch(Variable, Symbol.VALID_SYMBOL)) {
-                i.Add("'" + Variable + "' is not a legal Variable name");
-            } else {
-                Symbol sym = Symbol.FindSymbol(Variable, Parent);
-                if (sym == null) {
-                    i.Add("The Variable '" + Variable + "' is not in scope.");
-                } else if (sym is SetConstant) {
-                    i.Add("The symbol '" + Variable + "' is a Constant and may not be used with this instruction");
-                }
-            }
-            if (HasFixedTimeProvider) {
-                var referenceDate = NighttimeCalculator.GetReferenceDate(DateTime.Now);
-                if (lastReferenceDate != referenceDate) {
-                    UpdateTime();
-                }
-            } else {
-                DateTime today = System.DateTime.Today;
-                today = today.AddHours(Hours);
-                today = today.AddMinutes(Minutes);
-                today = today.AddSeconds(Seconds);
-                Expr.Value = ((DateTimeOffset)today).ToUnixTimeSeconds();
-                TimeString = Expr.ValueString;
-                //RaisePropertyChanged("Expr.Value");
-                //RaisePropertyChanged("Expr.ValueString");
-                RaisePropertyChanged("Expr");
-                RaisePropertyChanged("TimeString");
-            }
-
-            if (!timeDeterminedSuccessfully) {
-                i.Add(Loc.Instance["LblSelectedTimeSourceInvalid"]);
-            }
-
-            Expr.Evaluate();
-            
-            Issues = i;
-            return Issues.Count == 0;
+            return true;
         }
 
         // Legacy
