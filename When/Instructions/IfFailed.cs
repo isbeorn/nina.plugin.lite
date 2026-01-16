@@ -51,8 +51,7 @@ namespace WhenPlugin.When {
         public ISequenceItem? CheckInstruction { get; set; }
 
         public override object Clone() {
-            return new IfFailed(this) {
-            };
+            return new IfFailed(this);
         }
 
         public ICommand DropIntoIfCommand { get; set; }

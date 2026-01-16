@@ -57,8 +57,18 @@ namespace WhenPlugin.When {
             }
         }
 
-        [JsonProperty]
+        public override object Clone() {
+            return new OnceSafe(this);
+        }
+
+        [JsonIgnore]
         public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
 
         private bool isSafe;
 
