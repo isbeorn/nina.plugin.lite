@@ -119,13 +119,13 @@ namespace WhenPlugin.When {
                     throw new SequenceEntityFailedException("An Array must be specified and must have been initialized");
                 }
 
-                //if (!Array.Arrays.ContainsKey(NameExprExpression.StringValue)) {
-                //    throw new SequenceEntityFailedException("The Array specified does not exist");
-                //}
+                if (!WhenPlugin.When.Array.Arrays.ContainsKey(NameExprExpression.StringValue)) {
+                    throw new SequenceEntityFailedException("The Array specified does not exist");
+                }
 
-                //if (!Array.Arrays.TryGetValue(NameExprExpression.StringValue, out a)) {
-                //    throw new SequenceEntityFailedException("Huh?  Key exists but not Array??");
-                //}
+                if (!WhenPlugin.When.Array.Arrays.TryGetValue(NameExprExpression.StringValue, out a)) {
+                    throw new SequenceEntityFailedException("Huh?  Key exists but not Array??");
+                }
             }
 
             ETokens = new string[a.Count];
