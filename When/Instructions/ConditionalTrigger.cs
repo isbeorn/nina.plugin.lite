@@ -4,6 +4,7 @@ using NINA.Core.Utility;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.DragDrop;
 using NINA.Sequencer.Generators;
+using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
 using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Trigger;
@@ -122,8 +123,8 @@ namespace WhenPlugin.When {
         }
 
         private bool SkipTrigger() {
-            IfExpr.Evaluate();
-            return string.Equals(IfExpr.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (IfExpr.Error == null);
+            PredicateExpression.Evaluate();
+            return string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null);
         }
 
         public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
@@ -168,10 +169,9 @@ namespace WhenPlugin.When {
                     _ = vitem.Validate();
                 }
             }
-            IfExpr.Validate();
 
             IList<string> i = new List<string>();
-            Expr.AddExprIssues(i, IfExpr);
+            Expression.ValidateExpressions(i, predicateExpression);
 
             if (TriggerRunner.Triggers.Count == 0) {
                 i.Add("There must be a Trigger specified for this instruction");
