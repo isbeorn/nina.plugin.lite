@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using System.Threading;
-#region "copyright"
+﻿#region "copyright"
 
 /*
     Copyright © 2016 - 2023 Stefan Berg <isbeorn86+NINA@googlemail.com> and the N.I.N.A. contributors
@@ -16,16 +12,16 @@ using System.Threading;
 
 #endregion "copyright"
 
+using System;
+using System.Threading.Tasks;
+using System.Threading;
 using Newtonsoft.Json;
 using NINA.Core.Model;
 using NINA.Sequencer.SequenceItem;
 using System.ComponentModel.Composition;
 using NINA.Core.Utility;
-using System.Windows.Input;
 using NINA.Sequencer.Conditions;
 using System.Text;
-using Accord;
-using NINA.Sequencer.SequenceItem.Expressions;
 
 namespace WhenPlugin.When {
 
@@ -89,10 +85,11 @@ namespace WhenPlugin.When {
 
                     string expr = exprsList[vv];
 
-                    ResetVariable rv = new ResetVariable();
+                    NINA.Sequencer.SequenceItem.Expressions.ResetVariable rv = new();
                     rv.AttachNewParent(Parent);
                     rv.Variable = var;
-                    rv.Expr.Expression = expr;
+
+                    rv.Expr.Definition = expr;
                     Logger.Info("ForEach iteration: Variable = " + var + ", Expression: " + expr);
                     sb.Append(var + " = " + expr + "  ");
                     await rv.Execute(progress, token);
