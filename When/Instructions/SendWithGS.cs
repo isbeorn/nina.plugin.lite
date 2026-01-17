@@ -1,18 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.DragDrop;
+using NINA.Sequencer.Generators;
+using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
+using Serilog.Debugging;
 using System;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Sequencer.DragDrop;
 using System.Windows.Input;
-using System.Text.RegularExpressions;
-using NINA.Core.Utility;
-using Serilog.Debugging;
-using Google.Protobuf.WellKnownTypes;
-using NINA.Sequencer.Logic;
-using NINA.Sequencer.Generators;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Send via Ground Station")]
@@ -22,7 +23,7 @@ namespace WhenPlugin.When {
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 
-    public class GSSend : IfCommand {
+    public class GSSend : SequentialContainer {
 
         [ImportingConstructor]
         public GSSend() {
@@ -43,7 +44,30 @@ namespace WhenPlugin.When {
             };
         }
 
+        [JsonIgnore]
+        public IfContainer Condition { get; set; }
+
+        [JsonProperty("Condition")]
+        private IfContainer ObsoleteCondition {
+            // get is intentionally omitted here
+            set { Condition = value; }
+        }
+
+        [JsonIgnore]
+        public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
+
+        [JsonProperty]
+        public ISequenceItem? GSInstruction { get; set; }
+
         public ICommand DropIntoIfCommand { get; set; }
+
+        private object lockObj = new object();
 
         public string ProcessedScript(string message) {
             string value = message;
@@ -105,45 +129,37 @@ namespace WhenPlugin.When {
             messageProperty.SetValue(condition, message, null);
         }
 
-        // Allow only ONE instruction to be added to Condition
-        public void DropIntoCondition (DropIntoParameters parameters) {
-            lock (lockObj) {
-                ISequenceItem item;
-                var source = parameters.Source as ISequenceItem;
+        public void DropIntoCondition(DropIntoParameters parameters) {
+            ISequenceItem item;
+            var source = parameters.Source as ISequenceItem;
+            if (source == null) return;
 
-                if (source.Parent != null && !parameters.Duplicate) {
-                    item = source;
-                } else {
-                    item = (ISequenceItem)source.Clone();
-                }
+            if (source.Parent != null && !parameters.Duplicate) {
+                item = source;
+            } else {
+                item = (ISequenceItem)source.Clone();
+            }
 
-                if (item.Parent != Condition) {
-                    item.Parent?.Remove(item);
-                    item.AttachNewParent(Condition);
-                }
-
-                Condition.Items.Clear();
-                Condition.Items.Add(item);
-           }
+            GSInstruction = item;
+            item.AttachNewParent(this);
+            RaisePropertyChanged("GSInstruction");
         }
 
         public override bool Validate() {
             Issues.Clear();
-            if (Condition == null || Condition.Items.Count == 0) {
-                issues.Add("There must be a Ground Station instruction included in this instruction");
+            if (GSInstruction == null) {
+                Issues.Add("There must be a Ground Station instruction included in this instruction");
             } else {
-                var c = Condition.Items[0];
-
-                var messageProperty = c.GetType().GetProperty("Message");
+                var messageProperty = GSInstruction.GetType().GetProperty("Message");
                 if (messageProperty == null) {
-                    messageProperty = c.GetType().GetProperty("Payload");
+                    messageProperty = GSInstruction.GetType().GetProperty("Payload");
                     if (messageProperty == null) {
-                        issues.Add("This instruction cannot be used with Send via Ground Station");
+                        Issues.Add("This instruction cannot be used with Send via Ground Station");
                     }
                 }
              }
             RaisePropertyChanged("Issues");
-            return issues.Count == 0;
+            return Issues.Count == 0;
         }
 
         public override string ToString() {

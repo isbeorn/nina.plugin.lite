@@ -1150,7 +1150,7 @@
                     BorderThickness="1">
                     <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
                         <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
-                            <nina:SequenceBlockView DataContext="{Binding CheckInstruction}"/>
+                            <ContentPresenter Content="{Binding CheckInstruction}" />
                         </StackPanel>
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -1182,7 +1182,7 @@
                     BorderThickness="1">
                     <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
                         <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
-                            <nina:SequenceBlockView DataContext="{Binding CheckInstruction}"/>
+                            <ContentPresenter Content="{Binding CheckInstruction}" />
                         </StackPanel>
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -1431,20 +1431,22 @@
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <Border
-                   MinHeight="30"
-                   Margin="10,1,0,0"
-                   BorderBrush="{StaticResource BorderBrush}"
-                   BorderThickness="1">
-                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Condition}">
-                        <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+                    MinHeight="30"
+                    Margin="10,1,0,0"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Visibility="{Binding GSInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                            <ContentPresenter Content="{Binding GSInstruction}" />
+                        </StackPanel>
                         <TextBlock
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontStyle="Italic"
-                           Text="Ground Station instruction goes here"
-                           TextAlignment="Center"
-                           MinWidth="400"
-                           Visibility="{Binding Condition, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Text="Ground Station instruction goes here"
+                            TextAlignment="Center"
+                            MinWidth="400"
+                            Visibility="{Binding GSInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
                         <i:Interaction.Behaviors>
                             <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                         </i:Interaction.Behaviors>
