@@ -8,9 +8,12 @@ using NINA.Sequencer.Container;
 using NINA.Sequencer.DragDrop;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.Trigger;
 using NINA.Sequencer.Validations;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -33,6 +36,25 @@ namespace WhenPlugin.When {
         public IfTimeout(IfTimeout copyMe) : this() {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
+            }
+        }
+
+        partial void AfterClone(IfTimeout original, IfTimeout clone) {
+            clone.Icon = original.Icon;
+            clone.Name = original.Name;
+            clone.Category = original.Category;
+            clone.Description = original.Description;
+            clone.Items = new ObservableCollection<ISequenceItem>(original.Items.Select((ISequenceItem i) => i.Clone() as ISequenceItem));
+            clone.Triggers = new ObservableCollection<ISequenceTrigger>(original.Triggers.Select((ISequenceTrigger t) => t.Clone() as ISequenceTrigger));
+            clone.Conditions = new ObservableCollection<ISequenceCondition>(original.Conditions.Select((ISequenceCondition t) => t.Clone() as ISequenceCondition));
+            foreach (ISequenceItem item in clone.Items) {
+                item.AttachNewParent(clone);
+            }
+            foreach (ISequenceCondition condition in clone.Conditions) {
+                condition.AttachNewParent(clone);
+            }
+            foreach (ISequenceTrigger trigger in clone.Triggers) {
+                trigger.AttachNewParent(clone);
             }
         }
 
