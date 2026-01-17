@@ -645,9 +645,9 @@
                 <Border MinHeight="35"
                       BorderBrush="{StaticResource BorderBrush}"
                       BorderThickness="1">
-                    <StackPanel Orientation="Vertical" Background="{StaticResource BackgroundBrush}">
-                        <logic:ExprControl Label="Enabling Expression:" Exp="{Binding Path=PredicateExpression, Mode=TwoWay}"/>
-                        <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Background="{StaticResource BackgroundBrush}">
+                        <logic:ExprControl MinWidth="100" Label="Enabling Expression:" Exp="{Binding Path=PredicateExpression, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
                             <ItemsControl MinHeight="35" ItemsSource="{Binding TriggerRunner.Triggers}"/>
                             <TextBlock
                                HorizontalAlignment="Center"
