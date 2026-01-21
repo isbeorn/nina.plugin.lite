@@ -25,7 +25,7 @@
                 <ControlTemplate TargetType="ContentControl">
                     <ninactrl:DetachingExpander IsExpanded="False">
                         <ninactrl:DetachingExpander.Header>
-                            <TextBlock Text="{TemplateBinding Tag}" Foreground="{StaticResource ButtonForegroundBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Tag}" Foreground="{StaticResource ButtonForegroundBrush}" VerticalAlignment="Center" Padding="0,8" />
                         </ninactrl:DetachingExpander.Header>
                         <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
                             <Grid Background="{StaticResource BackgroundBrush}" DataContext="{TemplateBinding Content}">
@@ -785,7 +785,6 @@
                 <StackPanel>
                     <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="{StaticResource BackgroundBrush}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
                             <Border Width="20" Height="20" Margin="10,0,5,0" Background="{StaticResource NotificationErrorBrush}"
                                 BorderBrush="Transparent" CornerRadius="10"
                                 Visibility="{Binding Issues.Count, Converter={StaticResource ZeroToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -813,7 +812,6 @@
                 <StackPanel>
                     <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="{StaticResource BackgroundBrush}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
                             <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding FlipStatus}" />
                         </StackPanel>
                     </Border>
