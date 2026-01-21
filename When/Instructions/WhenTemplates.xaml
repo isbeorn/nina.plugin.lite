@@ -987,7 +987,6 @@
         </Border>
     </DataTemplate>
 
-
     <DataTemplate x:Key="WhenPlugin.When.RelaxedLoop_Mini" DataType="{x:Type local:RelaxedLoop}">
         <mini:MiniContainer DataContext="{Binding TriggerRunner}">
             <mini:MiniContainer.Content>
@@ -1027,6 +1026,49 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
+    <!-- IfContainer (TriggerRunner): show Items + allow drop, hide Triggers + Loop Conditions -->
+    <DataTemplate DataType="{x:Type local:IfContainer}">
+        <local:PowerupsContainerView AllowTriggers="False" AllowConditions="False" AllowInstructions="False">
+            <local:PowerupsContainerView.SequenceContainerContent>
+                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <!-- Local heading row -->
+                        <Border Background="{StaticResource SecondaryBackgroundBrush}" Padding="6,4">
+                            <StackPanel Orientation="Horizontal">
+                                <Path
+                                    Width="15"
+                                    Height="15"
+                                    Margin="2,0,6,0"
+                                    Data="{StaticResource SequenceSVG}"
+                                    Fill="{StaticResource PrimaryBrush}"
+                                    Stretch="Uniform"
+                                    UseLayoutRounding="True" />
+                                <TextBlock VerticalAlignment="Center" Text="Instructions" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Drop area -->
+                        <Grid MinHeight="40" Background="{StaticResource BackgroundBrush}">
+                            <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+
+                            <i:Interaction.Behaviors>
+                                <behaviors:DropIntoBehavior
+                                    AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TargetSequenceContainer"
+                                    OnDropCommand="DropIntoCommand" />
+                                <behaviors:DragOverBehavior
+                                    AllowDragAbove="False"
+                                    AllowDragBelow="False"
+                                    AllowDragCenter="{Binding Items.Count, Converter={StaticResource ZeroToBooleanTrueConverter}}"
+                                    DragAboveSize="0"
+                                    DragBelowSize="0" />
+                            </i:Interaction.Behaviors>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </local:PowerupsContainerView.SequenceContainerContent>
+        </local:PowerupsContainerView>
+    </DataTemplate>
+    
     <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
@@ -1517,19 +1559,17 @@
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
                 <StackPanel>
-                    <!-- Trigger header (safe: DIYMeridianFlipTrigger properties only) -->
                     <Border
-                    MinHeight="35"
-                    BorderBrush="{StaticResource BorderBrush}"
-                    BorderThickness="1"
-                    Background="{StaticResource BackgroundBrush}">
+                        MinHeight="35"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        Background="{StaticResource BackgroundBrush}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
                             <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding FlipStatus}" />
                         </StackPanel>
                     </Border>
 
-                    <!-- Render TriggerRunner via normal SequentialContainer template selection -->
                     <ContentPresenter Content="{Binding TriggerRunner}" />
                 </StackPanel>
             </nina:SequenceBlockView.SequenceItemContent>
