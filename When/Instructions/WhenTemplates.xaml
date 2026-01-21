@@ -1570,7 +1570,33 @@
                         </StackPanel>
                     </Border>
 
-                    <ContentPresenter Content="{Binding TriggerRunner}" />
+                    <ninactrl:DetachingExpander IsExpanded="False">
+                        <ninactrl:DetachingExpander.Header>
+                            <TextBlock 
+                                Text="Flip Instructions" 
+                                Foreground="{StaticResource ButtonForegroundBrush}"
+                                VerticalAlignment="Center" />
+                        </ninactrl:DetachingExpander.Header>
+                        <Border
+                            MinHeight="35"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1">
+                            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
+                                <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontStyle="Italic"
+                                    Opacity="0.4"
+                                    Text="Flip instructions go here"
+                                    Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                                <i:Interaction.Behaviors>
+                                    <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                    <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer" OnDropCommand="DropIntoCommand" />
+                                </i:Interaction.Behaviors>
+                            </Grid>
+                        </Border>
+                    </ninactrl:DetachingExpander>
                 </StackPanel>
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
