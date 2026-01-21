@@ -88,6 +88,31 @@ namespace WhenPlugin.When {
 
         static public bool SequenceRunning = false;
 
+        private bool hideTriggerRunnerTriggersAndConditions;
+
+        [JsonProperty]
+        public bool HideTriggerRunnerTriggersAndConditions {
+            get => hideTriggerRunnerTriggersAndConditions;
+            set {
+                hideTriggerRunnerTriggersAndConditions = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(TriggerRunnerView));
+            }
+        }
+
+        [JsonIgnore]
+        public TriggerRunnerViewModel TriggerRunnerView => new(TriggerRunner, HideTriggerRunnerTriggersAndConditions);
+
+        public sealed class TriggerRunnerViewModel {
+            public TriggerRunnerViewModel(SequentialContainer runner, bool hide) {
+                Runner = runner;
+                Hide = hide;
+            }
+
+            public SequentialContainer Runner { get; }
+            public bool Hide { get; }
+        }
+
         [ImportingConstructor]
         public DIYMeridianFlipTrigger(IProfileService profileService, ICameraMediator cameraMediator, ITelescopeMediator telescopeMediator,
             IFocuserMediator focuserMediator, IApplicationStatusMediator applicationStatusMediator, IMeridianFlipVMFactory meridianFlipVMFactory,
@@ -165,6 +190,7 @@ namespace WhenPlugin.When {
             PauseTimeBeforeMeridian = copyMe.PauseTimeBeforeMeridian;
             MaxMinutesAfterMeridian = copyMe.MaxMinutesAfterMeridian;
             MinutesAfterMeridian = copyMe.MinutesAfterMeridian;
+            HideTriggerRunnerTriggersAndConditions = copyMe.HideTriggerRunnerTriggersAndConditions;
         }
 
         public override object Clone() {

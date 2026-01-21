@@ -15,7 +15,86 @@
     xmlns:behaviors="clr-namespace:NINA.Sequencer.Behaviors;assembly=NINA.Sequencer"
     xmlns:wpfutil="clr-namespace:NINA.WPF.Base.Utility;assembly=NINA.WPF.Base"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:conv="clr-namespace:WhenPlugin.When.Converters">
+
+    <!-- Keep this near the top -->
+    <conv:BoolToAllowTriggersAndConditionsConverter x:Key="BoolToAllowTriggersAndConditionsConverter" />
+
+    <!-- MOVE/KEEP this template ABOVE any usage -->
+    <DataTemplate x:Key="DIYMeridianFlipTrigger_TriggerRunnerSequentialTemplate">
+        <!-- DataContext here is TriggerRunnerViewModel (has Runner + Hide) -->
+        <ninactrl:DetachingExpander
+            Padding="0"
+            Background="{StaticResource BackgroundBrush}"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1"
+            IsExpanded="True">
+
+            <ninactrl:DetachingExpander.Header>
+                <Grid Background="{StaticResource SecondaryBackgroundBrush}" MinHeight="35">
+                    <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Text="Instructions" />
+                </Grid>
+            </ninactrl:DetachingExpander.Header>
+
+            <StackPanel>
+                <!-- Instructions -->
+                <Grid Background="{StaticResource BackgroundBrush}">
+                    <ItemsControl MinHeight="35" ItemsSource="{Binding Runner.Items}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontStyle="Italic"
+                        Opacity="0.4"
+                        Text="Instructions will go here..."
+                        Visibility="{Binding Runner.Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                    <i:Interaction.Behaviors>
+                        <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        <behaviors:DropIntoBehavior
+                            AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
+                            OnDropCommand="DropIntoCommand" />
+                    </i:Interaction.Behaviors>
+                </Grid>
+
+                <!-- Optional Triggers + Conditions -->
+                <StackPanel Visibility="{Binding Hide, Converter={StaticResource BoolToAllowTriggersAndConditionsConverter}}">
+                    <Grid Margin="0,8,0,0" Background="{StaticResource BackgroundBrush}">
+                        <ItemsControl MinHeight="35" ItemsSource="{Binding Runner.Triggers}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Opacity="0.4"
+                            Text="Triggers go here"
+                            Visibility="{Binding Runner.Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                            <behaviors:DropIntoBehavior
+                                AllowedDragDropTypesString="NINA.Sequencer.Trigger.SequenceTrigger"
+                                OnDropCommand="DropIntoTriggersCommand" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+
+                    <Grid Margin="0,8,0,0" Background="{StaticResource BackgroundBrush}">
+                        <ItemsControl MinHeight="35" ItemsSource="{Binding Runner.Conditions}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Opacity="0.4"
+                            Text="Conditions go here"
+                            Visibility="{Binding Runner.Conditions.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                            <behaviors:DropIntoBehavior
+                                AllowedDragDropTypesString="NINA.Sequencer.Conditions.SequenceCondition"
+                                OnDropCommand="DropIntoConditionsCommand" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ninactrl:DetachingExpander>
+    </DataTemplate>
 
     <ControlTemplate x:Key="PowerupsButtons">
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -340,8 +419,8 @@
                      Background="{StaticResource SecondaryBackgroundBrush}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock 
@@ -1570,7 +1649,9 @@
                         </StackPanel>
                     </Border>
 
-                    <ContentPresenter Content="{Binding TriggerRunner}" />
+                    <ContentPresenter
+                        Content="{Binding TriggerRunnerView}"
+                        ContentTemplate="{StaticResource DIYMeridianFlipTrigger_TriggerRunnerSequentialTemplate}" />
                 </StackPanel>
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
