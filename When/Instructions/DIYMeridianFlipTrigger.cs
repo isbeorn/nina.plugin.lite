@@ -76,7 +76,6 @@ namespace WhenPlugin.When {
         protected IWindowServiceFactory windowServiceFactory;
         protected IImagingMediator imagingMediator;
 
-
         private GeometryGroup GuiderIcon = (GeometryGroup)Application.Current.Resources["GuiderSVG"];
         private GeometryGroup MeridianFlipIcon = (GeometryGroup)Application.Current.Resources["MeridianFlipSVG"];
         private GeometryGroup CameraIcon = (GeometryGroup)Application.Current.Resources["CameraSVG"];
@@ -113,7 +112,10 @@ namespace WhenPlugin.When {
             Name = Name;
             Icon = Icon;
             FlipStatus = "Waiting for a NINA sequence to start...";
-            TriggerRunner = new IfContainer();
+
+            // Changed from IfContainer to SequentialContainer
+            TriggerRunner = new SequentialContainer();
+
             AddItem(TriggerRunner, new StopGuiding(guiderMediator) { Name = "Stop Guiding", Icon = GuiderIcon }); ;
             AddItem(TriggerRunner, new PassMeridian(telescopeMediator, profileService) { Name = "Wait to Pass Meridian", Icon = MeridianFlipIcon });
             AddItem(TriggerRunner, new DoFlip(telescopeMediator, domeMediator, domeFollower) { Name = "Flip Scope", Icon = MeridianFlipIcon });
@@ -155,10 +157,10 @@ namespace WhenPlugin.When {
             Name = copyMe.Name;
             Icon = copyMe.Icon;
             FlipStatus = copyMe.FlipStatus;
-            // Fix for crash; unsure how we get here...
-            TriggerRunner = (IfContainer)copyMe.TriggerRunner.Clone();
+
+            // Changed clone handling: SequentialContainer instead of IfContainer
+            TriggerRunner = (SequentialContainer)copyMe.TriggerRunner.Clone();
             TriggerRunner.AttachNewParent(Parent);
-            ((IfContainer)TriggerRunner).PseudoParent = this;
 
             PauseTimeBeforeMeridian = copyMe.PauseTimeBeforeMeridian;
             MaxMinutesAfterMeridian = copyMe.MaxMinutesAfterMeridian;
@@ -509,17 +511,19 @@ namespace WhenPlugin.When {
         public virtual bool Validate() {
             // Validate the Items (this will update their status)
             if (TriggerRunner == null) return true;
-            if (!(TriggerRunner is IfContainer)) {
-                IfContainer ifc = new IfContainer();
+
+            // Ensure it's a SequentialContainer (not IfContainer)
+            if (TriggerRunner is not SequentialContainer) {
+                var sc = new SequentialContainer();
                 foreach (ISequenceItem item in TriggerRunner.Items) {
                     ISequenceItem i = (ISequenceItem)item.Clone();
-                    ifc.Items.Add(i);
-                    i.AttachNewParent(ifc);
+                    sc.Items.Add(i);
+                    i.AttachNewParent(sc);
                 }
-                ifc.AttachNewParent(Parent);
-                TriggerRunner = ifc;
+                sc.AttachNewParent(Parent);
+                TriggerRunner = sc;
             }
-            ((IfContainer)TriggerRunner).PseudoParent = this;
+
             bool valid = true;
             foreach (ISequenceItem item in TriggerRunner.Items) {
                 if (item is IValidatable vitem) {
