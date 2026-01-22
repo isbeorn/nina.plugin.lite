@@ -812,6 +812,16 @@
         </mini:MiniContainer>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:WhenUnsafe}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <ContentControl Style="{StaticResource CollapsibleInstructionsStyle}"
+                Content="{Binding Instructions}" Tag="Safety Instructions"
+                local:CollapsibleInstructionsHelper.PlaceholderText="Instructions to run when unsafe" />
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+   </DataTemplate>
+
     <DataTemplate DataType="{x:Type local:PassMeridian}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
