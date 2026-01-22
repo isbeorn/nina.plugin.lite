@@ -662,6 +662,152 @@
         </local:PowerupsContainerView>
     </HierarchicalDataTemplate>
 
+    <!-- IfThenElse DataTemplate - Add after existing templates -->
+    <DataTemplate DataType="{x:Type local:IfThenElse}">
+        <Border>
+            <Border.Resources>
+                <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
+            </Border.Resources>
+            <i:Interaction.Behaviors>
+                <!-- Drop area above and below the IfThenElse container only (no center drop) -->
+                <behaviors:DragOverBehavior
+                    AllowDragCenter="False"
+                    DragAboveSize="25"
+                    DragBelowSize="15" />
+            </i:Interaction.Behaviors>
+            <ninactrl:DetachingExpander IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
+                <ninactrl:DetachingExpander.Header>
+                    <Grid
+                        MinHeight="45"
+                        Margin="0"
+                        HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
+                        Background="{StaticResource SecondaryBackgroundBrush}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock 
+                                MinHeight="25"
+                                Margin="10,10,10,0"
+                                Foreground="{StaticResource ButtonForegroundBrush}"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Text="If" />
+                            <Border
+                                Width="20"
+                                Height="20"
+                                Margin="5,0,5,0"
+                                Background="{StaticResource NotificationErrorBrush}"
+                                BorderBrush="Transparent"
+                                CornerRadius="10">
+                                <Border.Visibility>
+                                    <PriorityBinding>
+                                        <Binding
+                                            Converter="{StaticResource ZeroToVisibilityConverter}"
+                                            FallbackValue="Collapsed"
+                                            Path="Issues.Count" />
+                                    </PriorityBinding>
+                                </Border.Visibility>
+                                <Path
+                                    HorizontalAlignment="Right"
+                                    Data="{StaticResource ExclamationCircledSVG}"
+                                    Fill="{StaticResource ButtonForegroundBrush}"
+                                    Stretch="Uniform" />
+                                <Border.ToolTip>
+                                    <ItemsControl ItemsSource="{Binding Issues}" />
+                                </Border.ToolTip>
+                            </Border>
+                            <logic:ExprControl Label="Predicate:" Exp="{Binding PredicateExpression}" />
+                        </StackPanel>
+                        <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
+                            <ContentPresenter
+                                Margin="2,0,10,0"
+                                HorizontalAlignment="Right"
+                                Content="{Binding}"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource ProgressPresenter}" />
+                        </Border>
+                        <Border
+                            x:Name="ButtonCommands"
+                            Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Background="{StaticResource SecondaryBackgroundBrush}">
+                            <Control Template="{StaticResource PowerupsButtons}" />
+                        </Border>
+                    </Grid>
+                </ninactrl:DetachingExpander.Header>
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                    <!-- Then Branch -->
+                    <Border
+                        MinHeight="35"
+                        Margin="0,5,0,0"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1">
+                        <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding ThenBranch}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                Grid.Row="0"
+                                Margin="10,5,0,5"
+                                Foreground="{StaticResource PrimaryBrush}"
+                                FontWeight="SemiBold"
+                                Text="Then" />
+                            <ItemsControl Grid.Row="1" MinHeight="35" ItemsSource="{Binding Items}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontStyle="Italic"
+                                Opacity="0.4"
+                                Text="Instructions to run if predicate is true"
+                                Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer" OnDropCommand="DropIntoCommand" />
+                            </i:Interaction.Behaviors>
+                        </Grid>
+                    </Border>
+                    <!-- Else Branch -->
+                    <Border
+                        MinHeight="35"
+                        Margin="0,5,0,5"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1">
+                        <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding ElseBranch}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock 
+                                Grid.Row="0"
+                                Margin="10,5,0,5"
+                                Foreground="{StaticResource PrimaryBrush}"
+                                FontWeight="SemiBold"
+                                Text="Else" />
+                            <ItemsControl Grid.Row="1" MinHeight="35" ItemsSource="{Binding Items}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontStyle="Italic"
+                                Opacity="0.4"
+                                Text="Instructions to run if predicate is false"
+                                Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer" OnDropCommand="DropIntoCommand" />
+                            </i:Interaction.Behaviors>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ninactrl:DetachingExpander>
+        </Border>
+    </DataTemplate>
+
     <HierarchicalDataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
@@ -889,7 +1035,7 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:GSSend}">
+    <HierarchicalDataTemplate DataType="{x:Type local:GSSend}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <Border

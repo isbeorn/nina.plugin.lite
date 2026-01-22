@@ -1,68 +1,84 @@
 ﻿using Newtonsoft.Json;
+using NINA.Core.Enum;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.Generators;
+using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Validations;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Core.Enum;
-using NINA.Core.Utility;
-using NINA.Sequencer.Generators;
-using NINA.Sequencer.Logic;
-using NINA.Sequencer.SequenceItem.Expressions;
 
 namespace WhenPlugin.When {
-    [ExportMetadata("Name", "If/Then/Else")]
+    [ExportMetadata("Name", "If-Then-Else")]
     [ExportMetadata("Description", "Executes an instruction set if the Expression is True (or 1)")]
     [ExportMetadata("Icon", "IfSVG")]
     [ExportMetadata("Category", "Powerups (Conditionals)")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     [UsesExpressions]
 
-    public partial class IfThenElse : IfCommand, IValidatable, ITrueFalse {
+    public partial class IfThenElse : SequentialContainer, IValidatable, ITrueFalse {
 
         [ImportingConstructor]
         public IfThenElse() {
-            Instructions = new IfContainer();
-            Instructions.AttachNewParent(Parent);
-            Instructions.PseudoParent = this;
-            Instructions.Name = Name;
-            Instructions.Icon = Icon;
-            ElseInstructions = new IfContainer();
-            ElseInstructions.AttachNewParent(Parent);
-            ElseInstructions.PseudoParent = this;
-            ElseInstructions.Name = Name;
-            ElseInstructions.Icon = Icon;
+            InitializeBranches();
         }
 
         public IfThenElse(IfThenElse copyMe) : this() {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
-                Instructions = (IfContainer)copyMe.Instructions.Clone();
-                Instructions.AttachNewParent(Parent);
-                Instructions.PseudoParent = this;
-                Instructions.Name = Name;
-                Instructions.Icon = Icon;
-                ElseInstructions = (IfContainer)copyMe.ElseInstructions.Clone();
-                ElseInstructions.AttachNewParent(Parent);
-                ElseInstructions.PseudoParent = this;
-                ElseInstructions.Name = Name;
-                ElseInstructions.Icon = Icon;
+            }
+        }
+
+        private void InitializeBranches() {
+            if (Items.Count == 0) {
+                var thenBranch = new SequentialContainer { Name = "Then" };
+                var elseBranch = new SequentialContainer { Name = "Else" };
+                
+                thenBranch.AttachNewParent(this);
+                elseBranch.AttachNewParent(this);
+                
+                Items.Add(thenBranch);
+                Items.Add(elseBranch);
+            }
+        }
+
+        [JsonProperty]
+        public SequentialContainer ThenBranch {
+            get => Items.Count > 0 ? Items[0] as SequentialContainer : null;
+        }
+
+        [JsonProperty]
+        public SequentialContainer ElseBranch {
+            get => Items.Count > 1 ? Items[1] as SequentialContainer : null;
+        }
+
+        partial void AfterClone(IfThenElse original, IfThenElse clone) {
+            clone.Icon = original.Icon;
+            clone.Name = original.Name;
+            clone.Category = original.Category;
+            clone.Description = original.Description;
+            clone.Items = new ObservableCollection<ISequenceItem>(original.Items.Select((ISequenceItem i) => i.Clone() as ISequenceItem));
+            foreach (ISequenceItem item in clone.Items) {
+                item.AttachNewParent(clone);
             }
         }
 
         [IsExpression]
         private string predicate;
 
-        [JsonProperty]
-        public IfContainer ElseInstructions { get; set; }
-
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
 
-            Logger.Info("Execute, Predicate: " + PredicateExpression.Definition);
+            Logger.Info("Predicate: " + PredicateExpression.Definition);
             if (string.IsNullOrEmpty(PredicateExpression.Definition)) {
                 Status = SequenceEntityStatus.FAILED;
                 return;
@@ -72,11 +88,15 @@ namespace WhenPlugin.When {
                 PredicateExpression.Evaluate();
 
                 if (!string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null)) {
-                    Logger.Info("Predicate is true; running Then");
-                    await Instructions.Run(progress, token);
+                    Logger.Info("Predicate is true, executing Then branch");
+                    if (ThenBranch != null) {
+                        await ThenBranch.Run(progress, token);
+                    }
                 } else {
-                    Logger.Info("Predicate is false; running Else");
-                    await ElseInstructions.Run(progress, token);
+                    Logger.Info("Predicate is false, executing Else branch");
+                    if (ElseBranch != null) {
+                        await ElseBranch.Run(progress, token);
+                    }
                 }
             } catch (ArgumentException ex) {
                 Logger.Info("If error: " + ex.Message);
@@ -88,38 +108,20 @@ namespace WhenPlugin.When {
             return $"Category: {Category}, Item: {nameof(IfThenElse)}, Expr: {PredicateExpression}";
         }
 
-        public override void ResetProgress() {
-            base.ResetProgress();
-            ElseInstructions.ResetAll();
-            foreach (ISequenceItem item in ElseInstructions.Items) {
-                item.ResetProgress();
-            }
-        }
+        public IList<string> Switches { get; set; } = null;
 
         public override void AfterParentChanged() {
             base.AfterParentChanged();
-            foreach (ISequenceItem item in ElseInstructions.Items) {
-                item.AfterParentChanged();
-            }
-        }
-
-        public override void ResetAll() {
-            base.ResetAll();
-            ElseInstructions.ResetAll();
+            PredicateExpression.Evaluate();
         }
 
         public new bool Validate() {
-
             var i = new List<string>();
 
-            ValidateInstructions(Instructions);
-            ValidateInstructions(ElseInstructions);
-
             Expression.ValidateExpressions(i, PredicateExpression);
-
+ 
             Issues = i;
             return i.Count == 0;
         }
-
     }
 }
