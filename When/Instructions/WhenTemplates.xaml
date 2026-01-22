@@ -759,7 +759,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Margin="10,10,10,0" Foreground="{StaticResource ButtonForegroundBrush}" VerticalAlignment="Center" Text="If-Then-Else" />
+                            <TextBlock Margin="10,0,10,0" Foreground="{StaticResource ButtonForegroundBrush}" VerticalAlignment="Center" Text="If-Then-Else" />
                             <Border Width="20" Height="20" Margin="5,0,5,0" Background="{StaticResource NotificationErrorBrush}" BorderBrush="Transparent" CornerRadius="10"
                                     Visibility="{Binding Issues.Count, Converter={StaticResource ZeroToVisibilityConverter}, FallbackValue=Collapsed}">
                                 <Path Data="{StaticResource ExclamationCircledSVG}" Fill="{StaticResource ButtonForegroundBrush}" Stretch="Uniform" />

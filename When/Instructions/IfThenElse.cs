@@ -121,12 +121,12 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
-            var i = new List<string>();
-
-            Expression.ValidateExpressions(i, PredicateExpression);
+            var valid = base.Validate();
+            
+            Issues.Clear();
+            Expression.ValidateExpressions((IList<string>)Issues, PredicateExpression);
  
-            Issues = i;
-            return i.Count == 0;
+            return Issues.Count == 0 && valid;
         }
     }
 }
