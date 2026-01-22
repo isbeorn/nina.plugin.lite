@@ -889,6 +889,38 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
+    <HierarchicalDataTemplate DataType="{x:Type local:GSSend}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <Border
+                    MinHeight="30"
+                    Margin="10,1,0,0"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Visibility="{Binding GSInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                            <ContentPresenter Content="{Binding GSInstruction}" />
+                        </StackPanel>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontStyle="Italic"
+                            Text="Ground Station instruction goes here"
+                            TextAlignment="Center"
+                            MinWidth="400"
+                            Visibility="{Binding GSInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
+                    </i:Interaction.Behaviors>
+                </Border>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+
     <DataTemplate x:Key="WhenPlugin.When.WhenUnsafe_Mini" DataType="{x:Type local:WhenUnsafe}">
         <mini:MiniContainer DataContext="{Binding Instructions}">
             <mini:MiniContainer.Content>
