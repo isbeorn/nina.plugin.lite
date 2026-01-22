@@ -654,6 +654,93 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
+    <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <logic:ExprControl Margin="20,0,0,0" Label="Expression: " Exp="{Binding PredicateExpression}" />
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <StackPanel Orientation="Horizontal">
+                    <logic:ExprControl Margin="0,2,0,0" Label="Wait " Exp="{Binding Path=WaitExpression, Mode=TwoWay}" />
+                    <TextBlock VerticalAlignment="Center" Margin="0,2,0,0" Text=" s before repeating " />
+                </StackPanel>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate DataType="{x:Type local:OnceSafe}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False"/>
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <Border
+                   MinHeight="30"
+                   Margin="10,1,0,0"
+                   BorderBrush="{StaticResource BorderBrush}"
+                   BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                            <ContentPresenter Content="{Binding CheckInstruction}" />
+                        </StackPanel>
+                        <TextBlock
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontStyle="Italic"
+                           Text="Instruction to check goes here"
+                           TextAlignment="Center"
+                           MinWidth="400"
+                           Visibility="{Binding CheckInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
+                    </i:Interaction.Behaviors>
+                </Border>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+
+    <HierarchicalDataTemplate DataType="{x:Type local:IfFailed}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <Border
+                   MinHeight="30"
+                   Margin="10,1,0,0"
+                   BorderBrush="{StaticResource BorderBrush}"
+                   BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                            <ContentPresenter Content="{Binding CheckInstruction}" />
+                        </StackPanel>
+                        <TextBlock
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontStyle="Italic"
+                           Text="Instruction to check goes here"
+                           TextAlignment="Center"
+                           MinWidth="400"
+                           Visibility="{Binding CheckInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
+                    </i:Interaction.Behaviors>
+                </Border>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+    
     <DataTemplate DataType="{x:Type local:ExternalScript}">
         <nina:SequenceBlockView>
             <nina:SequenceBlockView.SequenceItemContent>
