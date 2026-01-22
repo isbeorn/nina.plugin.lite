@@ -522,61 +522,40 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
-    <!--<DataTemplate DataType="{x:Type local:DIYTrigger}">
+    <DataTemplate DataType="{x:Type local:DIYTrigger}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
-                <ninactrl:DetachingExpander>
-                    <ninactrl:DetachingExpander.Header>
-                        <Border
-                                MinHeight="35"
-                                BorderBrush="{StaticResource BorderBrush}"
-                                BorderThickness="1">
-                            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
-                                <ItemsControl MinHeight="35" ItemsSource="{Binding Triggers}" />
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    TextAlignment="Center"
-                                    FontStyle="Italic"
-                                    Opacity="0.4"
-                                    Text="Trigger goes here"
-                                    Visibility="{Binding Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}"
-                                    MinWidth="200"/>
-                                <i:Interaction.Behaviors>
-                                    <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                                </i:Interaction.Behaviors>
-                            </Grid>
+                <StackPanel>
+                    <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="{StaticResource BackgroundBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="20" Height="20" Margin="10,0,5,0" 
+                                Background="{StaticResource NotificationErrorBrush}"
+                                BorderBrush="Transparent" CornerRadius="10"
+                                Visibility="{Binding Issues.Count, Converter={StaticResource ZeroToVisibilityConverter}, FallbackValue=Collapsed}">
+                                <Path Data="{StaticResource ExclamationCircledSVG}" Fill="{StaticResource ButtonForegroundBrush}" Stretch="Uniform" />
+                                <Border.ToolTip><ItemsControl ItemsSource="{Binding Issues}" /></Border.ToolTip>
+                            </Border>
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Trigger:" />
+                            <ItemsControl MinHeight="35" Margin="10,0,0,0" ItemsSource="{Binding TriggerRunner.Triggers}" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontStyle="Italic" Opacity="0.4"
+                                Text="Drop trigger here"
+                                Visibility="{Binding TriggerRunner.Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}"
+                                MinWidth="150"/>
                             <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                                 <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Trigger.SequenceTrigger" OnDropCommand="DropIntoDIYTriggersCommand" />
                             </i:Interaction.Behaviors>
-                        </Border>
-                    </ninactrl:DetachingExpander.Header>
-                    <StackPanel Orientation="Vertical">
-                        <Border
-                            MinHeight="35"
-                            Margin="0,0,0,0"
-                            BorderBrush="{StaticResource BorderBrush}"
-                            BorderThickness="1">
-                            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
-                                <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
-                                <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontStyle="Italic"
-                                Opacity="0.4"
-                                Text="Instructions will go here..."
-                                Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
-                                <i:Interaction.Behaviors>
-                                    <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                                    <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer" OnDropCommand="DropIntoCommand" />
-                                </i:Interaction.Behaviors>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </ninactrl:DetachingExpander>
+                        </StackPanel>
+                    </Border>
+                    <ContentControl Style="{StaticResource CollapsibleInstructionsStyle}" 
+                        Content="{Binding TriggerRunner}" Tag="Instructions"
+                        local:CollapsibleInstructionsHelper.PlaceholderText="Instructions to run when trigger fires" />
+                </StackPanel>
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
-    </DataTemplate>-->
+    </DataTemplate>
 
 
     <DataTemplate DataType="{x:Type local:ConditionalTrigger}">
