@@ -24,5 +24,24 @@ namespace WhenPlugin.When {
         }
 
         #endregion
+
+        #region HeaderText Attached Property
+
+        public static readonly DependencyProperty HeaderTextProperty =
+            DependencyProperty.RegisterAttached(
+                "HeaderText",
+                typeof(string),
+                typeof(CollapsibleInstructionsHelper),
+                new FrameworkPropertyMetadata("Header Text"));
+
+        public static string GetHeaderText(DependencyObject obj) {
+            return (string)obj.GetValue(HeaderTextProperty);
+        }
+
+        public static void SetHeaderText(DependencyObject obj, string value) {
+            obj.SetValue(HeaderTextProperty, value);
+        }
+
+        #endregion
     }
 }
