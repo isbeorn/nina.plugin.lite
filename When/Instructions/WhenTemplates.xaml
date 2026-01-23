@@ -1159,24 +1159,121 @@
   <HierarchicalDataTemplate DataType="{x:Type local:OnceSafe}" ItemsSource="{Binding Items}">
     <local:PowerupsContainerView AllowTriggers="False" AllowConditions="False" />
   </HierarchicalDataTemplate>
-  
-  <DataTemplate DataType="{x:Type local:DIYMeridianFlipTrigger}">
-    <nina:SequenceBlockView DataContext="{Binding}">
-      <nina:SequenceBlockView.SequenceItemContent>
-        <StackPanel>
-          <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="{StaticResource BackgroundBrush}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="{Binding FlipStatus}" />
-            </StackPanel>
-          </Border>
-          <ContentControl Style="{StaticResource CollapsibleInstructionsStyle}"
-              Content="{Binding TriggerRunner}" Tag="Flip Instructions"
-              local:CollapsibleInstructionsHelper.PlaceholderText="Flip instructions go here" />
-        </StackPanel>
-      </nina:SequenceBlockView.SequenceItemContent>
-    </nina:SequenceBlockView>
-  </DataTemplate>
 
+  <!-- DIYMeridianFlipTrigger - single expander; body shows flip header + instructions list -->
+  <DataTemplate DataType="{x:Type local:DIYMeridianFlipTrigger}">
+    <Border>
+      <Border.Resources>
+        <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
+      </Border.Resources>
+
+      <i:Interaction.Behaviors>
+        <behaviors:DragOverBehavior AllowDragCenter="False" DragAboveSize="25" DragBelowSize="15" />
+      </i:Interaction.Behaviors>
+
+      <ninactrl:DetachingExpander IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
+        <ninactrl:DetachingExpander.Header>
+          <Grid
+              MinHeight="45"
+              Margin="0"
+              HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
+              Background="{StaticResource SecondaryBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                  MinHeight="25"
+                  Margin="10,10,40,0"
+                  Foreground="White"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  Text="{Binding Name}" />
+
+              <Border
+                  Width="20"
+                  Height="20"
+                  Margin="5,0,5,0"
+                  Background="{StaticResource NotificationErrorBrush}"
+                  BorderBrush="Transparent"
+                  CornerRadius="10">
+                <Border.Visibility>
+                  <PriorityBinding>
+                    <Binding Path="Issues.Count" Converter="{StaticResource ZeroToVisibilityConverter}" FallbackValue="Collapsed" />
+                  </PriorityBinding>
+                </Border.Visibility>
+                <Path
+                    HorizontalAlignment="Right"
+                    Data="{StaticResource ExclamationCircledSVG}"
+                    Fill="{StaticResource ButtonForegroundBrush}"
+                    Stretch="Uniform" />
+                <Border.ToolTip>
+                  <ItemsControl ItemsSource="{Binding Issues}" />
+                </Border.ToolTip>
+              </Border>
+            </StackPanel>
+
+            <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
+              <ContentPresenter
+                  Margin="2,0,10,0"
+                  HorizontalAlignment="Right"
+                  Content="{Binding}"
+                  DockPanel.Dock="Right"
+                  Style="{StaticResource ProgressPresenter}" />
+            </Border>
+
+            <Border
+                x:Name="ButtonCommands"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource SecondaryBackgroundBrush}">
+              <Control Template="{StaticResource PowerupsButtons}" />
+            </Border>
+          </Grid>
+        </ninactrl:DetachingExpander.Header>
+
+        <!-- Body: show the prior "Flip Instructions" header + the instruction list (no inner expander) -->
+        <StackPanel>
+          <!-- "Header it had before" -->
+          <Grid Background="{StaticResource TertiaryBackgroundBrush}" MinHeight="30">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                  Margin="10,0,0,0"
+                  VerticalAlignment="Center"
+                  Foreground="{StaticResource PrimaryBrush}"
+                  FontWeight="SemiBold"
+                  Text="Flip Instructions" />
+              <TextBlock
+                  Margin="10,0,0,0"
+                  VerticalAlignment="Center"
+                  Foreground="{StaticResource ButtonForegroundBrush}"
+                  FontStyle="Italic"
+                  Opacity="0.6"
+                  Text="{Binding TriggerRunner.Items.Count, StringFormat='({0} items)'}" />
+            </StackPanel>
+          </Grid>
+
+          <!-- Instructions list -->
+          <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
+              <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+              <TextBlock
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  FontStyle="Italic"
+                  Opacity="0.4"
+                  Text="Flip instructions go here"
+                  Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </ninactrl:DetachingExpander>
+    </Border>
+  </DataTemplate>
+  
   <DataTemplate x:Key="WhenPlugin.When.WhenUnsafe_Mini" DataType="{x:Type local:WhenUnsafe}">
     <mini:MiniContainer DataContext="{Binding Instructions}">
       <mini:MiniContainer.Content>
