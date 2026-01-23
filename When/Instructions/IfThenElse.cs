@@ -122,10 +122,16 @@ namespace WhenPlugin.When {
 
         public new bool Validate() {
             var valid = base.Validate();
-            
-            Issues.Clear();
-            Expression.ValidateExpressions((IList<string>)Issues, PredicateExpression);
- 
+
+            var exprIssues = new List<string>();
+            Expression.ValidateExpressions(exprIssues, PredicateExpression);
+
+            foreach (var issue in exprIssues) {
+                if (!string.IsNullOrWhiteSpace(issue) && !Issues.Contains(issue)) {
+                    Issues.Add(issue);
+                }
+            }
+
             return Issues.Count == 0 && valid;
         }
     }

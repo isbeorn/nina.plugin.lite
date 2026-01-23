@@ -44,14 +44,7 @@ namespace WhenPlugin.When {
             };
         }
 
-        [JsonIgnore]
-        public IfContainer Condition { get; set; }
-
-        [JsonProperty("Condition")]
-        private IfContainer ObsoleteCondition {
-            // get is intentionally omitted here
-            set { Condition = value; }
-        }
+        public SequentialContainer Condition { get; set; }
 
         [JsonIgnore]
         public SequentialContainer Instructions { get; set; }
@@ -61,9 +54,6 @@ namespace WhenPlugin.When {
             // get is intentionally omitted here
             set { Instructions = value; }
         }
-
-        [JsonProperty]
-        public ISequenceItem? GSInstruction { get; set; }
 
         public ICommand DropIntoIfCommand { get; set; }
 
@@ -140,19 +130,20 @@ namespace WhenPlugin.When {
                 item = (ISequenceItem)source.Clone();
             }
 
-            GSInstruction = item;
+            Condition.Items.Clear();
+            Condition.Add(item);
             item.AttachNewParent(this);
-            RaisePropertyChanged("GSInstruction");
+            RaisePropertyChanged("Condition");
         }
 
         public override bool Validate() {
             Issues.Clear();
-            if (GSInstruction == null) {
+            if (Condition.Items.Count == 0) {
                 Issues.Add("There must be a Ground Station instruction included in this instruction");
             } else {
-                var messageProperty = GSInstruction.GetType().GetProperty("Message");
+                var messageProperty = Condition.Items[0].GetType().GetProperty("Message");
                 if (messageProperty == null) {
-                    messageProperty = GSInstruction.GetType().GetProperty("Payload");
+                    messageProperty = Condition.Items[0].GetType().GetProperty("Payload");
                     if (messageProperty == null) {
                         Issues.Add("This instruction cannot be used with Send via Ground Station");
                     }
