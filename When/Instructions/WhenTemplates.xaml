@@ -1235,9 +1235,7 @@
           </Grid>
         </ninactrl:DetachingExpander.Header>
 
-        <!-- Body: show the prior "Flip Instructions" header + the instruction list (no inner expander) -->
         <StackPanel>
-          <!-- "Header it had before" -->
           <Grid Background="{StaticResource TertiaryBackgroundBrush}" MinHeight="30">
             <StackPanel Orientation="Horizontal">
               <TextBlock
@@ -1256,8 +1254,8 @@
             </StackPanel>
           </Grid>
 
-          <!-- Instructions list -->
           <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <!-- IMPORTANT: DataContext is the container being dropped into -->
             <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
               <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
               <TextBlock
@@ -1267,6 +1265,14 @@
                   Opacity="0.4"
                   Text="Flip instructions go here"
                   Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+
+              <!-- Enable DnD into TriggerRunner -->
+              <i:Interaction.Behaviors>
+                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                <behaviors:DropIntoBehavior
+                    AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
+                    OnDropCommand="DropIntoCommand" />
+              </i:Interaction.Behaviors>
             </Grid>
           </Border>
         </StackPanel>
