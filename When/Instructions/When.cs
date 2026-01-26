@@ -79,7 +79,7 @@ namespace WhenPlugin.When {
         }
 
         [IsExpression]
-        private string predicate;
+        public partial string Predicate { get; set; }
 
         public string ValidateConstant(double temp) {
             if ((int)temp == 0) {

@@ -54,7 +54,7 @@ namespace WhenPlugin.When {
         public bool InFlight { get; set; }
 
         [IsExpression]
-        public string predicate;
+        public partial string Predicate { get; set; }
 
         private Expr _IfExpr;
 

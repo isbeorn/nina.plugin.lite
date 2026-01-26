@@ -39,13 +39,14 @@ namespace WhenPlugin.When {
         }
 
         [IsExpression]
-        private string nameExpr;
+        public partial string NameExpr { get; set; }
 
         [IsExpression]
-        private string iExpr;
+        public partial string IExpr { get; set; }
 
         [IsExpression]
-        private string vExpr;
+        public partial string VExpr { get; set; }
+
 
         public static readonly String VALID_SYMBOL = "^[a-zA-Z][a-zA-Z0-9-+_]*$";
 

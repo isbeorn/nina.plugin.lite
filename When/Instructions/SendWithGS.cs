@@ -100,7 +100,7 @@ namespace WhenPlugin.When {
             if (messageProperty == null) {
                 messageProperty = condition.GetType().GetProperty("Payload");
                 if (messageProperty == null) {
-                    throw new SequenceEntityFailedException("Not a Ground Station instruction?");
+                    throw new SequenceEntityFailedException("Not a supported Ground Station instruction?");
                 }
             }
             string message = (string)messageProperty.GetValue(condition);

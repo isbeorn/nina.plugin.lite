@@ -34,7 +34,7 @@ namespace WhenPlugin.When {
         }
 
         [IsExpression]
-        private string expr;
+        public partial string Expr { get; set; }
 
         public AddImagePattern(AddImagePattern copyMe) : this(OptionsVM) {
             if (copyMe != null) {

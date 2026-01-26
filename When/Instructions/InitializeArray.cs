@@ -39,7 +39,7 @@ namespace WhenPlugin.When {
 
 
         [IsExpression]
-        private string nameExpr;
+        public partial string NameExpr { get; set; }
 
         public override string ToString() {
                 return $"Initialize Array: {NameExprExpression.StringValue}";

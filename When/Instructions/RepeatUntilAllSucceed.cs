@@ -60,7 +60,7 @@ namespace WhenPlugin.When {
         public SequentialContainer Instructions { get; set; }
 
         [IsExpression (Default = 60)]
-        private int wait;
+        public partial int Wait { get; set; }
 
         public override string ToString() {
             return $"Instruction {nameof(RepeatUntilAllSucceed)}";

@@ -80,7 +80,7 @@ namespace WhenPlugin.When {
         public ISequenceItem? CheckInstruction { get; set; }
 
         [IsExpression]
-        private int time;
+        public partial int Time { get; set; }
 
         public ICommand DropIntoIfCommand { get; set; }
 

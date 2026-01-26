@@ -63,7 +63,7 @@ namespace WhenPlugin.When {
         public IfContainer Instructions { get; set; }
 
         [IsExpression]
-        private string predicate;
+        public partial string Predicate { get; set; }
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
 

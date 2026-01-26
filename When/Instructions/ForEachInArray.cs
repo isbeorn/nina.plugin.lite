@@ -64,7 +64,7 @@ namespace WhenPlugin.When {
 
 
         [IsExpression]
-        private string nameExpr;
+        public partial string NameExpr { get; set; }
 
         [JsonProperty]
         public string Array {
