@@ -26,15 +26,26 @@
     <nina:SequenceBlockView />
   </DataTemplate>
 
-  <view:SequenceDataTemplateSelector x:Key="SequenceDataTemplateSelector"
+    <view:SequenceDataTemplateSelector x:Key="SequenceDataTemplateSelector"
                                       SequenceContainer="{StaticResource SequenceContainerTemplate}"
                                       DeepSkyObjectContainer="{StaticResource SequenceContainerTemplate}"
                                       SequenceItem="{StaticResource SequenceItemTemplate}"
                                       SequenceTrigger="{StaticResource SequenceItemTemplate}"
                                       SequenceCondition="{StaticResource SequenceItemTemplate}" />
 
- 
-  <!-- Reusable style for collapsible instruction sections -->
+    <local:WhenTemplateSelector x:Key="WhenTemplateSelector">
+        <local:WhenTemplateSelector.FallbackSelector>
+            <view:SequenceDataTemplateSelector
+                DeepSkyObjectContainer="{StaticResource SequenceContainerTemplate}"
+                SequenceCondition="{StaticResource SequenceItemTemplate}"
+                SequenceContainer="{StaticResource SequenceContainerTemplate}"
+                SequenceItem="{StaticResource SequenceItemTemplate}"
+                SequenceTrigger="{StaticResource SequenceItemTemplate}" />
+        </local:WhenTemplateSelector.FallbackSelector>
+    </local:WhenTemplateSelector>
+
+
+    <!-- Reusable style for collapsible instruction sections -->
     <!-- Usage: Content = instructions container (with Items and DropIntoCommand), Tag = header text -->
     <Style x:Key="CollapsibleInstructionsStyle" TargetType="ContentControl">
         <Setter Property="Template">
@@ -409,7 +420,7 @@
           BorderBrush="{StaticResource BorderBrush}"
           BorderThickness="1">
                     <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Instructions}">
-                        <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" ItemTemplateSelector="{StaticResource SequenceDataTemplateSelector}" />
+                        <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" ItemTemplateSelector="{StaticResource WhenTemplateSelector}" />
                         <TextBlock
               HorizontalAlignment="Left"
               VerticalAlignment="Center"
