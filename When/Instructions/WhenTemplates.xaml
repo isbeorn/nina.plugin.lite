@@ -151,7 +151,7 @@
                     </ninactrl:DetachingExpander>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
+        </Setter>   
     </Style>
     
     <ControlTemplate x:Key="PowerupsButtons">
@@ -350,91 +350,99 @@
             <ninactrl:DetachingExpander IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
                 <ninactrl:DetachingExpander.Header>
                     <Grid
-            MinHeight="45"
-            Margin="0"
-            HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
-            Background="{StaticResource SecondaryBackgroundBrush}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+        MinHeight="45"
+        Margin="0"
+        HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
+        Background="{StaticResource SecondaryBackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
-                MinHeight="25"
-                Margin="10,10,40,0"
-                Foreground="White"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Text="{Binding Name}" />
-
-                            <Border
-                Width="20"
-                Height="20"
-                Margin="5,0,5,0"
-                Background="{StaticResource NotificationErrorBrush}"
-                BorderBrush="Transparent"
-                CornerRadius="10">
-                                <Border.Visibility>
-                                    <PriorityBinding>
-                                        <Binding Path="Issues.Count" Converter="{StaticResource ZeroToVisibilityConverter}" FallbackValue="Collapsed" />
-                                    </PriorityBinding>
-                                </Border.Visibility>
-                                <Path
-                  HorizontalAlignment="Right"
-                  Data="{StaticResource ExclamationCircledSVG}"
-                  Fill="{StaticResource ButtonForegroundBrush}"
-                  Stretch="Uniform" />
-                                <Border.ToolTip>
-                                    <ItemsControl ItemsSource="{Binding Issues}" />
-                                </Border.ToolTip>
-                            </Border>
-
-                            <!-- The only varying part between WhenUnsafe and WhenSwitch -->
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </StackPanel>
-
-                        <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
-                            <ContentPresenter
-                Margin="2,0,10,0"
-                HorizontalAlignment="Right"
-                Content="{Binding}"
-                DockPanel.Dock="Right"
-                Style="{StaticResource ProgressPresenter}" />
-                        </Border>
+                    <StackPanel Orientation="Horizontal">
+                        <Path
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Data="{StaticResource SequenceSVG}"
+                            Fill="{StaticResource ButtonForegroundBrush}"
+                            Stretch="Uniform"
+                            VerticalAlignment="Center" />
+                        <TextBlock
+                            MinHeight="25"
+                            Margin="0,10,40,0"
+                            Foreground="White"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name}" />
 
                         <Border
-              x:Name="ButtonCommands"
-              Grid.Column="2"
-              HorizontalAlignment="Stretch"
-              Background="{StaticResource SecondaryBackgroundBrush}">
-                            <Control Template="{StaticResource PowerupsButtons}" />
+                            Width="20"
+                            Height="20"
+                            Margin="5,0,5,0"
+                            Background="{StaticResource NotificationErrorBrush}"
+                            BorderBrush="Transparent"
+                            CornerRadius="10">
+                            <Border.Visibility>
+                                <PriorityBinding>
+                                    <Binding Path="Issues.Count" Converter="{StaticResource ZeroToVisibilityConverter}" FallbackValue="Collapsed" />
+                                </PriorityBinding>
+                            </Border.Visibility>
+                            <Path
+                              HorizontalAlignment="Right"
+                              Data="{StaticResource ExclamationCircledSVG}"
+                              Fill="{StaticResource ButtonForegroundBrush}"
+                              Stretch="Uniform" />
+                            <Border.ToolTip>
+                                <ItemsControl ItemsSource="{Binding Issues}" />
+                            </Border.ToolTip>
                         </Border>
-                    </Grid>
+
+                        <!-- The only varying part between WhenUnsafe and WhenSwitch -->
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
+                        <ContentPresenter
+                            Margin="2,0,10,0"
+                            HorizontalAlignment="Right"
+                            Content="{Binding}"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource ProgressPresenter}" />
+                    </Border>
+
+                    <Border
+                          x:Name="ButtonCommands"
+                          Grid.Column="2"
+                          HorizontalAlignment="Stretch"
+                          Background="{StaticResource SecondaryBackgroundBrush}">
+                        <Control Template="{StaticResource PowerupsButtons}" />
+                    </Border>
+                </Grid>
                 </ninactrl:DetachingExpander.Header>
 
                 <Border
-          MinHeight="35"
-          Margin="0,0,0,0"
-          BorderBrush="{StaticResource BorderBrush}"
-          BorderThickness="1">
+                      MinHeight="35"
+                      Margin="0,0,0,0"
+                      BorderBrush="{StaticResource BorderBrush}"
+                      BorderThickness="1">
                     <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Instructions}">
                         <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" ItemTemplateSelector="{StaticResource WhenTemplateSelector}" />
                         <TextBlock
-              HorizontalAlignment="Left"
-              VerticalAlignment="Center"
-              Margin="30,0,0,0"
-              FontStyle="Italic"
-              Opacity="0.4"
-              Text="Instructions"
-              Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          Margin="30,0,0,0"
+                          FontStyle="Italic"
+                          Opacity="0.4"
+                          Text="Instructions"
+                          Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
 
                         <i:Interaction.Behaviors>
                             <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                             <behaviors:DropIntoBehavior
-                AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
-                OnDropCommand="DropIntoCommand" />
+                                AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
+                                OnDropCommand="DropIntoCommand" />
                         </i:Interaction.Behaviors>
                     </Grid>
                 </Border>
@@ -825,9 +833,17 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal">
+                            <Path
+                            Width="20"
+                            Height="20"
+                            Margin="0,0,10,0"
+                            Data="{StaticResource SequenceSVG}"
+                            Fill="{StaticResource ButtonForegroundBrush}"
+                            Stretch="Uniform"
+                            VerticalAlignment="Center" />
                             <TextBlock
                             MinHeight="25"
-                            Margin="10,10,40,0"
+                            Margin="0,10,40,0"
                             Foreground="White"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
