@@ -113,18 +113,20 @@ namespace WhenPlugin.When {
             Name = Name;
             Icon = Icon;
             FlipStatus = "Waiting for a NINA sequence to start...";
-            TriggerRunner = new IfContainer();
-            AddItem(TriggerRunner, new StopGuiding(guiderMediator) { Name = "Stop Guiding", Icon = GuiderIcon }); ;
-            AddItem(TriggerRunner, new PassMeridian(telescopeMediator, profileService) { Name = "Wait to Pass Meridian", Icon = MeridianFlipIcon });
-            AddItem(TriggerRunner, new DoFlip(telescopeMediator, domeMediator, domeFollower) { Name = "Flip Scope", Icon = MeridianFlipIcon });
-            AddItem(TriggerRunner, new WaitForTimeSpan() { Name = "Settle (Wait for Time Span)", Icon = HourglassIcon, Time = 10 });
-            AddItem(TriggerRunner, new RunAutofocus(profileService, history, cameraMediator, filterWheelMediator, focuserMediator,
+            Instructions = new IfContainer();
+            Instructions.AttachNewParent(Parent);
+            Instructions.PseudoParent = this;
+            AddItem(Instructions, new StopGuiding(guiderMediator) { Name = "Stop Guiding", Icon = GuiderIcon }); ;
+            AddItem(Instructions, new PassMeridian(telescopeMediator, profileService) { Name = "Wait to Pass Meridian", Icon = MeridianFlipIcon });
+            AddItem(Instructions, new DoFlip(telescopeMediator, domeMediator, domeFollower) { Name = "Flip Scope", Icon = MeridianFlipIcon });
+            AddItem(Instructions, new WaitForTimeSpan() { Name = "Settle (Wait for Time Span)", Icon = HourglassIcon, Time = 10 });
+            AddItem(Instructions, new RunAutofocus(profileService, history, cameraMediator, filterWheelMediator, focuserMediator,
                 autoFocusVMFactory) { Name = "Run Autofocus", Icon = CameraIcon });
             NINA.Sequencer.SequenceItem.Platesolving.Center c = new(profileService, telescopeMediator, imagingMediator, filterWheelMediator, guiderMediator,
                 domeMediator, domeFollower, plateSolverFactory, windowServiceFactory) { Name = "Slew and center", Icon = PlatesolveIcon };
-            AddItem(TriggerRunner, c);
-            AddItem(TriggerRunner, new StartGuiding(guiderMediator) { Name = "Start Guiding", Icon = GuiderIcon });
-            AddItem(TriggerRunner, new WaitForTimeSpan() { Name = "Settle (Wait for Time Span)", Icon = HourglassIcon, Time = 5 });
+            AddItem(Instructions, c);
+            AddItem(Instructions, new StartGuiding(guiderMediator) { Name = "Start Guiding", Icon = GuiderIcon });
+            AddItem(Instructions, new WaitForTimeSpan() { Name = "Settle (Wait for Time Span)", Icon = HourglassIcon, Time = 5 });
 
             PauseTimeBeforeMeridian = profileService.ActiveProfile.MeridianFlipSettings.PauseTimeBeforeMeridian;
             MaxMinutesAfterMeridian = profileService.ActiveProfile.MeridianFlipSettings.MaxMinutesAfterMeridian;
@@ -155,10 +157,9 @@ namespace WhenPlugin.When {
             Name = copyMe.Name;
             Icon = copyMe.Icon;
             FlipStatus = copyMe.FlipStatus;
-            // Fix for crash; unsure how we get here...
-            TriggerRunner = (IfContainer)copyMe.TriggerRunner.Clone();
-            TriggerRunner.AttachNewParent(Parent);
-            ((IfContainer)TriggerRunner).PseudoParent = this;
+            Instructions = (IfContainer)copyMe.Instructions.Clone();
+            Instructions.AttachNewParent(Parent);
+            Instructions.PseudoParent = this;
 
             PauseTimeBeforeMeridian = copyMe.PauseTimeBeforeMeridian;
             MaxMinutesAfterMeridian = copyMe.MaxMinutesAfterMeridian;
@@ -246,6 +247,9 @@ namespace WhenPlugin.When {
             }
         }
 
+        [JsonProperty]
+        public IfContainer Instructions { get; protected set; }
+
         MeridianFlipSettings MFSettings = new();
 
         public virtual double TimeToMeridianFlip {
@@ -273,10 +277,10 @@ namespace WhenPlugin.When {
         public override void AfterParentChanged() {
             lastFlipTime = DateTime.MinValue;
             lastFlipCoordiantes = null;
-            foreach (ISequenceItem item in TriggerRunner.Items) {
-                if (item.Parent == null) item.AttachNewParent(TriggerRunner);
+            foreach (ISequenceItem item in Instructions.Items) {
+                if (item.Parent == null) item.AttachNewParent(Instructions);
             }
-            TriggerRunner.AttachNewParent(Parent);
+            Instructions.AttachNewParent(Parent);
         }
 
         protected virtual TimeSpan CalculateMinimumTimeRemaining() {
@@ -464,11 +468,12 @@ namespace WhenPlugin.When {
                 Target = t;
                 Logger.Debug("Found Target: " + Target);
                 RaisePropertyChanged("Target");
-                UpdateChildren(TriggerRunner);
+                UpdateChildren(Instructions);
             } else {
                 Logger.Debug("Running target not found");
             }
         }
+
 
         private string TimeString(DateTime min) {
             return min.ToString("T", CultureInfo.CurrentCulture);
@@ -494,13 +499,13 @@ namespace WhenPlugin.When {
         }
 
         public override bool ShouldTriggerAfter(ISequenceItem previousItem, ISequenceItem nextItem) {
-            return false;
+            return false;   
         }
 
         public override async Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             InFlight = true;
             try {
-                await TriggerRunner.Run(progress, token);
+                await Instructions.Run(progress, token);
             } finally {
                 InFlight = false;
             }
@@ -508,20 +513,20 @@ namespace WhenPlugin.When {
 
         public virtual bool Validate() {
             // Validate the Items (this will update their status)
-            if (TriggerRunner == null) return true;
-            if (!(TriggerRunner is IfContainer)) {
+            if (Instructions == null) return true;
+            if (!(Instructions is IfContainer)) {
                 IfContainer ifc = new IfContainer();
-                foreach (ISequenceItem item in TriggerRunner.Items) {
+                foreach (ISequenceItem item in Instructions.Items) {
                     ISequenceItem i = (ISequenceItem)item.Clone();
                     ifc.Items.Add(i);
                     i.AttachNewParent(ifc);
                 }
                 ifc.AttachNewParent(Parent);
-                TriggerRunner = ifc;
+                Instructions = ifc;
             }
-            ((IfContainer)TriggerRunner).PseudoParent = this;
+            Instructions.PseudoParent = this;
             bool valid = true;
-            foreach (ISequenceItem item in TriggerRunner.Items) {
+            foreach (ISequenceItem item in Instructions.Items) {
                 if (item is IValidatable vitem) {
                     valid &= vitem.Validate();
                 }
