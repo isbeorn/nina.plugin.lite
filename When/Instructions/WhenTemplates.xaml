@@ -985,9 +985,6 @@
   <!-- DIYMeridianFlipTrigger - single expander; body shows flip header + instructions list -->
   <DataTemplate DataType="{x:Type local:DIYMeridianFlipTrigger}">
     <Border>
-      <Border.Resources>
-        <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
-      </Border.Resources>
 
       <i:Interaction.Behaviors>
         <behaviors:DragOverBehavior AllowDragCenter="False" DragAboveSize="25" DragBelowSize="15" />
@@ -1045,6 +1042,13 @@
                   <ItemsControl ItemsSource="{Binding Issues}" />
                 </Border.ToolTip>
               </Border>
+
+            <!-- FlipStatus display -->
+            <TextBlock
+                Margin="10,0,0,0"
+                VerticalAlignment="Center"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                Text="{Binding FlipStatus}" />
             </StackPanel>
 
             <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
