@@ -985,9 +985,15 @@
   <!-- DIYMeridianFlipTrigger - single expander; body shows flip header + instructions list -->
   <DataTemplate DataType="{x:Type local:DIYMeridianFlipTrigger}">
     <Border>
+      <Border.Resources>
+        <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
+      </Border.Resources>
 
       <i:Interaction.Behaviors>
-        <behaviors:DragOverBehavior AllowDragCenter="False" DragAboveSize="25" DragBelowSize="15" />
+        <behaviors:DragOverBehavior 
+            AllowDragCenter="False" 
+            DragAboveSize="25" 
+            DragBelowSize="15" />
       </i:Interaction.Behaviors>
 
       <ninactrl:DetachingExpander IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
@@ -1003,25 +1009,29 @@
               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Orientation="Horizontal">
-               <Path
-                   Width="20"
-                   Height="20"
-                   Margin="10,0,10,0"
-                   Data="{StaticResource SequenceSVG}"
-                   Fill="{StaticResource ButtonForegroundBrush}"
-                   Stretch="Uniform"
-                   VerticalAlignment="Center" />
+            <!-- Left section: Icon, Name, Issues, Settings, and Status -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+              <!-- Sequence icon -->
+              <Path
+                  Width="20"
+                  Height="20"
+                  Margin="10,0,10,0"
+                  Data="{StaticResource SequenceSVG}"
+                  Fill="{StaticResource ButtonForegroundBrush}"
+                  Stretch="Uniform"
+                  VerticalAlignment="Center" />
 
-               <TextBlock
-                   MinHeight="25"
-                   Margin="0,10,40,0"
-                   Foreground="White"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Center"
-                   Text="{Binding Name}" />
-               
-                <Border
+              <!-- Name -->
+              <TextBlock
+                  MinHeight="25"
+                  Margin="0,10,40,0"
+                  Foreground="White"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  Text="{Binding Name}" />
+
+              <!-- Issues indicator -->
+              <Border
                   Width="20"
                   Height="20"
                   Margin="5,0,5,0"
@@ -1030,7 +1040,10 @@
                   CornerRadius="10">
                 <Border.Visibility>
                   <PriorityBinding>
-                    <Binding Path="Issues.Count" Converter="{StaticResource ZeroToVisibilityConverter}" FallbackValue="Collapsed" />
+                    <Binding 
+                        Path="Issues.Count" 
+                        Converter="{StaticResource ZeroToVisibilityConverter}" 
+                        FallbackValue="Collapsed" />
                   </PriorityBinding>
                 </Border.Visibility>
                 <Path
@@ -1043,15 +1056,74 @@
                 </Border.ToolTip>
               </Border>
 
-            <!-- FlipStatus display -->
-            <TextBlock
-                Margin="10,0,0,0"
-                VerticalAlignment="Center"
-                Foreground="{StaticResource ButtonForegroundBrush}"
-                Text="{Binding FlipStatus}" />
+              <!-- Settings and Status -->
+              <StackPanel 
+                  Orientation="Vertical" 
+                  VerticalAlignment="Center">
+                <!-- Settings row -->
+                <StackPanel 
+                    Orientation="Horizontal" 
+                    Margin="0,10,0,10">
+                  <!-- Target display -->
+                  <TextBlock 
+                      VerticalAlignment="Center" 
+                      Text="Target: " 
+                      Visibility="{Binding Target, Converter={StaticResource NullToVisibilityCollapsedConverter}}" />
+                  <TextBlock 
+                      Margin="0,0,25,0" 
+                      VerticalAlignment="Center" 
+                      Visibility="{Binding Target, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
+                    <TextBlock.Inlines>
+                      <Run FontWeight="Bold" Text="{Binding Target.TargetName}" />
+                    </TextBlock.Inlines>
+                  </TextBlock>
+
+                  <!-- Pause before meridian -->
+                  <TextBlock 
+                      Margin="10,0,0,0"
+                      VerticalAlignment="Center" 
+                      Text="Pause before meridian:" />
+                  <TextBox
+                      MinWidth="25"
+                      Margin="5,0,10,0"
+                      Text="{Binding PauseTimeBeforeMeridian}"
+                      VerticalAlignment="Center"
+                      TextAlignment="Center" />
+
+                  <!-- Minutes after meridian -->
+                  <TextBlock 
+                      VerticalAlignment="Center" 
+                      Text="Minutes after meridian:" />
+                  <TextBox
+                      MinWidth="25"
+                      Margin="5,0,10,0"
+                      Text="{Binding MinutesAfterMeridian}"
+                      TextAlignment="Center" />
+
+                  <!-- Max minutes after meridian -->
+                  <TextBlock 
+                      VerticalAlignment="Center" 
+                      Text="Max minutes after meridian:" />
+                  <TextBox
+                      MinWidth="25"
+                      Margin="5,0,10,0"
+                      Text="{Binding MaxMinutesAfterMeridian}"
+                      TextAlignment="Center" />
+                </StackPanel>
+
+                <!-- FlipStatus display -->
+                <TextBlock
+                    Margin="10,5,0,10"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource ButtonForegroundBrush}"
+                    Text="{Binding FlipStatus}" />
+              </StackPanel>
             </StackPanel>
 
-            <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
+            <!-- Center section: Progress indicator -->
+            <Border 
+                Grid.Column="1" 
+                Background="{StaticResource SecondaryBackgroundBrush}">
               <ContentPresenter
                   Margin="2,0,10,0"
                   HorizontalAlignment="Right"
@@ -1060,6 +1132,7 @@
                   Style="{StaticResource ProgressPresenter}" />
             </Border>
 
+            <!-- Right section: Action buttons -->
             <Border
                 x:Name="ButtonCommands"
                 Grid.Column="2"
@@ -1070,8 +1143,12 @@
           </Grid>
         </ninactrl:DetachingExpander.Header>
 
+        <!-- Body: Flip instructions section -->
         <StackPanel>
-          <Grid Background="{StaticResource TertiaryBackgroundBrush}" MinHeight="30">
+          <!-- Flip Instructions sub-header -->
+          <Grid 
+              Background="{StaticResource TertiaryBackgroundBrush}" 
+              MinHeight="30">
             <StackPanel Orientation="Horizontal">
               <TextBlock
                   Margin="10,0,0,0"
@@ -1089,10 +1166,17 @@
             </StackPanel>
           </Grid>
 
-          <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
-            <!-- IMPORTANT: DataContext is the container being dropped into -->
-            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding TriggerRunner}">
-              <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+          <!-- Flip instructions drop zone -->
+          <Border 
+              MinHeight="35" 
+              BorderBrush="{StaticResource BorderBrush}" 
+              BorderThickness="1">
+            <Grid 
+                Background="{StaticResource BackgroundBrush}" 
+                DataContext="{Binding TriggerRunner}">
+              <ItemsControl 
+                  MinHeight="35" 
+                  ItemsSource="{Binding Items}" />
               <TextBlock
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
@@ -1101,9 +1185,10 @@
                   Text="Flip instructions go here"
                   Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
 
-              <!-- Enable DnD into TriggerRunner -->
               <i:Interaction.Behaviors>
-                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                <behaviors:DragOverBehavior 
+                    DragAboveSize="0" 
+                    DragBelowSize="0" />
                 <behaviors:DropIntoBehavior
                     AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
                     OnDropCommand="DropIntoCommand" />
