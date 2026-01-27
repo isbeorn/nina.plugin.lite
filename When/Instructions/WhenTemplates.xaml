@@ -436,7 +436,7 @@
                           Margin="30,0,0,0"
                           FontStyle="Italic"
                           Opacity="0.4"
-                          Text="Instructions"
+                          Text="Instructions to run when Trigger fires"
                           Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
 
                         <i:Interaction.Behaviors>
@@ -925,7 +925,7 @@
                         Margin="30,0,0,0"
                         FontStyle="Italic"
                         Opacity="0.4"
-                        Text="Instructions to run when trigger fires"
+                        Text="Instructions to run when Trigger fires"
                         Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
 
                     <i:Interaction.Behaviors>
