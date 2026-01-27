@@ -336,8 +336,9 @@
       </nina:SequenceBlockView.SequenceItemContent>
     </nina:SequenceBlockView>
   </DataTemplate>
-    <!-- Shared base for WhenSwitch/WhenUnsafe -->
-    <ControlTemplate x:Key="WhenBaseTemplate" TargetType="ContentControl">
+    
+  <!-- Shared base for WhenSwitch/WhenUnsafe -->
+  <ControlTemplate x:Key="WhenBaseTemplate" TargetType="ContentControl">
         <Border>
             <Border.Resources>
                 <wpfutil:SharedResourceDictionary Source="/NINA.Sequencer;component/Resources/Styles/ProgressStyle.xaml" />
@@ -364,7 +365,7 @@
                         <Path
                             Width="20"
                             Height="20"
-                            Margin="0,0,10,0"
+                            Margin="10,0,10,0"
                             Data="{StaticResource SequenceSVG}"
                             Fill="{StaticResource ButtonForegroundBrush}"
                             Stretch="Uniform"
@@ -836,7 +837,7 @@
                             <Path
                             Width="20"
                             Height="20"
-                            Margin="0,0,10,0"
+                            Margin="10,0,10,0"
                             Data="{StaticResource SequenceSVG}"
                             Fill="{StaticResource ButtonForegroundBrush}"
                             Stretch="Uniform"
