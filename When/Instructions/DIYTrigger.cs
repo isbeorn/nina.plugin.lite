@@ -23,7 +23,13 @@ namespace WhenPlugin.When {
     [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
     public class DIYTrigger : SequenceTrigger, IValidatable {
+        
+        [JsonProperty]
+        public SequentialContainer Instructions { get; set; } = new SequentialContainer();
 
+        // Keep TriggerRunner for the trigger itself (not serialized to Items)
+        [JsonProperty]  
+        public SequentialContainer TriggerRunner { get; set; } = new SequentialContainer();
 
         [ImportingConstructor]
         public DIYTrigger() {
@@ -40,7 +46,8 @@ namespace WhenPlugin.When {
                 Name = Name,
                 Category = Category,
                 Description = Description,
-                TriggerRunner = (SequentialContainer)TriggerRunner.Clone()
+                TriggerRunner = (SequentialContainer)TriggerRunner.Clone(),
+                Instructions = (SequentialContainer)Instructions.Clone()
             };
 
             return clone;
@@ -89,15 +96,14 @@ namespace WhenPlugin.When {
         /// <returns></returns>
         public override async Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             InFlight = true;
-            TriggerRunner.AttachNewParent(context);
-
+            Instructions.AttachNewParent(context);
             try {
                 Logger.Info("DIY Trigger executing...");
-                await TriggerRunner.Run(progress, token);
+                await Instructions.Run(progress, token);
             } finally {
                 InFlight = false;
-                TriggerRunner.Parent?.Remove(TriggerRunner);
-                TriggerRunner.AttachNewParent(Parent);
+                Instructions.Parent?.Remove(Instructions);
+                Instructions.AttachNewParent(Parent);
             }
         }
         public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
@@ -129,16 +135,20 @@ namespace WhenPlugin.When {
         }
 
         public override void AfterParentChanged() {
+            // Handle TriggerRunner
             foreach (ISequenceTrigger item in TriggerRunner.Triggers) {
-                if (item.Parent == null) item.AttachNewParent(TriggerRunner);
-            }
-            foreach (ISequenceItem item in TriggerRunner.Items) {
                 if (item.Parent == null) item.AttachNewParent(TriggerRunner);
             }
             TriggerRunner.AttachNewParent(Parent);
             if (TriggerRunner.Triggers.Count > 0) {
                 TriggerRunner.Triggers[0].AfterParentChanged();
             }
+            
+            // Handle Instructions
+            foreach (ISequenceItem item in Instructions.Items) {
+                if (item.Parent == null) item.AttachNewParent(Instructions);
+            }
+            Instructions.AttachNewParent(Parent);
         }
         public virtual bool Validate() {
             // Validate the Items (this will update their status)
@@ -148,7 +158,7 @@ namespace WhenPlugin.When {
                     _ = vitem.Validate();
                 }
             }
-            foreach (ISequenceItem item in TriggerRunner.Items) {
+            foreach (ISequenceItem item in Instructions.Items) {
                 if (item is IValidatable vitem) {
                     _ = vitem.Validate();
                 }
