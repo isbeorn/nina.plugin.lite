@@ -316,14 +316,14 @@
               BorderThickness="1"
               Background="{StaticResource BackgroundBrush}">
             <Grid DataContext="{Binding}">
-              <ContentPresenter Content="{Binding Condition.Items[0]}" />
+              <ContentPresenter Content="{Binding Items[0]}" />
               <TextBlock
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   FontStyle="Italic"
                   Opacity="0.4"
                   Text="Drop Ground Station instruction here"
-                  Visibility="{Binding Condition.Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                  Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
               <i:Interaction.Behaviors>
                 <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                 <behaviors:DropIntoBehavior

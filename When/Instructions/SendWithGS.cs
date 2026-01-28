@@ -9,6 +9,7 @@ using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
 using Serilog.Debugging;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -44,6 +45,7 @@ namespace WhenPlugin.When {
             };
         }
 
+        [JsonProperty]
         public SequentialContainer Condition { get; set; }
 
         [JsonIgnore]
@@ -86,24 +88,24 @@ namespace WhenPlugin.When {
 
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            ISequenceItem condition = Condition.Items[0];
+            ISequenceItem instruction = Items[0];
 
-            if (condition == null) {
+            if (instruction == null) {
                 Status = NINA.Core.Enum.SequenceEntityStatus.FAILED;
                 return;
             }
 
             // Execute the conditional
-            condition.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+            instruction.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
 
-            var messageProperty = condition.GetType().GetProperty("Message");
+            var messageProperty = instruction.GetType().GetProperty("Message");
             if (messageProperty == null) {
-                messageProperty = condition.GetType().GetProperty("Payload");
+                messageProperty = instruction.GetType().GetProperty("Payload");
                 if (messageProperty == null) {
                     throw new SequenceEntityFailedException("Not a supported Ground Station instruction?");
                 }
             }
-            string message = (string)messageProperty.GetValue(condition);
+            string message = (string)messageProperty.GetValue(instruction);
             if (message == null) {
                 throw new SequenceEntityFailedException("Message is null?");
             }
@@ -113,10 +115,10 @@ namespace WhenPlugin.When {
             if (processedMessage == null) {
                 throw new SequenceEntityFailedException("Processed message is null?");
             }
-            messageProperty.SetValue(condition, processedMessage, null);
-            condition.AttachNewParent(Parent);
-            await condition.Run(progress, token);
-            messageProperty.SetValue(condition, message, null);
+            messageProperty.SetValue(instruction, processedMessage, null);
+            instruction.AttachNewParent(Parent);
+            await instruction.Run(progress, token);
+            messageProperty.SetValue(instruction, message, null);
         }
 
         public void DropIntoCondition(DropIntoParameters parameters) {
@@ -130,20 +132,21 @@ namespace WhenPlugin.When {
                 item = (ISequenceItem)source.Clone();
             }
 
-            Condition.Items.Clear();
-            Condition.Add(item);
-            item.AttachNewParent(this);
-            RaisePropertyChanged("Condition");
+            Items.Clear();
+            Add(item);
+            RaisePropertyChanged("Instructions");
         }
+
+        public new IList<string> Issues { get; } = new List<string>();
 
         public override bool Validate() {
             Issues.Clear();
-            if (Condition.Items.Count == 0) {
+            if (Items.Count == 0) {
                 Issues.Add("There must be a Ground Station instruction included in this instruction");
             } else {
-                var messageProperty = Condition.Items[0].GetType().GetProperty("Message");
+                var messageProperty = Items[0].GetType().GetProperty("Message");
                 if (messageProperty == null) {
-                    messageProperty = Condition.Items[0].GetType().GetProperty("Payload");
+                    messageProperty = Items[0].GetType().GetProperty("Payload");
                     if (messageProperty == null) {
                         Issues.Add("This instruction cannot be used with Send via Ground Station");
                     }
