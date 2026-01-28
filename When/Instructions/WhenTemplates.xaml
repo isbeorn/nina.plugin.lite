@@ -841,7 +841,7 @@
             Template="{StaticResource WhenBaseTemplate}"
             local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the captured Trigger fires">
         <!-- Trigger drop zone in header -->
-        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+        <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
             <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" 
                    Foreground="{StaticResource ButtonForegroundBrush}"
                    Text="Trigger:" />
