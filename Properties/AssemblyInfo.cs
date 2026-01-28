@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 //Should be incremented for each new release build of a plugin
 
 // Odd minor releases for Beta
-[assembly: AssemblyVersion("4.0.0.3")]
-[assembly: AssemblyFileVersion("4.0.0.3")]
+[assembly: AssemblyVersion("4.0.0.4")]
+[assembly: AssemblyFileVersion("4.0.0.4")]
 
 // [MANDATORY] The name of your plugingit st
 [assembly: AssemblyTitle("Sequencer Powerups")]
@@ -46,14 +46,11 @@ using System.Runtime.InteropServices;
 //[Optional] An additional url to an example example screenshot of your plugin in action
 [assembly: AssemblyMetadata("AltScreenshotURL", "https://1drv.ms/u/s!AjBSqKNCEWOTgfIGHf3eIXv2hZfYAw?e=LLHMJF")]
 //[Optional] An in-depth description of your plugin
-[assembly: AssemblyMetadata("LongDescription", @"## This plugin contains a variety of potentially useful instructions that enhance the power of the Advanced Sequencer.  The set of these instructions is expected to increase over time; consider them 'utility' instructions.  Many of these instructions allow you to take arbitrary sets of actions when specific circumstances arise; you specify these actions by dragging instructions into place, just as you would to create any instruction set or template.
-
-## Among the more powerful Powerups are those related to Constants, Variables, and Expressions, and the Template by Reference instruction.
-
+[assembly: AssemblyMetadata("LongDescription", @"## This plugin contains a variety of instructions that enhance the power of the Advanced Sequencer.  The set of these instructions is expected to increase over time; consider them 'utility' instructions.  Many of these instructions allow you to take arbitrary sets of actions when specific circumstances arise; you specify these actions by dragging instructions into place, just as you would to create any instruction set or template.
 
 # Complete documentation for Sequencer Powerups is at [Powerups Docs](https://marcblank.github.io)
 
-## Comments, suggestions, bug reports, etc. are welcomed!  Contact me by DM @chatter on the NINA Discord server, or post in the #sequencer-powerups channel.
+## Comments, suggestions, bug reports, etc. are welcomed!  Contact me by DM @Marc on the NINA Discord server, or post in the #sequencer-powerups channel.
 ")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

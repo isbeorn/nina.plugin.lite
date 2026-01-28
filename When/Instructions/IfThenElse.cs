@@ -121,6 +121,8 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
+            Issues.Clear();
+
             var valid = base.Validate();
 
             var exprIssues = new List<string>();
