@@ -112,5 +112,14 @@ namespace WhenPlugin.When {
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(IfFailed)}";
         }
+
+        public override bool Remove(ISequenceItem item) {
+            if (item == CheckInstruction) {
+                CheckInstruction = null;
+                RaisePropertyChanged(nameof(CheckInstruction));
+                return true;
+            }
+            return base.Remove(item);
+        }
     }
 }

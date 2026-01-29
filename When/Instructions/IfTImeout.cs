@@ -193,6 +193,15 @@ namespace WhenPlugin.When {
             RaisePropertyChanged("CheckInstruction");
         }
 
+        public new bool Remove(ISequenceItem item) {
+            if (item == CheckInstruction) {
+                CheckInstruction = null;
+                RaisePropertyChanged(nameof(CheckInstruction));
+                return true;
+            }
+            return base.Remove(item);
+        }
+
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(IfTimeout)}";
         }
