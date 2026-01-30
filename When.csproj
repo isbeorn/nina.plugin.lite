@@ -129,7 +129,7 @@
     <ProjectReference Include="..\..\nina\NINA.Plugin\NINA.Plugin.csproj" />
     <ProjectReference Include="..\..\nina\NINA.WPF.Base\NINA.WPF.Base.csproj" />
  
-    <PackageReference Include="NINA.Sequencer.Generators" Version="3.3.0.1000-preview5" />
+    <PackageReference Include="NINA.Sequencer.Generators" Version="3.3.0.1000-preview6" />
     <PackageReference Include="Parlot" Version="1.3.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />

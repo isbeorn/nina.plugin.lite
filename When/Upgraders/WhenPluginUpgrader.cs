@@ -17,14 +17,13 @@ using System.Reflection;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "WhenPlugin Upgrader")]
-    [ExportMetadata("Description", "Upgrades legacy WhenPlugin types")]
-    [ExportMetadata("Icon", "WaitForAltitudeSVG")]
-    [ExportMetadata("Category", "Lbl_SequenceCategory_Utility")]
     [Export(typeof(ISequenceEntityUpgrader))]
 
     public class WhenPluginUpgrader : ISequenceEntityUpgrader {
 
         public string Name { get; set; }
+
+        public string AssemblyName { get; set; }
 
         public static ISequencerFactory Factory { get; set; }
 
