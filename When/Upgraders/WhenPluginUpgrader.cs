@@ -26,6 +26,8 @@ namespace WhenPlugin.When {
 
         public string Name { get; set; }
 
+        public static ISequencerFactory Factory { get; set; }
+
         public bool CanUpgrade(SequenceUpgradeContext context, SequenceUpgradeStage stage) {
             return true;
         }
@@ -39,7 +41,7 @@ namespace WhenPlugin.When {
                         break;
                     }
                 case SequenceUpgradeStage.AfterPopulate: {
-                        UpgradeInstruction(current, context.Json);
+                        UpgradeInstruction(current, context);
                         break;
                     }
             }
@@ -88,14 +90,9 @@ namespace WhenPlugin.When {
             }
         }
 
-        private static ISequencerFactory itemFactory = null;
-        private static ISequencerFactory containerFactory = null;
-        private static ISequencerFactory conditionFactory = null;
-        private static ISequencerFactory triggerFactory = null;
-
         private static T CreateNewItem<T>(ISequenceItem item) {
-            var method = itemFactory.GetType().GetMethod(nameof(itemFactory.GetItem)).MakeGenericMethod(new Type[] { typeof(T) });
-            T newObj = (T)method.Invoke(itemFactory, null);
+            var method = Factory.GetType().GetMethod(nameof(Factory.GetItem)).MakeGenericMethod(new Type[] { typeof(T) });
+            T newObj = (T)method.Invoke(Factory, null);
             ISequenceItem newItem = (ISequenceItem)newObj;
             newItem.Name += " [" + item.Name + " =>NINA";
             newItem.Attempts = item.Attempts;
@@ -103,53 +100,27 @@ namespace WhenPlugin.When {
             return newObj;
         }
         private static T CreateNewContainer<T>(string oldName) {
-            var method = containerFactory.GetType().GetMethod(nameof(containerFactory.GetContainer)).MakeGenericMethod(new Type[] { typeof(T) });
-            T newObj = (T)method.Invoke(containerFactory, null);
+            var method = Factory.GetType().GetMethod(nameof(Factory.GetContainer)).MakeGenericMethod(new Type[] { typeof(T) });
+            T newObj = (T)method.Invoke(Factory, null);
             ((ISequenceContainer)newObj).Name += " [" + oldName + " =>NINA";
             return newObj;
         }
 
         private static T CreateNewCondition<T>(string oldName) {
-            var method = containerFactory.GetType().GetMethod(nameof(conditionFactory.GetCondition)).MakeGenericMethod(new Type[] { typeof(T) });
-            T newObj = (T)method.Invoke(conditionFactory, null);
+            var method = Factory.GetType().GetMethod(nameof(Factory.GetCondition)).MakeGenericMethod(new Type[] { typeof(T) });
+            T newObj = (T)method.Invoke(Factory, null);
             ((ISequenceCondition)newObj).Name += " [" + oldName + " =>NINA";
             return newObj;
         }
 
         private static T CreateNewTrigger<T>(string oldName) {
-            var method = triggerFactory.GetType().GetMethod(nameof(triggerFactory.GetTrigger)).MakeGenericMethod(new Type[] { typeof(T) });
-            T newObj = (T)method.Invoke(triggerFactory, null);
+            var method = Factory.GetType().GetMethod(nameof(Factory.GetTrigger)).MakeGenericMethod(new Type[] { typeof(T) });
+            T newObj = (T)method.Invoke(Factory, null);
             ((ISequenceTrigger)newObj).Name += " [" + oldName + " =>NINA";
             return newObj;
         }
 
-        public static void RegisterContainerConverter(JsonCreationConverter<ISequenceContainer> conv) {
-            if (containerFactory == null) {
-                FieldInfo fi = conv.GetType().GetField("factory", BindingFlags.Instance | BindingFlags.NonPublic);
-                containerFactory = (ISequencerFactory)fi.GetValue(conv);
-            }
-        }
-
-        public static void RegisterItemConverter(JsonCreationConverter<ISequenceItem> conv) {
-            if (itemFactory == null) {
-                FieldInfo fi = conv.GetType().GetField("factory", BindingFlags.Instance | BindingFlags.NonPublic);
-                itemFactory = (ISequencerFactory)fi.GetValue(conv);
-            }
-        }
-        public static void RegisterConditionConverter(JsonCreationConverter<ISequenceCondition> conv) {
-            if (conditionFactory == null) {
-                FieldInfo fi = conv.GetType().GetField("factory", BindingFlags.Instance | BindingFlags.NonPublic);
-                conditionFactory = (ISequencerFactory)fi.GetValue(conv);
-            }
-        }
-        public static void RegisterTriggerConverter(JsonCreationConverter<ISequenceTrigger> conv) {
-            if (triggerFactory == null) {
-                FieldInfo fi = conv.GetType().GetField("factory", BindingFlags.Instance | BindingFlags.NonPublic);
-                triggerFactory = (ISequencerFactory)fi.GetValue(conv);
-            }
-        }
-
-        private static string GetExpr(Type t, ISequenceEntity item, string propertyName) {
+         private static string GetExpr(Type t, ISequenceEntity item, string propertyName) {
             PropertyInfo pi = t.GetProperty(propertyName);
             object expr = pi.GetValue(item);
             pi = expr.GetType().GetProperty("Expression");
@@ -267,8 +238,9 @@ namespace WhenPlugin.When {
             }
         }
 
-        public static object UpgradeInstruction(object obj, JObject jObject) {
-
+        public static object UpgradeInstruction(object obj, SequenceUpgradeContext context) {
+            JObject jObject = context.Json;
+            Factory = context.Factory;
             try {
                 ISequenceItem item = obj as ISequenceItem;
                 ISequenceCondition condition = obj as ISequenceCondition;
