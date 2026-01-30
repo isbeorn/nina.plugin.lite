@@ -124,7 +124,11 @@
     <PackageReference Include="Namotion.Reflection" Version="3.4.3" />
     <PackageReference Include="NCalcSync" Version="5.2.11" />
     <PackageReference Include="NINA.Accord.Imaging" Version="3.5.3" />
-    <PackageReference Include="NINA.Plugin" Version="3.3.0.1000-preview5" />
+    <ProjectReference Include="..\..\nina\NINA.Sequencer\NINA.Sequencer.csproj" />
+    <ProjectReference Include="..\..\nina\NINA.Core\NINA.Core.csproj" />
+    <ProjectReference Include="..\..\nina\NINA.Plugin\NINA.Plugin.csproj" />
+    <ProjectReference Include="..\..\nina\NINA.WPF.Base\NINA.WPF.Base.csproj" />
+ 
     <PackageReference Include="NINA.Sequencer.Generators" Version="3.3.0.1000-preview5" />
     <PackageReference Include="Parlot" Version="1.3.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
