@@ -44,8 +44,7 @@ namespace WhenPlugin.When {
                         break;
                     }
                 case SequenceUpgradeStage.AfterPopulate: {
-                        UpgradeInstruction(current, context);
-                        break;
+                        return UpgradeInstruction(current, context);
                     }
             }
 

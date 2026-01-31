@@ -313,7 +313,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock VerticalAlignment="Center" Text="{ns:Loc LblScript}" />
+                    <TextBlock Margin="10,0,6,0" VerticalAlignment="Center" Text="{ns:Loc LblScript}" />
                     <TextBox
                       Grid.Column="1"
                       MinWidth="40"
