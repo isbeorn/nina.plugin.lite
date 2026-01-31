@@ -6,10 +6,11 @@ using NINA.Sequencer.Conditions;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
-using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Serialization;
 using NINA.Sequencer.Trigger;
+using Parlot.Fluent;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -35,6 +36,12 @@ namespace WhenPlugin.When {
             var typeString = context.OriginalTypeString ?? context.RequestedType.FullName;
             
             switch (stage) {
+                case SequenceUpgradeStage.BeforeCreate: {
+                        if (typeString == "WhenPlugin.When.CVContainer, WhenPlugin") {
+                            context.Json["$type"] = "NINA.Sequencer.Container.SequentialContainer, NINA.Sequencer";
+                        }
+                        break;
+                    }
                 case SequenceUpgradeStage.AfterCreate: {
                         PreUpgradeInstruction(typeString, context.Json);
                         break;
