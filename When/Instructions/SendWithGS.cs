@@ -18,7 +18,7 @@ using System.Windows.Input;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Send via Ground Station")]
-    [ExportMetadata("Description", "Send a message via Ground Station, including Powerups Expressions.")]
+    [ExportMetadata("Description", "Send a message via Ground Station, including Expressions.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
     [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
@@ -73,7 +73,7 @@ namespace WhenPlugin.When {
                     if (toReplace.Length == 0) break;
                     Expression ex = ExpressionHelper.Expr(toReplace, Parent, SymbolBroker, null);
                     if (ex.Error != null) {
-                        Logger.Warning("Send via Ground Station, error processing script, " + ex.Error);
+                        Logger.Warning("Error processing script, " + ex.Error);
                         value = value.Replace("{" + toReplace + "}", ex.Error);
                     } else if (ex.StringValue != null) {
                         value = value.Replace("{" + toReplace + "}", ex.StringValue);
@@ -111,7 +111,7 @@ namespace WhenPlugin.When {
             }
             message = message.Replace('\t', ' ');
             var processedMessage = ProcessedScript(message);
-            Logger.Info("Sending to Ground Station: " + processedMessage);
+            Logger.Info("Sending to GNS: " + processedMessage);
             if (processedMessage == null) {
                 throw new SequenceEntityFailedException("Processed message is null?");
             }
@@ -142,16 +142,23 @@ namespace WhenPlugin.When {
         public override bool Validate() {
             Issues.Clear();
             if (Items.Count == 0) {
-                Issues.Add("There must be a Ground Station instruction included in this instruction");
+                Issues.Add("There must be a GNS instruction included in this instruction");
             } else {
-                var messageProperty = Items[0].GetType().GetProperty("Message");
-                if (messageProperty == null) {
-                    messageProperty = Items[0].GetType().GetProperty("Payload");
+                string itemName = Items[0].GetType().AssemblyQualifiedName;
+                string[] parts = itemName.Split(',');
+                string assemblyName = parts.Length > 1 ? parts[1].Trim() : null;
+                if (assemblyName == "DaleGhent.NINA.GroundStation") {
+                    var messageProperty = Items[0].GetType().GetProperty("Message");
                     if (messageProperty == null) {
-                        Issues.Add("This instruction cannot be used with Send via Ground Station");
+                        messageProperty = Items[0].GetType().GetProperty("Payload");
+                        if (messageProperty == null) {
+                            Issues.Add("This Ground Station instruction cannot be used with Send with Ground Station");
+                        }
                     }
+                } else {
+                    Issues.Add("The instruction specified isn't from the Ground Station plugin");
                 }
-             }
+            }
             RaisePropertyChanged("Issues");
             return Issues.Count == 0;
         }

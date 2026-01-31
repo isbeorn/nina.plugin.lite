@@ -70,7 +70,6 @@
     <Compile Remove="When\Instructions\ResetVariableToDate.cs" />
     <Compile Remove="When\Instructions\Return.cs" />
     <Compile Remove="When\Instructions\RunAutofocus.cs" />
-    <Compile Remove="When\Instructions\SendWithGNS.cs" />
     <Compile Remove="When\Instructions\SequenceBlockView.xaml.cs" />
     <Compile Remove="When\Instructions\SetSwitchValue.cs" />
     <Compile Remove="When\Instructions\SetVariable.cs" />

@@ -1,25 +1,30 @@
-﻿using Newtonsoft.Json;
+﻿using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.DragDrop;
+using NINA.Sequencer.Generators;
+using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
+using Serilog.Debugging;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Sequencer.DragDrop;
 using System.Windows.Input;
-using System.Text.RegularExpressions;
-using NINA.Core.Utility;
-using Serilog.Debugging;
-using Google.Protobuf.WellKnownTypes;
 
-namespace PowerupsLite.When {
-    [ExportMetadata("Name", "Send via GNS")]
-    [ExportMetadata("Description", "Send a message via GNS, including Powerups Expressions.")]
+namespace WhenPlugin.When {
+    [ExportMetadata("Name", "Send with GNS")]
+    [ExportMetadata("Description", "Send a message with GNS, including Expressions.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Fun-ctions)")]
+    [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class GNSSend : IfCommand {
+
+    public class GNSSend : SequentialContainer {
 
         [ImportingConstructor]
         public GNSSend() {
@@ -40,7 +45,21 @@ namespace PowerupsLite.When {
             };
         }
 
+        [JsonProperty]
+        public SequentialContainer Condition { get; set; }
+
+        [JsonIgnore]
+        public SequentialContainer Instructions { get; set; }
+
+        [JsonProperty("Instructions")]
+        private IfContainer ObsoleteInstructions {
+            // get is intentionally omitted here
+            set { Instructions = value; }
+        }
+
         public ICommand DropIntoIfCommand { get; set; }
+
+        private object lockObj = new object();
 
         public string ProcessedScript(string message) {
             string value = message;
@@ -52,9 +71,9 @@ namespace PowerupsLite.When {
                         break;
                     }
                     if (toReplace.Length == 0) break;
-                    Expr ex = new Expr(this, toReplace, "Any");
+                    Expression ex = ExpressionHelper.Expr(toReplace, Parent, SymbolBroker, null);
                     if (ex.Error != null) {
-                        Logger.Warning("Send via GNS, error processing script, " + ex.Error);
+                        Logger.Warning("Error processing script, " + ex.Error);
                         value = value.Replace("{" + toReplace + "}", ex.Error);
                     } else if (ex.StringValue != null) {
                         value = value.Replace("{" + toReplace + "}", ex.StringValue);
@@ -69,72 +88,79 @@ namespace PowerupsLite.When {
 
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            ISequenceItem condition = Condition.Items[0];
+            ISequenceItem instruction = Items[0];
 
-            if (condition == null) {
+            if (instruction == null) {
                 Status = NINA.Core.Enum.SequenceEntityStatus.FAILED;
                 return;
             }
 
             // Execute the conditional
-            condition.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
+            instruction.Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
 
-            var messageProperty = condition.GetType().GetProperty("Text");
+            var messageProperty = instruction.GetType().GetProperty("Message");
             if (messageProperty == null) {
-                throw new SequenceEntityFailedException("Not a GNS instruction?");
+                messageProperty = instruction.GetType().GetProperty("Payload");
+                if (messageProperty == null) {
+                    throw new SequenceEntityFailedException("Not a supported Ground Station instruction?");
+                }
             }
-            string message = (string)messageProperty.GetValue(condition);
+            string message = (string)messageProperty.GetValue(instruction);
             if (message == null) {
                 throw new SequenceEntityFailedException("Message is null?");
             }
             message = message.Replace('\t', ' ');
             var processedMessage = ProcessedScript(message);
-            Logger.Info("Sending to GNS: " + processedMessage);
+            Logger.Info("Sending to Ground Station: " + processedMessage);
             if (processedMessage == null) {
                 throw new SequenceEntityFailedException("Processed message is null?");
             }
-            messageProperty.SetValue(condition, processedMessage, null);
-            condition.AttachNewParent(Parent);
-            await condition.Run(progress, token);
-            messageProperty.SetValue(condition, message, null);
+            messageProperty.SetValue(instruction, processedMessage, null);
+            instruction.AttachNewParent(Parent);
+            await instruction.Run(progress, token);
+            messageProperty.SetValue(instruction, message, null);
         }
 
-        // Allow only ONE instruction to be added to Condition
-        public void DropIntoCondition (DropIntoParameters parameters) {
-            lock (lockObj) {
-                ISequenceItem item;
-                var source = parameters.Source as ISequenceItem;
+        public void DropIntoCondition(DropIntoParameters parameters) {
+            ISequenceItem item;
+            var source = parameters.Source as ISequenceItem;
+            if (source == null) return;
 
-                if (source.Parent != null && !parameters.Duplicate) {
-                    item = source;
-                } else {
-                    item = (ISequenceItem)source.Clone();
-                }
+            if (source.Parent != null && !parameters.Duplicate) {
+                item = source;
+            } else {
+                item = (ISequenceItem)source.Clone();
+            }
 
-                if (item.Parent != Condition) {
-                    item.Parent?.Remove(item);
-                    item.AttachNewParent(Condition);
-                }
-
-                Condition.Items.Clear();
-                Condition.Items.Add(item);
-           }
+            Items.Clear();
+            Add(item);
+            RaisePropertyChanged("Instructions");
         }
+
+        public new IList<string> Issues { get; } = new List<string>();
 
         public override bool Validate() {
             Issues.Clear();
-            if (Condition == null || Condition.Items.Count == 0) {
-                issues.Add("There must be a GNS instruction included in this instruction");
+            if (Items.Count == 0) {
+                Issues.Add("There must be a Ground Station instruction included in this instruction");
             } else {
-                var c = Condition.Items[0];
-
-                var messageProperty = c.GetType().GetProperty("Text");
-                if (messageProperty == null) {
-                    issues.Add("This instruction cannot be used with Send via GNS");
+                string itemName = Items[0].GetType().AssemblyQualifiedName;
+                string[] parts = itemName.Split(',');
+                string assemblyName = parts.Length > 1 ? parts[1].Trim() : null;
+                if (assemblyName == "NINA.Plugin.GNS") {
+                    var messageProperty = Items[0].GetType().GetProperty("Message");
+                    if (messageProperty == null) {
+                        messageProperty = Items[0].GetType().GetProperty("Text");
+                        if (messageProperty == null) {
+                            Issues.Add("This GNS instruction cannot be used with Send via GNS");
+                        }
+                    }
+                } else {
+                    Issues.Add("The instruction specified isn't from the GNS plugin");
                 }
              }
             RaisePropertyChanged("Issues");
-            return issues.Count == 0;
+            return Issues.Count == 0;
         }
 
         public override string ToString() {

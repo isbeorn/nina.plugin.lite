@@ -546,6 +546,7 @@ namespace WhenPlugin.When {
                         break;
 
                     case "GSSend":
+                    case "GNSSend":
                         ISequenceContainer c = item.GetType().GetProperty("Condition").GetValue(item, null) as ISequenceContainer;
                         ISequenceContainer gss = item as ISequenceContainer;
                         if (c != null) {

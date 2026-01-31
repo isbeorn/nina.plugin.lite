@@ -344,41 +344,74 @@
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
     </DataTemplate>
-    
+
     <!-- GSSend (Send via Ground Station) -->
-  <DataTemplate DataType="{x:Type local:GSSend}">
-    <nina:SequenceBlockView DataContext="{Binding}">
-      <nina:SequenceBlockView.SequenceItemContent>
-        <StackPanel>
-          <!-- Condition drop slot (expects a single GS sequence item) -->
-          <Border
+    <DataTemplate DataType="{x:Type local:GSSend}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel>
+                    <!-- Condition drop slot (expects a single GS sequence item) -->
+                    <Border
               MinHeight="35"
               BorderBrush="{StaticResource BorderBrush}"
               BorderThickness="1"
               Background="{StaticResource BackgroundBrush}">
-            <Grid DataContext="{Binding}">
-              <ContentPresenter Content="{Binding Items[0]}" />
-              <TextBlock
+                        <Grid DataContext="{Binding}">
+                            <ContentPresenter Content="{Binding Items[0]}" />
+                            <TextBlock
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
                   FontStyle="Italic"
                   Opacity="0.4"
                   Text="Drop Ground Station instruction here"
                   Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
-              <i:Interaction.Behaviors>
-                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                <behaviors:DropIntoBehavior
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior
                     AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem"
                     OnDropCommand="DropIntoIfCommand" />
-              </i:Interaction.Behaviors>
-            </Grid>
-          </Border>
-        </StackPanel>
-      </nina:SequenceBlockView.SequenceItemContent>
-    </nina:SequenceBlockView>
-  </DataTemplate>
+                            </i:Interaction.Behaviors>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+
+    <!-- GNSSend (Send via GNS) -->
+    <DataTemplate DataType="{x:Type local:GNSSend}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel>
+                    <!-- Condition drop slot (expects a single GS sequence item) -->
+                    <Border
+              MinHeight="35"
+              BorderBrush="{StaticResource BorderBrush}"
+              BorderThickness="1"
+              Background="{StaticResource BackgroundBrush}">
+                        <Grid DataContext="{Binding}">
+                            <ContentPresenter Content="{Binding Items[0]}" />
+                            <TextBlock
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  FontStyle="Italic"
+                  Opacity="0.4"
+                  Text="Drop GNS instruction here"
+                  Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                            <i:Interaction.Behaviors>
+                                <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                                <behaviors:DropIntoBehavior
+                    AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem"
+                    OnDropCommand="DropIntoIfCommand" />
+                            </i:Interaction.Behaviors>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
     
-  <!-- Shared base for WhenSwitch/WhenUnsafe/DIYTrigger -->
+    <!-- Shared base for WhenSwitch/WhenUnsafe/DIYTrigger -->
   <ControlTemplate x:Key="WhenBaseTemplate" TargetType="ContentControl">
     <Border>
         <Border.Resources>
