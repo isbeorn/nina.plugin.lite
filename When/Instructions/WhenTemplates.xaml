@@ -304,7 +304,48 @@
         </StackPanel>
     </ControlTemplate>
 
-  <!-- GSSend (Send via Ground Station) -->
+    <DataTemplate DataType="{x:Type local:ExternalScript}">
+        <nina:SequenceBlockView>
+            <nina:SequenceBlockView.SequenceItemContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="{ns:Loc LblScript}" />
+                    <TextBox
+                      Grid.Column="1"
+                      MinWidth="40"
+                      Margin="5,0,0,0"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Center"
+                      Text="{Binding Script}"
+                      TextAlignment="Left"
+                      ToolTip="{Binding ProcessedScriptAnnotated}"
+                       />
+                    <Button
+                      Grid.Column="2"
+                      Width="20"
+                      Height="20"
+                      Margin="5,0,0,0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Command="{Binding OpenDialogCommand}"
+                      Style="{StaticResource BackgroundButton}">
+                        <Path
+                          Margin="2,10,2,0"
+                          Data="{StaticResource DotsSVG}"
+                          Fill="{StaticResource ButtonForegroundBrush}"
+                          Stretch="Uniform"
+                          UseLayoutRounding="True" />
+                    </Button>
+                </Grid>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+    
+    <!-- GSSend (Send via Ground Station) -->
   <DataTemplate DataType="{x:Type local:GSSend}">
     <nina:SequenceBlockView DataContext="{Binding}">
       <nina:SequenceBlockView.SequenceItemContent>
