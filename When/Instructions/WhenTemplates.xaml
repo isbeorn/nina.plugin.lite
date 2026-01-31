@@ -472,15 +472,22 @@
         </ninactrl:DetachingExpander>
     </Border>
 </ControlTemplate>
-    
-  <DataTemplate DataType="{x:Type local:WhenSwitch}">
+
+    <DataTemplate DataType="{x:Type local:WhenSwitch}">
         <ContentControl 
             Template="{StaticResource WhenBaseTemplate}"
-            local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the predicate is true">
+            local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the currently running instruction has finished">
             <logic:ExprControl Label="Predicate:" Exp="{Binding PredicateExpression}" />
         </ContentControl>
     </DataTemplate>
- 
+
+    <DataTemplate DataType="{x:Type local:InterruptTrigger}">
+        <ContentControl 
+            Template="{StaticResource WhenBaseTemplate}"
+            local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the predicate is true">
+        </ContentControl>
+    </DataTemplate>
+   
     <DataTemplate DataType="{x:Type local:WhenUnsafe}">
         <ContentControl 
             Template="{StaticResource WhenBaseTemplate}"
@@ -918,43 +925,6 @@
                         <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Trigger.SequenceTrigger" OnDropCommand="SafeTriggerCommand" />
                     </i:Interaction.Behaviors>
                 </Border>
-            </nina:SequenceBlockView.SequenceItemContent>
-        </nina:SequenceBlockView>
-    </DataTemplate>
-
-  
-    <DataTemplate DataType="{x:Type local:InterruptTrigger}">
-        <nina:SequenceBlockView DataContext="{Binding}">
-            <nina:SequenceBlockView.SequenceItemContent>
-                <ninactrl:DetachingExpander>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Border
-                        Grid.Row="1"
-                        MinHeight="65"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="1">
-                            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding Runner}">
-                                <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
-                                <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontStyle="Italic"
-                                Opacity="0.4"
-                                Text="Instructions will go here..."
-                                Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
-                                <i:Interaction.Behaviors>
-                                    <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                                    <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.TemplatedSequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoCommand" />
-                                </i:Interaction.Behaviors>
-                            </Grid>
-                        </Border>
-                    </Grid>
-                </ninactrl:DetachingExpander>
-
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
     </DataTemplate>

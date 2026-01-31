@@ -6,11 +6,8 @@ using NINA.Sequencer.Conditions;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.Logic;
 using NINA.Sequencer.SequenceItem;
-using NINA.Sequencer.SequenceItem;
 using NINA.Sequencer.SequenceItem.Expressions;
-using NINA.Sequencer.Serialization;
 using NINA.Sequencer.Trigger;
-using Parlot.Fluent;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -583,6 +580,22 @@ namespace WhenPlugin.When {
                         }
                         break;
 
+                    case "InterruptTrigger": {
+                            ISequenceContainer runner = trigger.GetType().GetProperty("Runner").GetValue(trigger, null) as ISequenceContainer;
+                            ISequenceContainer instructions = trigger.GetType().GetProperty("Instructions").GetValue(trigger, null) as ISequenceContainer;
+                            if (runner != null && instructions != null && runner.Items.Count > 0) {
+                                instructions.Items.Clear();
+                                for (int i = 0; i < runner.Items.Count; i++) {
+                                    ISequenceItem oldItem = runner.Items[i];
+                                    ISequenceItem newItem = oldItem.Clone() as ISequenceItem;
+                                    instructions.Add(newItem); // Temporarily add clone to expand collection
+                                    newItem.AttachNewParent(instructions);
+                                }
+                                runner.Items.Clear();
+                            }
+                            break;
+                        }
+
                     // Unchanged (no Expressions)
                     case "IfContainer":
                     case "FlipRotator":
@@ -596,7 +609,6 @@ namespace WhenPlugin.When {
                     case "EndSequence":
                     case "EndInstructionSet":
                     case "WhenUnsafe":
-                    case "InterruptTrigger":
                     case "AutofocusTrigger":
                     case "LogThis":
                     case "TemplateByReference":
