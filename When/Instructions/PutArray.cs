@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
+using NINA.Sequencer.Interfaces;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Put into Array")]

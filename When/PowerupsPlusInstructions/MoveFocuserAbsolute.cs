@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NINA.Core.Locale;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.Interfaces;
 
 namespace WhenPlugin.When {
 
@@ -32,6 +33,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups (Deprecated)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
+    
     public class MoveFocuserAbsolute : SequenceItem, IValidatable {
 
         [ImportingConstructor]
