@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Reflection;
+using System.Security.Cryptography;
 using static NINA.Equipment.Equipment.MyGPS.PegasusAstro.UnityApi.DriverUranusReport;
 
 namespace WhenPlugin.When {
@@ -302,9 +303,6 @@ namespace WhenPlugin.When {
             newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
             newTe.Binning = oldTe?.Binning;
             newTe.ImageType = oldTe?.ImageType;
-            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter oldSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)item).Items[2];
-            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)newObj).Items[2];
-            newSf.ComboBoxText = oldSf.ComboBoxText;
             newObj.AttachNewParent(item.Parent);
         }
 
@@ -465,6 +463,8 @@ namespace WhenPlugin.When {
                             SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
                             SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
                             UpgradeFlatInstructions(tm, newTm, item, newObj);
+                            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)newObj).Items[2];
+                            newSf.ComboBoxText = jObject["FilterExpr"].ToString();
                             return newObj;
                         }
                     case "TrainedFlatExposure": {
@@ -472,6 +472,8 @@ namespace WhenPlugin.When {
                             SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
                             SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
                             UpgradeFlatInstructions(tm, newTm, item, newObj);
+                            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)newObj).Items[2];
+                            newSf.ComboBoxText = jObject["FilterExpr"].ToString();
                             return newObj;
                         }
                     case "TakeManyExposures": {
