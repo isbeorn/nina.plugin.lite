@@ -41,11 +41,6 @@ using System.Diagnostics;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Take Exposure +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Imaging_TakeExposure_Description")]
-    [ExportMetadata("Icon", "CameraSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class TakeExposure : SequenceItem, IExposureItem, IValidatable {
         private ICameraMediator cameraMediator;

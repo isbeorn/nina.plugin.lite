@@ -31,12 +31,6 @@ using NINA.Sequencer.SequenceItem;
 
 namespace WhenPlugin.When { 
 
-    [ExportMetadata("Name", "Take Many Exposures +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Imaging_TakeManyExposures_Description")]
-    [ExportMetadata("Icon", "CameraSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
-    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class TakeManyExposures : SequentialContainer, IImmutableContainer {
 

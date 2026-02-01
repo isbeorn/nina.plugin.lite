@@ -33,12 +33,6 @@ using System.Threading;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Smart Exposure +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Imaging_SmartExposure_Description")]
-    [ExportMetadata("Icon", "CameraSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
-    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SmartExposure : SequentialContainer, IImmutableContainer {
 

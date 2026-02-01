@@ -13,11 +13,6 @@ using NINA.Core.Model;
 using NINA.Sequencer.SequenceItem.Expressions;
 
 namespace WhenPlugin.When {
-    [ExportMetadata("Name", "Loop While")]
-    [ExportMetadata("Description", "Loops while the specified expression is not false.")]
-    [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceCondition))]
     [JsonObject(MemberSerialization.OptIn)]
 
     public class LoopWhile : SequenceCondition, IValidatable, ITrueFalse {

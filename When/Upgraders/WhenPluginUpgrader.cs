@@ -43,12 +43,62 @@ namespace WhenPlugin.When {
                         PreUpgradeInstruction(typeString, context.Json);
                         break;
                     }
+                case SequenceUpgradeStage.Create: {
+                        return CreateInstruction(typeString, context.Json);
+                    }
                 case SequenceUpgradeStage.AfterPopulate: {
                         return UpgradeInstruction(current, context);
                     }
             }
 
             return current;
+        }
+
+        public static object CreateInstruction(string originalType, JObject jObject) {
+            if (jObject.TryGetValue("$type", out var token)) {
+                // If it's one we need to upgrade to NINA, create a dummy object
+                switch (originalType) {
+                    case "WhenPlugin.When.Center, WhenPlugin":
+                    case "WhenPlugin.When.CoolCamera, WhenPlugin":
+                    case "WhenPlugin.When.SetConstant, WhenPlugin":
+                    case "WhenPlugin.When.DitherAfterExposures, WhenPlugin":
+                    case "WhenPlugin.When.ExternalScript, WhenPlugin":
+                    case "WhenPlugin.When.SetGlobalVariable, WhenPlugin":
+                    case "WhenPlugin.When.LoopWhile, WhenPlugin":
+                    case "WhenPlugin.When.MoveFocuserAbsolute, WhenPlugin":
+                    case "WhenPlugin.When.MoveFocuserRelative, WhenPlugin":
+                    case "WhenPlugin.When.MoveRotatorMechanical, WhenPlugin":
+                    case "WhenPlugin.When.ResetVariable, WhenPlugin":
+                    case "WhenPlugin.When.ResetVariableToDate, WhenPlugin":
+                    case "WhenPlugin.When.SetSwitchValue, WhenPlugin":
+                    case "WhenPlugin.When.SlewDomeAzimuth, WhenPlugin":
+                    case "WhenPlugin.When.SlewToAltAz, WhenPlugin":
+                    case "WhenPlugin.When.SlewToRADec, WhenPlugin":
+                    //case "WhenPlugin.When.SmartExposure, WhenPlugin":
+                    //case "WhenPlugin.When.SmartSubframeExposure, WhenPlugin":
+                    case "WhenPlugin.When.SwitchFilter, WhenPlugin":
+                    case "WhenPlugin.When.TakeExposure, WhenPlugin":
+                    //case "WhenPlugin.When.TakeManyExposures, WhenPlugin":
+                    //case "WhenPlugin.When.TrainedDarkFlatExposure, WhenPlugin":
+                    //case "WhenPlugin.When.TrainedFlatExposure, WhenPlugin":
+                    case "WhenPlugin.When.SetVariable, WhenPlugin":
+                    case "WhenPlugin.When.WaitForTimeSpan, WhenPlugin":
+                    case "WhenPlugin.When.WaitUntil, WhenPlugin":
+                        try {
+                            Type t = Type.GetType(originalType);
+                            if (t != null) {
+                                object instance = Activator.CreateInstance(t);
+                                return instance;
+                            }
+                        } catch (Exception e) {
+                            //
+                        }
+                        return null;
+                    default:
+                        break;
+                  }
+            }
+                return null;
         }
 
         public static void PreUpgradeInstruction(string originalType, JObject jObject) {

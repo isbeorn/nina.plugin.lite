@@ -10,11 +10,6 @@ using System.Threading.Tasks;
 using WhenPlugin.When;
 
 namespace WhenPlugin.When {
-    [ExportMetadata("Name", "Set Variable")]
-    [ExportMetadata("Description", "If the variable has been previously defined, its value will become the result of the specified expression")]
-    [ExportMetadata("Icon", "VariableSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class ResetVariable : SequenceItem, IValidatable {
         [ImportingConstructor]
