@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Reflection;
+using static NINA.Equipment.Equipment.MyGPS.PegasusAstro.UnityApi.DriverUranusReport;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "WhenPlugin Upgrader")]
@@ -291,6 +292,22 @@ namespace WhenPlugin.When {
             }
         }
 
+        private static void UpgradeFlatInstructions(SequentialContainer tm, SequentialContainer newTm, ISequenceItem item, ISequenceItem newObj) {
+            Type t = item.GetType();
+            ((LoopCondition)newTm.Conditions[0]).IterationsExpression.Definition = GetExpr(t, item, "IterExpr");
+            NINA.Sequencer.SequenceItem.Imaging.TakeExposure oldTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)tm.Items[0];
+            NINA.Sequencer.SequenceItem.Imaging.TakeExposure newTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)newTm.Items[0];
+            newTe.ExposureTimeExpression.Definition = UpdateSymbols(oldTe?.ExposureTimeExpression.Definition);
+            newTe.GainExpression.Definition = UpdateSymbols(oldTe?.GainExpression.Definition);
+            newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
+            newTe.Binning = oldTe?.Binning;
+            newTe.ImageType = oldTe?.ImageType;
+            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter oldSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)item).Items[2];
+            NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)((ISequenceContainer)newObj).Items[2];
+            newSf.ComboBoxText = oldSf.ComboBoxText;
+            newObj.AttachNewParent(item.Parent);
+        }
+
         public static object UpgradeInstruction(object obj, SequenceUpgradeContext context) {
             JObject jObject = context.Json;
             Factory = context.Factory;
@@ -447,30 +464,14 @@ namespace WhenPlugin.When {
                             NINA.Sequencer.SequenceItem.FlatDevice.TrainedDarkFlatExposure newObj = CreateNewContainer<NINA.Sequencer.SequenceItem.FlatDevice.TrainedDarkFlatExposure>(item.Name);
                             SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
                             SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
-                            ((LoopCondition)newTm.Conditions[0]).IterationsExpression.Definition = GetExpr(t, item, "IterExpr");
-                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure oldTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)tm.Items[0];
-                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure newTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)newTm.Items[0];
-                            newTe.ExposureTimeExpression.Definition = UpdateSymbols(oldTe?.ExposureTimeExpression.Definition);
-                            newTe.GainExpression.Definition = UpdateSymbols(oldTe?.GainExpression.Definition);
-                            newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
-                            newTe.Binning = oldTe?.Binning;
-                            newTe.ImageType = oldTe?.ImageType;
-                            newObj.AttachNewParent(item.Parent);
+                            UpgradeFlatInstructions(tm, newTm, item, newObj);
                             return newObj;
                         }
                     case "TrainedFlatExposure": {
                             NINA.Sequencer.SequenceItem.FlatDevice.TrainedFlatExposure newObj = CreateNewContainer<NINA.Sequencer.SequenceItem.FlatDevice.TrainedFlatExposure>(item.Name);
                             SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
                             SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
-                            ((LoopCondition)newTm.Conditions[0]).IterationsExpression.Definition = GetExpr(t, item, "IterExpr");
-                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure oldTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)tm.Items[0];
-                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure newTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)newTm.Items[0];
-                            newTe.ExposureTimeExpression.Definition = UpdateSymbols(oldTe?.ExposureTimeExpression.Definition);
-                            newTe.GainExpression.Definition = UpdateSymbols(oldTe?.GainExpression.Definition);
-                            newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
-                            newTe.Binning = oldTe?.Binning;
-                            newTe.ImageType = oldTe?.ImageType;
-                            newObj.AttachNewParent(item.Parent);
+                            UpgradeFlatInstructions(tm, newTm, item, newObj);
                             return newObj;
                         }
                     case "TakeManyExposures": {
