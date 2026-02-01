@@ -27,11 +27,6 @@ using NINA.Sequencer.Interfaces;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Move Focuser Relative +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Focuser_MoveFocuserRelative_Description")]
-    [ExportMetadata("Icon", "MoveFocuserRelativeSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     
     public class MoveFocuserRelative : SequenceItem, IValidatable {
@@ -47,6 +42,8 @@ namespace WhenPlugin.When {
             PExpr = new Expr(this, cloneMe.PExpr.Expression, "Integer");
             PExpr.Default = 0;
         }
+
+        public MoveFocuserRelative() { }
 
         public override object Clone() {
             return new MoveFocuserRelative(this) {

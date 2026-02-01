@@ -38,12 +38,6 @@ using NINA.Equipment.Equipment.MyFilterWheel;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Trained Dark Exposure +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_FlatDevice_TrainedDarkFlatExposure_Description")]
-    [ExportMetadata("Icon", "BrainBulbSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
-    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class TrainedDarkFlatExposure : SequentialContainer, IImmutableContainer {
 
@@ -115,6 +109,11 @@ namespace WhenPlugin.When {
                 FExpr = new Expr(this, cloneMe.FExpr.Expression, "Integer");
                 FilterExpr = cloneMe.FilterExpr;
             }
+        }
+
+        public TrainedDarkFlatExposure() {
+            IterExpr = new Expr(this, "", "Integer");
+            FExpr = new Expr(this, "", "Integer");
         }
 
         public override void AfterParentChanged() {
@@ -264,6 +263,11 @@ namespace WhenPlugin.When {
         public string FilterExpr {
             get => iFilterExpr;
             set {
+                if (ProfileService == null) {
+                    field = value;
+                    return;
+                }
+
                 value ??= "(Current)";
                 if (value.Length == 0) {
                     value = "(Current)";

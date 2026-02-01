@@ -73,6 +73,8 @@ namespace WhenPlugin.When {
             EExpr.Default = 0;
         }
 
+        public TakeExposure() { }
+
         public override object Clone() {
             var clone = new TakeExposure(this) {
                 ExposureCount = 0,

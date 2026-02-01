@@ -35,11 +35,6 @@ using NINA.Equipment.Equipment.MyFilterWheel;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Switch Filter +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_FilterWheel_SwitchFilter_Description")]
-    [ExportMetadata("Icon", "FW_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SwitchFilter : SequenceItem, IValidatable {
 
@@ -56,6 +51,10 @@ namespace WhenPlugin.When {
             WeakEventManager<IProfileService, EventArgs>.AddHandler(ProfileService, nameof(ProfileService.ProfileChanged), ProfileService_ProfileChanged);
             FExpr = new Expr(this);
           
+        }
+
+        public SwitchFilter() {
+            FExpr = new Expr(this);
         }
 
         private void MatchFilter() {
@@ -135,6 +134,10 @@ namespace WhenPlugin.When {
         public string FilterExpr {
             get => iFilterExpr;
             set {
+                if (ProfileService == null) {
+                    field = value;
+                    return;
+                }
                 value ??= "(Current)";
                 if (value.Length == 0) {
                     value = "(Current)";

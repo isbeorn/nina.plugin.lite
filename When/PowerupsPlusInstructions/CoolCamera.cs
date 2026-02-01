@@ -32,12 +32,6 @@ using NINA.Profile.Interfaces;
 using NINA.Core.Utility;
 
 namespace WhenPlugin.When {
-
-    [ExportMetadata("Name", "Cool Camera +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Camera_CoolCamera_Description")]
-    [ExportMetadata("Icon", "SnowflakeSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class CoolCamera : SequenceItem, IValidatable {
 
@@ -54,6 +48,10 @@ namespace WhenPlugin.When {
 
         private CoolCamera(CoolCamera cloneMe) : this(cloneMe.profileService, cloneMe.cameraMediator) {
             CopyMetaData(cloneMe);
+        }
+
+        public CoolCamera() {
+
         }
 
         public override object Clone() {

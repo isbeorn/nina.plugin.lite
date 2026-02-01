@@ -49,12 +49,6 @@ using NINA.Equipment.Equipment.MyCamera;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Smart Subframe Exposure +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Imaging_SmartSubframeExposure_Description")]
-    [ExportMetadata("Icon", "CameraSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
-    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SmartSubframeExposure : SequentialContainer, IImmutableContainer {
 
@@ -137,6 +131,13 @@ namespace WhenPlugin.When {
                 HExpr = new Expr(this, cloneMe.HExpr.Expression, "Integer", SetHeight, 0);
 
             }
+        }
+
+        public SmartSubframeExposure() {
+            IterExpr = new Expr(this, "", "Integer");
+            DExpr = new Expr(this, "", "Integer");
+            FExpr = new Expr(this, "", "Integer");
+            RExpr = new Expr(this, "", "Integer");
         }
 
         private InstructionErrorBehavior errorBehavior = InstructionErrorBehavior.ContinueOnError;
@@ -317,6 +318,7 @@ namespace WhenPlugin.When {
         public string FilterExpr {
             get => iFilterExpr;
             set {
+
                 value ??= "(Current)";
                 if (value.Length == 0) {
                     value = "(Current)";

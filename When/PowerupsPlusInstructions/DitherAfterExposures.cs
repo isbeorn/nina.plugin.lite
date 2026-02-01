@@ -38,11 +38,6 @@ using NINA.Sequencer.Trigger;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Dither After Exposures +")]
-    [ExportMetadata("Description", "Lbl_SequenceTrigger_Guider_DitherAfterExposures_Description")]
-    [ExportMetadata("Icon", "DitherSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
     public class DitherAfterExposures : SequenceTrigger, IValidatable {
         private IGuiderMediator guiderMediator;
@@ -62,6 +57,8 @@ namespace WhenPlugin.When {
         private DitherAfterExposures(DitherAfterExposures cloneMe) : this(cloneMe.guiderMediator, cloneMe.history, cloneMe.profileService) {
             CopyMetaData(cloneMe);
         }
+
+        public DitherAfterExposures() { }
 
         public override object Clone() {
             var clone = new DitherAfterExposures(this);

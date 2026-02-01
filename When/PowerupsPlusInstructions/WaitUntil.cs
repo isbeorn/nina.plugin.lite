@@ -29,11 +29,7 @@ using System.Threading.Tasks;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Wait Until")]
-    [ExportMetadata("Description", "Waits until the expression is true.")]
-    [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
+    [JsonObject(MemberSerialization.OptIn)]
     public class WaitUntil : SequenceItem, IValidatable, ITrueFalse {
         private ISafetyMonitorMediator safetyMonitorMediator;
         protected ISequenceMediator sequenceMediator;
@@ -50,6 +46,8 @@ namespace WhenPlugin.When {
         private WaitUntil(WaitUntil cloneMe) : this(cloneMe.safetyMonitorMediator, cloneMe.sequenceMediator, cloneMe.profileService) {
             CopyMetaData(cloneMe);
         }
+
+        public WaitUntil() { }
 
         public override object Clone() {
             WaitUntil clone = new WaitUntil(this);

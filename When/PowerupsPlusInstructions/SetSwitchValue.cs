@@ -34,11 +34,6 @@ using NCalc.Domain;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Set Switch Value +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Switch_SetSwitchValue_Description")]
-    [ExportMetadata("Icon", "ButtonSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SetSwitchValue : SequenceItem, IValidatable {
         private ISwitchMediator switchMediator;
@@ -55,6 +50,8 @@ namespace WhenPlugin.When {
         private SetSwitchValue(SetSwitchValue cloneMe) : this(cloneMe.switchMediator) {
             CopyMetaData(cloneMe);
         }
+
+        public SetSwitchValue() { }
 
         public override object Clone() {
             SetSwitchValue clone = new SetSwitchValue(this) { };

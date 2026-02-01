@@ -28,11 +28,6 @@ using NINA.Sequencer.SequenceItem;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Slew Dome Azimuth +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Dome_SetDomeAzimuth_Description")]
-    [ExportMetadata("Icon", "RotatorSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SlewDomeAzimuth : SequenceItem, IValidatable {
 
@@ -45,6 +40,8 @@ namespace WhenPlugin.When {
         private SlewDomeAzimuth(SlewDomeAzimuth cloneMe) : this(cloneMe.domeMediator) {
             CopyMetaData(cloneMe);
         }
+
+        public SlewDomeAzimuth() { }
 
         public override object Clone() {
             SlewDomeAzimuth clone = new SlewDomeAzimuth(this);

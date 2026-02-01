@@ -27,11 +27,6 @@ using NINA.Sequencer.Interfaces;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Move Focuser Absolute +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Focuser_MoveFocuserAbsolute_Description")]
-    [ExportMetadata("Icon", "MoveFocuserSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     
     public class MoveFocuserAbsolute : SequenceItem, IValidatable {
@@ -47,6 +42,8 @@ namespace WhenPlugin.When {
             PExpr = new Expr(this, cloneMe.PExpr.Expression, "Integer");
             PExpr.Default = 0;
         }
+
+        public MoveFocuserAbsolute() { }
 
         public override object Clone() {
             return new MoveFocuserAbsolute(this) {

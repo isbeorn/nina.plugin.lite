@@ -24,11 +24,6 @@ using System.Linq;
 using WhenPlugin.When;
 
 namespace WhenPlugin.When {
-    [ExportMetadata("Name", "Set Variable to Time")]
-    [ExportMetadata("Description", "If the variable has been previously defined, its value will become the result of the specified expression")]
-    [ExportMetadata("Icon", "VariableSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class ResetVariableToDate : SequenceItem, IValidatable {
 
@@ -59,6 +54,8 @@ namespace WhenPlugin.When {
                 CopyMetaData(copyMe);
             }
         }
+
+        public ResetVariableToDate() { }
 
         public override object Clone() {
             ResetVariableToDate clone = new ResetVariableToDate(this) { };

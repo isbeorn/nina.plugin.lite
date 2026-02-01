@@ -50,6 +50,8 @@ namespace WhenPlugin.When {
             IterExpr = new Expr(this);
         }
 
+        public TakeManyExposures() { }
+
         private InstructionErrorBehavior errorBehavior = InstructionErrorBehavior.ContinueOnError;
 
         [JsonProperty]

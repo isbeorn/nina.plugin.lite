@@ -1,3 +1,4 @@
+using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json.Linq;
 using NINA.Core.Model.Equipment;
 using NINA.Core.Utility;
@@ -74,13 +75,13 @@ namespace WhenPlugin.When {
                     case "WhenPlugin.When.SlewDomeAzimuth, WhenPlugin":
                     case "WhenPlugin.When.SlewToAltAz, WhenPlugin":
                     case "WhenPlugin.When.SlewToRADec, WhenPlugin":
-                    //case "WhenPlugin.When.SmartExposure, WhenPlugin":
-                    //case "WhenPlugin.When.SmartSubframeExposure, WhenPlugin":
+                    case "WhenPlugin.When.SmartExposure, WhenPlugin":
+                    case "WhenPlugin.When.SmartSubframeExposure, WhenPlugin":
                     case "WhenPlugin.When.SwitchFilter, WhenPlugin":
                     case "WhenPlugin.When.TakeExposure, WhenPlugin":
-                    //case "WhenPlugin.When.TakeManyExposures, WhenPlugin":
-                    //case "WhenPlugin.When.TrainedDarkFlatExposure, WhenPlugin":
-                    //case "WhenPlugin.When.TrainedFlatExposure, WhenPlugin":
+                    case "WhenPlugin.When.TakeManyExposures, WhenPlugin":
+                    case "WhenPlugin.When.TrainedDarkFlatExposure, WhenPlugin":
+                    case "WhenPlugin.When.TrainedFlatExposure, WhenPlugin":
                     case "WhenPlugin.When.SetVariable, WhenPlugin":
                     case "WhenPlugin.When.WaitForTimeSpan, WhenPlugin":
                     case "WhenPlugin.When.WaitUntil, WhenPlugin":
@@ -418,8 +419,9 @@ namespace WhenPlugin.When {
                         }
                     case "SwitchFilter": {
                             NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newObj = CreateNewItem<NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter>(item);
-                            PropertyInfo pi = t.GetProperty("FilterExpr");
-                            newObj.ComboBoxText = UpdateSymbols(pi.GetValue(item) as string);
+                            //PropertyInfo pi = t.GetProperty("FilterExpr");
+                            //newObj.ComboBoxText = UpdateSymbols(pi.GetValue(item) as string);
+                            newObj.ComboBoxText = jObject["FilterExpr"].ToString();
                             newObj.AttachNewParent(item.Parent);
                             return newObj;
                         }
@@ -438,6 +440,36 @@ namespace WhenPlugin.When {
                             NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter newSf = (NINA.Sequencer.SequenceItem.FilterWheel.SwitchFilter)newObj.Items[0];
                             newSf.ComboBoxText = oldSf.ComboBoxText;
                             // Dither?
+                            newObj.AttachNewParent(item.Parent);
+                            return newObj;
+                        }
+                    case "TrainedDarkFlatExposure": {
+                            NINA.Sequencer.SequenceItem.FlatDevice.TrainedDarkFlatExposure newObj = CreateNewContainer<NINA.Sequencer.SequenceItem.FlatDevice.TrainedDarkFlatExposure>(item.Name);
+                            SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
+                            SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
+                            ((LoopCondition)newTm.Conditions[0]).IterationsExpression.Definition = GetExpr(t, item, "IterExpr");
+                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure oldTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)tm.Items[0];
+                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure newTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)newTm.Items[0];
+                            newTe.ExposureTimeExpression.Definition = UpdateSymbols(oldTe?.ExposureTimeExpression.Definition);
+                            newTe.GainExpression.Definition = UpdateSymbols(oldTe?.GainExpression.Definition);
+                            newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
+                            newTe.Binning = oldTe?.Binning;
+                            newTe.ImageType = oldTe?.ImageType;
+                            newObj.AttachNewParent(item.Parent);
+                            return newObj;
+                        }
+                    case "TrainedFlatExposure": {
+                            NINA.Sequencer.SequenceItem.FlatDevice.TrainedFlatExposure newObj = CreateNewContainer<NINA.Sequencer.SequenceItem.FlatDevice.TrainedFlatExposure>(item.Name);
+                            SequentialContainer tm = ((ISequenceContainer)item).Items[4] as SequentialContainer;
+                            SequentialContainer newTm = ((ISequenceContainer)newObj).Items[4] as SequentialContainer;
+                            ((LoopCondition)newTm.Conditions[0]).IterationsExpression.Definition = GetExpr(t, item, "IterExpr");
+                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure oldTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)tm.Items[0];
+                            NINA.Sequencer.SequenceItem.Imaging.TakeExposure newTe = (NINA.Sequencer.SequenceItem.Imaging.TakeExposure)newTm.Items[0];
+                            newTe.ExposureTimeExpression.Definition = UpdateSymbols(oldTe?.ExposureTimeExpression.Definition);
+                            newTe.GainExpression.Definition = UpdateSymbols(oldTe?.GainExpression.Definition);
+                            newTe.OffsetExpression.Definition = UpdateSymbols(oldTe?.OffsetExpression.Definition);
+                            newTe.Binning = oldTe?.Binning;
+                            newTe.ImageType = oldTe?.ImageType;
                             newObj.AttachNewParent(item.Parent);
                             return newObj;
                         }

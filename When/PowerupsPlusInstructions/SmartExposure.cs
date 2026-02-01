@@ -117,6 +117,10 @@ namespace WhenPlugin.When {
             }
         }
 
+        public SmartExposure () {
+            FExpr = new Expr(this, "", "Integer");
+        }
+
         private InstructionErrorBehavior errorBehavior = InstructionErrorBehavior.ContinueOnError;
 
         public override void AfterParentChanged() {
@@ -306,6 +310,11 @@ namespace WhenPlugin.When {
         public string FilterExpr {
             get => iFilterExpr;
             set {
+                if (ProfileService == null) {
+                    field = value;
+                    return;
+                }
+
                 value ??= "(Current)";
                 if (value.Length == 0) {
                     value = "(Current)";

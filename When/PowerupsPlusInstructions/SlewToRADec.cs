@@ -33,11 +33,6 @@ using ASCOM.Common.Alpaca;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Slew to RA/Dec +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Telescope_SlewScopeToRaDec_Description")]
-    [ExportMetadata("Icon", "SlewToRaDecSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SlewToRADec : SequenceItem, IValidatable {
 
@@ -53,6 +48,8 @@ namespace WhenPlugin.When {
         private SlewToRADec(SlewToRADec cloneMe) : this(cloneMe.telescopeMediator, cloneMe.guiderMediator) {
             CopyMetaData(cloneMe);
         }
+
+        public SlewToRADec() { }
 
         public override object Clone() {
             SlewToRADec clone = new SlewToRADec(this) {

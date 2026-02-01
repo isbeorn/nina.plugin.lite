@@ -26,11 +26,6 @@ using NINA.Sequencer.SequenceItem;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Rotate by Mechanical Angle +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Rotator_MoveRotatorMechanical_Description")]
-    [ExportMetadata("Icon", "RotatorSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class MoveRotatorMechanical : SequenceItem, IValidatable {
 
@@ -46,6 +41,8 @@ namespace WhenPlugin.When {
             RExpr.Setter = ValidateAngle;
             RExpr.Default = 0;
         }
+
+        public MoveRotatorMechanical() { }
 
         public override object Clone() {
             return new MoveRotatorMechanical(this) {

@@ -29,11 +29,6 @@ using NINA.Sequencer.Logic;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "External Script +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Utility_ExternalScript_Description")]
-    [ExportMetadata("Icon", "ScriptSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class ExternalScript : SequenceItem, IValidatable {
 

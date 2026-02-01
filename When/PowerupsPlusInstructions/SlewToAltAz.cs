@@ -34,11 +34,6 @@ using NINA.Profile.Interfaces;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Slew to Alt/Az +")]
-    [ExportMetadata("Description", "Lbl_SequenceItem_Telescope_SlewScopeToAltAz_Description")]
-    [ExportMetadata("Icon", "SlewToAltAzSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class SlewToAltAz : SequenceItem, IValidatable {
 
@@ -54,6 +49,10 @@ namespace WhenPlugin.When {
 
         private SlewToAltAz(SlewToAltAz cloneMe) : this(cloneMe.telescopeMediator, cloneMe.guiderMediator, cloneMe.profileService) {
             CopyMetaData(cloneMe);
+        }
+
+        public SlewToAltAz() {
+            Coordinates = new InputTopocentricCoordinates(Angle.Zero, Angle.Zero);
         }
 
         public override object Clone() {
@@ -153,7 +152,7 @@ namespace WhenPlugin.When {
         }
 
         public override string ToString() {
-            return $"Category: {Category}, Item: {nameof(SlewToRADec)}, Coordinates: {Coordinates}";
+            return $"Category: {Category}, Item: {nameof(SlewToAltAz)}, Coordinates: {Coordinates}";
         }
     }
 }

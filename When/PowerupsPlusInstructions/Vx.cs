@@ -13,11 +13,6 @@ using System.Data;
 using System.Runtime.Serialization;
 
 namespace WhenPlugin.When {
-    [ExportMetadata("Name", "Variable")]
-    [ExportMetadata("Description", "Creates a Variable whose numeric value can be used in various instructions")]
-    [ExportMetadata("Icon", "VariableSVG")]
-    [ExportMetadata("Category", "Powerups (Deprecated)")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 
     public class SetVariable : Symbol {
