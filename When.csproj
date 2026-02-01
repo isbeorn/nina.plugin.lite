@@ -90,6 +90,7 @@
     <Compile Remove="When\Instructions\WaitUntil.cs" />
     <Compile Remove="When\Instructions\WhenTemplateOptions.cs" />
     <Compile Remove="When\InterruptWait.cs" />
+    <Compile Remove="When\PowerupsPlusInstructions\ExternalScriptDeprecated.cs" />
     <Compile Remove="When\PrependToLastImage.cs" />
     <Compile Remove="When\Runner.cs" />
     <Compile Remove="When\SetConstantView.xaml.cs" />
