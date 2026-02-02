@@ -26,6 +26,8 @@ namespace WhenPlugin.When {
 
         public string AssemblyName { get; set; }
 
+        public SequenceUpgradeStage Stages => SequenceUpgradeStage.BeforeCreate | SequenceUpgradeStage.Create | SequenceUpgradeStage.AfterCreate | SequenceUpgradeStage.AfterPopulate;
+
         public static ISequencerFactory Factory { get; set; }
 
         public bool CanUpgrade(SequenceUpgradeContext context, SequenceUpgradeStage stage) {
