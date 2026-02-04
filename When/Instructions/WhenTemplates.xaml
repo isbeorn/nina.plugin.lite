@@ -345,6 +345,30 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:AddImagePattern}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="Name:" />
+                    <TextBox
+                      MinWidth="40"
+                      Margin="5,-1,10,-2"
+                      Text="{Binding Identifier}"
+                      VerticalAlignment="Center"
+                      TextAlignment="Center" />
+                    <logic:ExprControl Label="Value:" Exp="{Binding ExprExpression}"/>
+                    <TextBlock Margin="20,-1,10,-2" VerticalAlignment="Center" Text="Description:" />
+                    <TextBox
+                      MinWidth="250"
+                      Margin="5,-1,10,-2"
+                      Text="{Binding PatternDescription}"
+                      VerticalAlignment="Center"
+                      TextAlignment="Left" />
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+
     <!-- GSSend (Send via Ground Station) -->
     <DataTemplate DataType="{x:Type local:GSSend}">
         <nina:SequenceBlockView DataContext="{Binding}">

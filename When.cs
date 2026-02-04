@@ -1,8 +1,15 @@
-﻿using NINA.Core.Utility;
+﻿using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Equipment.Interfaces.Mediator;
 using NINA.Plugin;
 using NINA.Plugin.Interfaces;
 using NINA.Profile;
 using NINA.Profile.Interfaces;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.Interfaces.Mediator;
+using NINA.Sequencer.Logic;
+using NINA.Sequencer.SequenceItem;
+using NINA.ViewModel.Sequencer;
 using NINA.WPF.Base.Interfaces.Mediator;
 using NINA.WPF.Base.Interfaces.ViewModel;
 using System;
@@ -15,12 +22,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using NINA.Equipment.Interfaces.Mediator;
-using NINA.Sequencer.Container;
-using NINA.Sequencer.Interfaces.Mediator;
-using NINA.Sequencer.Logic;
-using NINA.Sequencer.SequenceItem;
-using NINA.ViewModel.Sequencer;
+using Expression = NINA.Sequencer.Logic.Expression;
 using Settings = WhenPlugin.When.Properties.Settings;
 
 namespace WhenPlugin.When {
@@ -57,11 +59,29 @@ namespace WhenPlugin.When {
             FilterWheelMediator = filterWheelMediator;
             SymbolBrokerVM = symbolBroker;
 
+            imageSaveMediator.BeforeFinalizeImageSaved += ImageSaveMediator_BeforeFinalizeImageSaved;
+
             OpenRoofFilePathDiagCommand = new RelayCommand(OpenRoofFilePathDiag);
 
             Plugin = this;
 
             SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
+        }
+
+        private Task ImageSaveMediator_BeforeFinalizeImageSaved(object sender, BeforeFinalizeImageSavedEventArgs e) {
+            foreach (AddImagePattern.ImagePatternExpr pe in AddImagePattern.ImagePatterns) {
+                ImagePattern p = pe.Pattern;
+                Expression expr = pe.Expr;
+
+                if (expr.Context == null || expr.Context.Parent == null) {
+                    continue;
+                }
+
+                expr.Evaluate();
+                string v = (expr.Error != null) ? "ERROR" : expr.ValueString;
+                e.AddImagePattern(new ImagePattern(p.Key, p.Description, p.Category) { Value = v });
+            }
+            return Task.CompletedTask;
         }
 
         public static WhenPluginManifest Plugin { get; private set; }

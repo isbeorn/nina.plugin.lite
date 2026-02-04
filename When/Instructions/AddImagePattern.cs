@@ -48,30 +48,46 @@ namespace WhenPlugin.When {
 
         public override string ToString() {
             return $"AddImagePattern: {Identifier}, Expr: {Expr}";
-
         }
 
         public IList<String> Issues { get; set; }
 
         public static readonly String VALID_SYMBOL = "^[A-Z]+$";
 
-        private string ImagePatternAdded = String.Empty;
-
         [JsonProperty]
         public string PatternDescription { get; set; } = String.Empty;
 
         public class ImagePatternExpr {
 
-            public ImagePatternExpr(ImagePattern p, Expression e) {
+            public ImagePatternExpr(ImagePattern p, Expression e, AddImagePattern parent) {
                 Pattern = p;
                 Expr = e;
+                Parent = parent;
             }
 
             public ImagePattern Pattern;
             public Expression Expr;
+            public AddImagePattern Parent;
+            
+            // Called during image capture to get current formatted value
+            public string GetFormattedValue() {
+                // Use ExpandableString to leverage the new format support
+                var expandable = new ExpandableString(Parent.Expr);
+                expandable.SetSymbolBroker(Parent.SymbolBroker);
+                expandable.SetParent(Parent.Parent);
+                
+                string result = expandable.Expanded;
+                
+                // Return the expanded/formatted value, or empty if error
+                return expandable.HasError ? string.Empty : result;
+            }
         }
 
-        public static IList<ImagePatternExpr> ImagePatterns = new List<ImagePatternExpr>();
+        public static List<ImagePatternExpr> ImagePatterns = new List<ImagePatternExpr>();
+
+        private string ImagePatternAdded = String.Empty;
+
+        private string ImagePatternExprDefinition = String.Empty;
 
         public bool Validate() {
             if (!UserSymbol.IsAttachedToRoot(this)) return true;
@@ -84,12 +100,41 @@ namespace WhenPlugin.When {
                 i.Add("The name of an image pattern token must be all uppercase alphabetic characters");
             } else {
                 // Create it
+                // Check if pattern changed...
+                if (ImagePatternAdded.Length != 0) {
+                    // Remove existing pattern
+                    if (Identifier != ImagePatternAdded || ExprExpression.Definition != ImagePatternExprDefinition) {
+                        var toRemove = ImagePatterns.Find(p => p.Pattern.Key == "$$" + ImagePatternAdded + "$$");
+                        if (toRemove != null) {
+                            ImagePatterns.Remove(toRemove);
+                            OptionsVM.RemoveImagePattern(toRemove.Pattern.Key);
+                        }
+                        ImagePatternAdded = "";
+                    }
+                }
                 if (ImagePatternAdded.Length == 0) {
                     string desc = PatternDescription;
-                    ImagePatterns.Add(new ImagePatternExpr(new ImagePattern("$$" + Identifier + "$$", desc, "Sequencer Powerups"), ExprExpression));
-                    OptionsVM.AddImagePattern(new ImagePattern("$$" + Identifier + "$$", desc, "Sequencer Powerups") { Value = "6.66" });
+                    
+                    // Create the pattern with a placeholder value
+                    var pattern = new ImagePattern("$$" + Identifier + "$$", desc, "Sequencer Powerups");
+                    
+                    // Add to our tracking list with reference to parent for dynamic evaluation
+                    ImagePatterns.Add(new ImagePatternExpr(pattern, ExprExpression, this));
+                    
+                    // Get initial formatted value for display
+                    var expandable = new ExpandableString(Expr);
+                    expandable.SetSymbolBroker(SymbolBroker);
+                    expandable.SetParent(Parent);
+                    string initialValue = expandable.Expanded;
+                    
+                    // Add to OptionsVM with initial formatted value
+                    pattern.Value = expandable.HasError ? "Error" : initialValue;
+                    OptionsVM.RemoveImagePattern(pattern.Key);
+                    OptionsVM.AddImagePattern(pattern);
+                    
                     ImagePatternAdded = Identifier;
-                    Notification.ShowInformation("Image pattern '" + Identifier + "' added");
+                    ImagePatternExprDefinition = ExprExpression.Definition;
+                    Notification.ShowInformation($"Image pattern '{Identifier}' added with format support");
                 }
             }
 
