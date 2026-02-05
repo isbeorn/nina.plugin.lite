@@ -64,7 +64,10 @@ namespace WhenPlugin.When {
         }
 
         public void TemplatesLoadingHandler(object? sender, EventArgs e) {
-            RaisePropertyChanged("SortedTemplates");
+            TemplateController controller = sender as TemplateController;
+            if (controller != null && !controller.TemplatesLoading) {
+                RaisePropertyChanged("SortedTemplates");
+            }
         }
 
         public TemplateByReference(TemplateByReference copyMe) : this(sequenceMediator, profileService) {

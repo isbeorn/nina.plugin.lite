@@ -434,7 +434,27 @@
             </nina:SequenceBlockView.SequenceItemContent>
         </nina:SequenceBlockView>
     </DataTemplate>
-    
+
+    <DataTemplate DataType="{x:Type local:EndInstructionSet}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                       MinHeight="20"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,0"
+                       VerticalAlignment="Center"
+                       Text="Name:" />
+                    <ComboBox
+                       Margin="10,-2,0,0"
+                       ItemsSource="{Binding InstructionSetNames}"
+                       SelectedItem="{Binding InstructionSetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+
+
     <!-- Shared base for WhenSwitch/WhenUnsafe/DIYTrigger -->
   <ControlTemplate x:Key="WhenBaseTemplate" TargetType="ContentControl">
     <Border>
