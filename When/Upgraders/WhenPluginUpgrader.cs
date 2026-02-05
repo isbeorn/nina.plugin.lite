@@ -22,13 +22,13 @@ namespace WhenPlugin.When {
 
     public class WhenPluginUpgrader : ISequenceEntityUpgrader {
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        public string AssemblyName { get; set; }
+        public required string AssemblyName { get; set; }
 
         public SequenceUpgradeStage Stages => SequenceUpgradeStage.BeforeCreate | SequenceUpgradeStage.Create | SequenceUpgradeStage.AfterCreate | SequenceUpgradeStage.AfterPopulate;
 
-        public static ISequencerFactory Factory { get; set; }
+        public static ISequencerFactory? Factory { get; set; }
 
         public bool CanUpgrade(SequenceUpgradeContext context, SequenceUpgradeStage stage) {
             return true;
@@ -95,7 +95,7 @@ namespace WhenPlugin.When {
                                 object instance = Activator.CreateInstance(t);
                                 return instance;
                             }
-                        } catch (Exception e) {
+                        } catch (Exception) {
                             //
                         }
                         return null;
@@ -192,7 +192,7 @@ namespace WhenPlugin.When {
         private static readonly IDictionary<string, object> EmptyReferences = new Dictionary<string, object>();
 
         private static readonly IReadOnlyDictionary<string, string> SymbolUpgradeMap = new Dictionary<string, string> {
-            {"TIME", "ApplicationUptime"},
+            {"TIME", "Uptime"},
             {"RightAscension", "RightAscensionJ2000" },
             {"Declination", "DeclinationJ2000" },
             {"FocuserPosition", "Focuser_Position"},
@@ -207,7 +207,7 @@ namespace WhenPlugin.When {
 
 
         };
-        private static string GetUpgradedSymbol(string oldSymbol) {
+        private static string? GetUpgradedSymbol(string oldSymbol) {
             return SymbolUpgradeMap.TryGetValue(oldSymbol, out var newSymbol) ? newSymbol : null;
         }
 

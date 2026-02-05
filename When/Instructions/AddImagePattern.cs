@@ -85,9 +85,8 @@ namespace WhenPlugin.When {
 
         public static List<ImagePatternExpr> ImagePatterns = new List<ImagePatternExpr>();
 
-        private string ImagePatternAdded = String.Empty;
-
-        private string ImagePatternExprDefinition = String.Empty;
+        private string _lastIdentifier = string.Empty;
+        private string _lastExprDefinition = string.Empty;
 
         public bool Validate() {
             if (!UserSymbol.IsAttachedToRoot(this)) return true;
@@ -99,43 +98,8 @@ namespace WhenPlugin.When {
             } else if (!Regex.IsMatch(Identifier, VALID_SYMBOL)) {
                 i.Add("The name of an image pattern token must be all uppercase alphabetic characters");
             } else {
-                // Create it
-                // Check if pattern changed...
-                if (ImagePatternAdded.Length != 0) {
-                    // Remove existing pattern
-                    if (Identifier != ImagePatternAdded || ExprExpression.Definition != ImagePatternExprDefinition) {
-                        var toRemove = ImagePatterns.Find(p => p.Pattern.Key == "$$" + ImagePatternAdded + "$$");
-                        if (toRemove != null) {
-                            ImagePatterns.Remove(toRemove);
-                            OptionsVM.RemoveImagePattern(toRemove.Pattern.Key);
-                        }
-                        ImagePatternAdded = "";
-                    }
-                }
-                if (ImagePatternAdded.Length == 0) {
-                    string desc = PatternDescription;
-                    
-                    // Create the pattern with a placeholder value
-                    var pattern = new ImagePattern("$$" + Identifier + "$$", desc, "Sequencer Powerups");
-                    
-                    // Add to our tracking list with reference to parent for dynamic evaluation
-                    ImagePatterns.Add(new ImagePatternExpr(pattern, ExprExpression, this));
-                    
-                    // Get initial formatted value for display
-                    var expandable = new ExpandableString(Expr);
-                    expandable.SetSymbolBroker(SymbolBroker);
-                    expandable.SetParent(Parent);
-                    string initialValue = expandable.Expanded;
-                    
-                    // Add to OptionsVM with initial formatted value
-                    pattern.Value = expandable.HasError ? "Error" : initialValue;
-                    OptionsVM.RemoveImagePattern(pattern.Key);
-                    OptionsVM.AddImagePattern(pattern);
-                    
-                    ImagePatternAdded = Identifier;
-                    ImagePatternExprDefinition = ExprExpression.Definition;
-                    Notification.ShowInformation($"Image pattern '{Identifier}' added with format support");
-                }
+                // Check if pattern changed and update accordingly
+                UpdateImagePattern();
             }
 
             Expression.ValidateExpressions(i, ExprExpression);
@@ -143,6 +107,56 @@ namespace WhenPlugin.When {
             Issues = i;
             RaisePropertyChanged("Issues");
             return i.Count == 0;
+        }
+
+        private void UpdateImagePattern() {
+            bool hasChanged = Identifier != _lastIdentifier || ExprExpression.Definition != _lastExprDefinition;
+            bool isInitial = string.IsNullOrEmpty(_lastIdentifier);
+
+            if (hasChanged) {
+                // Remove old pattern if it exists
+                if (!isInitial) {
+                    RemoveOldPattern();
+                }
+
+                // Add new pattern
+                AddNewPattern();
+
+                // Update tracking
+                _lastIdentifier = Identifier;
+                _lastExprDefinition = ExprExpression.Definition;
+
+                Notification.ShowInformation($"Image pattern '{Identifier}' {(isInitial ? "added" : "updated")}");
+            }
+        }
+
+        private void RemoveOldPattern() {
+            string oldKey = "$$" + _lastIdentifier + "$$";
+
+            // Remove from static list
+            ImagePatterns.RemoveAll(p => p.Pattern.Key == oldKey);
+
+            // Remove from OptionsVM
+            OptionsVM.RemoveImagePattern(oldKey);
+        }
+
+        private void AddNewPattern() {
+            string key = "$$" + Identifier + "$$";
+
+            // Create the pattern
+            var pattern = new ImagePattern(key, PatternDescription, "Sequencer Powerups");
+
+            // Get initial formatted value
+            var expandable = new ExpandableString(Expr);
+            expandable.SetSymbolBroker(SymbolBroker);
+            expandable.SetParent(Parent);
+            pattern.Value = expandable.HasError ? "Error" : expandable.Expanded;
+
+            // Add to static list
+            ImagePatterns.Add(new ImagePatternExpr(pattern, ExprExpression, this));
+
+            // Add to OptionsVM
+            OptionsVM.AddImagePattern(pattern);
         }
 
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
