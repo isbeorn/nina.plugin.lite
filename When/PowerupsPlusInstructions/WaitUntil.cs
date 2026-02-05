@@ -47,7 +47,9 @@ namespace WhenPlugin.When {
             CopyMetaData(cloneMe);
         }
 
-        public WaitUntil() { }
+        public WaitUntil() {
+            PredicateExpr = new Expr(this);
+        }
 
         public override object Clone() {
             WaitUntil clone = new WaitUntil(this);

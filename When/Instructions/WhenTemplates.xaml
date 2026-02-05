@@ -1188,7 +1188,7 @@
     <nina:SequenceBlockView>
       <nina:SequenceBlockView.SequenceItemContent>
         <StackPanel Orientation="Horizontal">
-          <TextBlock VerticalAlignment="Center" Text="Mechanical Position: " />
+          <TextBlock VerticalAlignment="Center" Text="Current Mechanical Position: " />
           <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding MechanicalPosition}" />
         </StackPanel>
       </nina:SequenceBlockView.SequenceItemContent>

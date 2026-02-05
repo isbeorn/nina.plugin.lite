@@ -36,7 +36,7 @@ namespace WhenPlugin.When {
 
         public object? Upgrade(SequenceUpgradeContext context, SequenceUpgradeStage stage, object? current) {
             var typeString = context.OriginalTypeString ?? context.RequestedType.FullName;
-            
+
             switch (stage) {
                 case SequenceUpgradeStage.BeforeCreate: {
                         if (typeString == "WhenPlugin.When.CVContainer, WhenPlugin") {
@@ -44,12 +44,15 @@ namespace WhenPlugin.When {
                         }
                         break;
                     }
-                case SequenceUpgradeStage.AfterCreate: {
-                        PreUpgradeInstruction(typeString, context.Json);
-                        break;
-                    }
                 case SequenceUpgradeStage.Create: {
                         return CreateInstruction(typeString, context.Json);
+                    }
+                case SequenceUpgradeStage.AfterCreate: {
+                        // Fix: Ensure typeString is not null before calling PreUpgradeInstruction
+                        if (typeString != null) {
+                            PreUpgradeInstruction(typeString, context.Json);
+                        }
+                        break;
                     }
                 case SequenceUpgradeStage.AfterPopulate: {
                         return UpgradeInstruction(current, context);
