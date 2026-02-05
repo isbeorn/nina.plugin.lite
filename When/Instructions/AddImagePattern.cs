@@ -87,6 +87,7 @@ namespace WhenPlugin.When {
 
         private string _lastIdentifier = string.Empty;
         private string _lastExprDefinition = string.Empty;
+        private string _lastPatternDescription = string.Empty;
 
         public bool Validate() {
             if (!UserSymbol.IsAttachedToRoot(this)) return true;
@@ -110,7 +111,7 @@ namespace WhenPlugin.When {
         }
 
         private void UpdateImagePattern() {
-            bool hasChanged = Identifier != _lastIdentifier || ExprExpression.Definition != _lastExprDefinition;
+            bool hasChanged = Identifier != _lastIdentifier || ExprExpression.Definition != _lastExprDefinition || PatternDescription != _lastPatternDescription;
             bool isInitial = string.IsNullOrEmpty(_lastIdentifier);
 
             if (hasChanged) {
@@ -125,6 +126,7 @@ namespace WhenPlugin.When {
                 // Update tracking
                 _lastIdentifier = Identifier;
                 _lastExprDefinition = ExprExpression.Definition;
+                _lastPatternDescription = PatternDescription;
 
                 Notification.ShowInformation($"Image pattern '{Identifier}' {(isInitial ? "added" : "updated")}");
             }
