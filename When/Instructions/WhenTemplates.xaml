@@ -646,8 +646,8 @@
                         <StackPanel Orientation="Horizontal">
                             <!-- Time input - always visible -->
                             <TextBlock Margin="2,2,0,0" VerticalAlignment="Center" Text="@" />
-                            <TextBox Margin="10,2,5,0" VerticalAlignment="Center" MinWidth="40" TextAlignment="Center" Text="{Binding Time}" />
-                            <TextBlock Margin="2,2,30,0" VerticalAlignment="Center" Text=" s" />
+                            <TextBox Margin="5,2,0,0" VerticalAlignment="Center" MinWidth="40" TextAlignment="Center" Text="{Binding Time}" />
+                            <TextBlock Margin="0,2,30,0" VerticalAlignment="Center" Text=" s" />
 
                             <!-- CheckInstruction - only visible when not null -->
                             <ContentPresenter Content="{Binding CheckInstruction}" 

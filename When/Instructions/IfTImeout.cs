@@ -163,7 +163,7 @@ namespace WhenPlugin.When {
                 if (TimedOut) {
                     Logger.Info("Timed out; executing instructions...");
                     Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
-                    await Run(progress, token);
+                    await base.Execute(progress, token);
                 } else {
                     Logger.Info("Exception: " + ex.Message);
                 }
