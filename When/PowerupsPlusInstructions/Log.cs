@@ -28,11 +28,6 @@ using NINA.Sequencer.Logic;
 
 namespace WhenPlugin.When {
 
-    [ExportMetadata("Name", "Annotation +")]
-    [ExportMetadata("Description", "Add the specified text to the log, expanding any expressions within {}'s")]
-    [ExportMetadata("Icon", "ScriptSVG")]
-    [ExportMetadata("Category", "Powerups")]
-    [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
     public class Log : SequenceItem, IValidatable {
 

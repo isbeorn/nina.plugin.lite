@@ -927,7 +927,52 @@
     </ContentControl>
     </DataTemplate>
 
-
+    <DataTemplate DataType="{x:Type local:Break}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock 
+                      Text="Reason: " 
+                      VerticalAlignment="Center"
+                      Visibility="{Binding NotInFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                      Margin="10,0,5,0" />
+                    <TextBox
+                      HorizontalAlignment="Left"
+                      Padding="2"
+                      Visibility="{Binding NotInFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                      VerticalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      MinHeight="35"
+                      MinWidth="250"
+                      ToolTip="Enter text that will appear in the Breakpoint notification (not required)"
+                      Text="{Binding Reason}" />
+                    <TextBlock
+                       HorizontalAlignment="Left"
+                       Margin="10,0,5,0"
+                       Visibility="{Binding InFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                       VerticalAlignment="Center"
+                       Opacity="0.9"
+                       MinWidth="250"
+                       ToolTip="[See variables and constants here]"
+                       Text="Click this button to continue the sequence:" />
+                    <Button
+                       Margin="0,0,0,0"
+                       Padding="5,2"
+                       Width="150"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch"
+                       Visibility="{Binding InFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                       Command="{Binding StopInstructions}">
+                        <TextBlock
+                           Foreground="{StaticResource ButtonForegroundBrush}"
+                           Text="Continue"
+                           TextWrapping="Wrap" />
+                    </Button>
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type local:ConditionalTrigger}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
