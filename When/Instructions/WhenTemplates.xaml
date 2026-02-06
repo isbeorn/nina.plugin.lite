@@ -789,20 +789,35 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:AssignVariables}">
-        <nina:SequenceBlockView DataContext="{Binding}">
-            <nina:SequenceBlockView.SequenceItemContent>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock 
+        <Border 
+        Background="{StaticResource BackgroundBrush}"
+        BorderBrush="{StaticResource BorderBrush}"
+        BorderThickness="0"
+        MinHeight="40">
+            <Grid Margin="5,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock 
+                    Grid.Column="0"
                     Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Name}"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock 
+                    Grid.Column="1"
+                    Margin="40,0,0,0"
                     VerticalAlignment="Center"
                     Text="{Binding Assignments}"
                     FontStyle="Italic"
                     Opacity="0.8" />
-                </StackPanel>
-            </nina:SequenceBlockView.SequenceItemContent>
-        </nina:SequenceBlockView>
+            </Grid>
+        </Border>
     </DataTemplate>
-    
+
     <HierarchicalDataTemplate DataType="{x:Type local:ForEachList}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>

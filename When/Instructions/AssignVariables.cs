@@ -102,15 +102,7 @@ namespace WhenPlugin.When {
 
             }
         }
-        public override ICommand DetachCommand {
-            get {
-                // Prevent deletion if parent is ForEachList or ForEachInArray
-                if (Parent is ForEachList) {
-                    return null;
-                }
-                return base.DetachCommand;
-            }
-        }
+        public override ICommand DetachCommand => null;
 
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(AssignVariables)}";
