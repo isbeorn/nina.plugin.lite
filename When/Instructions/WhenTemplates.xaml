@@ -844,7 +844,8 @@
                                     <ItemsControl ItemsSource="{Binding Issues}" />
                                 </Border.ToolTip>
                             </Border>
-                            <TextBlock Margin="0,3,0,0" VerticalAlignment="Center" Text="Index Variable:" />
+                            <logic:ExprControl Label="Array Name:" Exp="{Binding NameExprExpression}" />
+                            <TextBlock Margin="20,3,0,0" VerticalAlignment="Center" Text="Index Variable:" />
                             <TextBox
                                MinWidth="40"
                                Margin="5,2,10,-2"
@@ -858,7 +859,6 @@
                                Text="{Binding ValueVariable}"
                                VerticalAlignment="Center"
                                TextAlignment="Center" />
-                            <logic:ExprControl Label="Name:" Exp="{Binding NameExprExpression}" />
                         </StackPanel>
                         <Border Grid.Column="1" Background="{StaticResource SecondaryBackgroundBrush}">
                             <ContentPresenter
