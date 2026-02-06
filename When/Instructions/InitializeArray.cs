@@ -10,6 +10,7 @@ using NINA.Sequencer.Validations;
 using System.Collections.Generic;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
+using NINA.Core.Utility;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Initialize Array")]
@@ -85,7 +86,7 @@ namespace WhenPlugin.When {
 
         // 3.3 Upgrade
         [JsonProperty]
-        public Expr iNameExpr {  get; set; }
+        public string iNameExpr { get; set; }
         public bool ShouldSerializeiNameExpr() {
             return false; // Always return false to prevent serialization
         }

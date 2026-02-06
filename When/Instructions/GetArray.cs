@@ -124,17 +124,17 @@ namespace WhenPlugin.When {
 
         // 3.3 Upgrade
         [JsonProperty]
-        public Expr iNameExpr { get; set; }
+        public string iNameExpr { get; set; }
         public bool ShouldSerializeiNameExpr() {
             return false;
         }
         [JsonProperty]
-        public Expr iIExpr { get; set; }
+        public string iIExpr { get; set; }
         public bool ShouldSerializeiIExpr() {
             return false;
         }
         [JsonProperty]
-        public Expr iVExpr { get; set; }
+        public string iVExpr { get; set; }
         public bool ShouldSerializeiVExpr() {
             return false;
         }
