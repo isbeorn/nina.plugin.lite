@@ -75,8 +75,7 @@ namespace WhenPlugin.When {
                 Logger.Info("IfFailed - Triggered by: " + CheckInstruction.Name);
                 
                 // Items won't run unless we reset this to CREATED
-                Status = NINA.Core.Enum.SequenceEntityStatus.CREATED;
-                await Run(progress, token);
+                await base.Execute(progress, token);
                 return;
             }
         }
