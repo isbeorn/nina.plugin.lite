@@ -1,23 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using Accord.Math;
+using Newtonsoft.Json;
 using NINA.Core.Model;
-using NINA.Sequencer.SequenceItem;
-using NINA.Sequencer.Validations;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Threading;
-using System.Threading.Tasks;
+using NINA.Core.MyMessageBox;
+using NINA.Core.Utility;
 using NINA.Core.Utility.Notification;
-using NINA.Sequencer.Interfaces.Mediator;
-using NINA.ViewModel.Sequencer;
-using System.Reflection;
+using NINA.Profile.Interfaces;
 using NINA.Sequencer;
 using NINA.Sequencer.Container;
-using NINA.Core.Utility;
+using NINA.Sequencer.Interfaces.Mediator;
+using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.Validations;
+using NINA.ViewModel.Sequencer;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Linq;
-using Accord.Math;
-using NINA.Profile.Interfaces;
-using NINA.Core.MyMessageBox;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WhenPlugin.When {
@@ -25,6 +27,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Description", "Incorporate a template by reference.  Please read the description on the plugin page.")]
     [ExportMetadata("Icon", "BoxClosedSVG")]
     [ExportMetadata("Category", "Powerups")]
+    [Export(typeof(ISequenceContainer))]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 
@@ -68,6 +71,20 @@ namespace WhenPlugin.When {
             if (controller != null && !controller.TemplatesLoading) {
                 RaisePropertyChanged("SortedTemplates");
             }
+        }
+
+        private IList<ISequenceItem> savedItems;
+
+        [OnSerializing]
+        public void OnSerializing(StreamingContext context) {
+            savedItems = new ObservableCollection<ISequenceItem>(Items.Select(i => i.Clone() as ISequenceItem));
+            Items.Clear();
+        }
+
+        [OnSerialized]
+        public void OnSerialized(StreamingContext context) {
+            Items = savedItems;
+            RaisePropertyChanged("Items");
         }
 
         public TemplateByReference(TemplateByReference copyMe) : this(sequenceMediator, profileService) {
