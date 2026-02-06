@@ -884,7 +884,7 @@
                      BorderBrush="{StaticResource BorderBrush}"
                      BorderThickness="1">
                         <Grid Background="{StaticResource BackgroundBrush}" >
-                            <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
+                            <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" ItemTemplateSelector="{StaticResource WhenTemplateSelector}"/>
                             <TextBlock
                              HorizontalAlignment="Center"
                              VerticalAlignment="Center"
