@@ -634,39 +634,48 @@
         </local:PowerupsContainerView>
     </HierarchicalDataTemplate>
 
-  <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
-    <local:PowerupsContainerView>
-      <local:PowerupsContainerView.HeaderAddon>
-        <Border
-           MinHeight="30"
-           Margin="10,1,0,0"
-           BorderBrush="{StaticResource BorderBrush}"
-           BorderThickness="1">
-          <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
-            <StackPanel Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}">
-              <ContentPresenter Content="{Binding CheckInstruction}" />
-            </StackPanel>
-            <TextBlock
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontStyle="Italic"
-               Text="Instruction to check goes here"
-               TextAlignment="Center"
-               MinWidth="400"
-               Visibility="{Binding CheckInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
-            <i:Interaction.Behaviors>
-              <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-            </i:Interaction.Behaviors>
-          </Grid>
-          <i:Interaction.Behaviors>
-            <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
-          </i:Interaction.Behaviors>
-        </Border>
-      </local:PowerupsContainerView.HeaderAddon>
-    </local:PowerupsContainerView>
-  </HierarchicalDataTemplate>
+    <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
+        <local:PowerupsContainerView>
+            <local:PowerupsContainerView.HeaderAddon>
+                <Border
+          MinHeight="40"
+          Margin="10,1,0,0"
+          BorderBrush="{StaticResource BorderBrush}"
+          BorderThickness="1">
+                    <Grid Background="{StaticResource BackgroundBrush}" DataContext="{Binding}">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Time input - always visible -->
+                            <TextBlock Margin="2,2,0,0" VerticalAlignment="Center" Text="@" />
+                            <TextBox Margin="10,2,5,0" VerticalAlignment="Center" MinWidth="40" TextAlignment="Center" Text="{Binding Time}" />
+                            <TextBlock Margin="2,2,30,0" VerticalAlignment="Center" Text=" s" />
 
-  <HierarchicalDataTemplate DataType="{x:Type local:IfFailed}" ItemsSource="{Binding Items}">
+                            <!-- CheckInstruction - only visible when not null -->
+                            <ContentPresenter Content="{Binding CheckInstruction}" 
+                               Visibility="{Binding CheckInstruction, Converter={StaticResource NullToVisibilityCollapsedConverter}}" />
+
+                            <!-- Placeholder - only visible when CheckInstruction is null -->
+                            <TextBlock
+                Margin="0,2,10,0"
+                VerticalAlignment="Center"
+                FontStyle="Italic"
+                Opacity="0.4"
+                Text="Instruction to check goes here"
+                Visibility="{Binding CheckInstruction, Converter={StaticResource InverseNullToVisibilityConverter}}" />
+                        </StackPanel>
+
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
+                        </i:Interaction.Behaviors>
+                    </Grid>
+                    <i:Interaction.Behaviors>
+                        <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.SequenceItem.ISequenceItem" OnDropCommand="DropIntoIfCommand" />
+                    </i:Interaction.Behaviors>
+                </Border>
+            </local:PowerupsContainerView.HeaderAddon>
+        </local:PowerupsContainerView>
+    </HierarchicalDataTemplate>
+    
+<HierarchicalDataTemplate DataType="{x:Type local:IfFailed}" ItemsSource="{Binding Items}">
     <local:PowerupsContainerView>
       <local:PowerupsContainerView.HeaderAddon>
         <Border
