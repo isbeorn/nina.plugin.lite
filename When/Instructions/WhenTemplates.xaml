@@ -942,7 +942,6 @@
                       Visibility="{Binding NotInFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
                       VerticalAlignment="Center"
                       VerticalContentAlignment="Center"
-                      MinHeight="35"
                       MinWidth="250"
                       ToolTip="Enter text that will appear in the Breakpoint notification (not required)"
                       Text="{Binding Reason}" />

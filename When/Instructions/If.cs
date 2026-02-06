@@ -78,7 +78,7 @@ namespace WhenPlugin.When {
 
                 if (!string.Equals(PredicateExpression.ValueString, "0", StringComparison.OrdinalIgnoreCase) && (PredicateExpression.Error == null)) {
                     Logger.Info("Predicate is true, " + PredicateExpression);
-                    await Run(progress, token);
+                    await base.Execute(progress, token);
                 } else {
                     Logger.Info("Predicate is false, " + PredicateExpression);
                     return;
