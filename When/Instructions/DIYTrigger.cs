@@ -165,6 +165,7 @@ namespace WhenPlugin.When {
             }
             return true;
         }
+
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(DIYTrigger)}";
         }
