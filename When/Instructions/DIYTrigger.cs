@@ -27,10 +27,6 @@ namespace WhenPlugin.When {
         [JsonProperty]
         public SequentialContainer Instructions { get; set; } = new SequentialContainer();
 
-        // Keep TriggerRunner for the trigger itself (not serialized to Items)
-        [JsonProperty]  
-        public SequentialContainer TriggerRunner { get; set; } = new SequentialContainer();
-
         [ImportingConstructor]
         public DIYTrigger() {
             DropIntoDIYTriggersCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropInSequenceTrigger);
@@ -97,6 +93,7 @@ namespace WhenPlugin.When {
         public override async Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             InFlight = true;
             Instructions.AttachNewParent(context);
+            Instructions.ResetAll();
             try {
                 Logger.Info("DIY Trigger executing...");
                 await Instructions.Run(progress, token);
@@ -104,6 +101,7 @@ namespace WhenPlugin.When {
                 InFlight = false;
                 Instructions.Parent?.Remove(Instructions);
                 Instructions.AttachNewParent(Parent);
+                Instructions.ResetAll();
             }
         }
         public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
@@ -130,8 +128,11 @@ namespace WhenPlugin.When {
 
         // Per Nick Holland
         public override void SequenceBlockInitialize() {
-            if (!InFlight && TriggerRunner.Triggers.FirstOrDefault() != null)
+            if (!InFlight && TriggerRunner.Triggers.FirstOrDefault() != null) {
                 TriggerRunner.Triggers.FirstOrDefault().SequenceBlockInitialize();
+            }
+            // Also initialize the Instructions container
+            Instructions.ResetAll();
         }
 
         public override void AfterParentChanged() {
