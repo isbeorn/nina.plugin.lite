@@ -133,7 +133,7 @@ namespace WhenPlugin.When {
             foreach (var kvp in a) {
                 double d;
                 object v = kvp.Value;
-                if (!Double.TryParse((string)v, out d)) {
+                if (!Double.TryParse(v.ToString(), out d)) {
                     v = "'" + v + "'";
                 }
                 ETokens[i++] = kvp.Key + "," + v;
