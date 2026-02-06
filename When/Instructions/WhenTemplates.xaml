@@ -788,6 +788,21 @@
         </Border>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:AssignVariables}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock 
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Assignments}"
+                    FontStyle="Italic"
+                    Opacity="0.8" />
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+    
     <HierarchicalDataTemplate DataType="{x:Type local:ForEachList}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>

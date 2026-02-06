@@ -12,16 +12,17 @@
 
 #endregion "copyright"
 
-using System;
-using System.Threading.Tasks;
-using System.Threading;
 using Newtonsoft.Json;
 using NINA.Core.Model;
-using NINA.Sequencer.SequenceItem;
-using System.ComponentModel.Composition;
 using NINA.Core.Utility;
 using NINA.Sequencer.Conditions;
+using NINA.Sequencer.SequenceItem;
+using System;
+using System.ComponentModel.Composition;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace WhenPlugin.When {
 
@@ -100,8 +101,16 @@ namespace WhenPlugin.When {
                 throw new SequenceEntityFailedException("Exception in AssignVariables: " + e.Message);
 
             }
-        } 
-            
+        }
+        public override ICommand DetachCommand {
+            get {
+                // Prevent deletion if parent is ForEachList or ForEachInArray
+                if (Parent is ForEachList) {
+                    return null;
+                }
+                return base.DetachCommand;
+            }
+        }
 
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(AssignVariables)}";
