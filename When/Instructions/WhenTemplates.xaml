@@ -650,6 +650,37 @@
         </local:PowerupsContainerView>
     </HierarchicalDataTemplate>
 
+    <DataTemplate DataType="{x:Type local:WaitIndefinitely}">
+        <nina:SequenceBlockView DataContext="{Binding}">
+            <nina:SequenceBlockView.SequenceItemContent>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                       MinHeight="20"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,0,-20"
+                       Visibility="{Binding InFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                       VerticalAlignment="Top"
+                       Opacity="0.4"
+                       MinWidth="200"
+                       Text="Click this button to terminate the wait:" />
+                    <Button
+                       MinHeight="20"
+                       Margin="5,-2,0,0"
+                       Width="100"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Stretch"
+                       Visibility="{Binding InFlight, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                       Command="{Binding StopInstructions}">
+                        <TextBlock
+                           Foreground="{StaticResource ButtonForegroundBrush}"
+                           Text="Stop"
+                           TextWrapping="Wrap" />
+                    </Button>
+                </StackPanel>
+            </nina:SequenceBlockView.SequenceItemContent>
+        </nina:SequenceBlockView>
+    </DataTemplate>
+
     <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
