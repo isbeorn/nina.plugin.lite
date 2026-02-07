@@ -20,7 +20,7 @@ using System.Windows.Input;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Relaxed Loop")]
-    [ExportMetadata("Description", "This trigger will run the specified instructions when the underlying trigger is activated.")]
+    [ExportMetadata("Description", "This condition will allow the current instruction to keep running before interrupting")]
     [ExportMetadata("Icon", "WandSVG")]
     [ExportMetadata("Category", "Powerups")]
     [Export(typeof(ISequenceCondition))]
@@ -118,6 +118,7 @@ namespace WhenPlugin.When {
             return $"Category: {Category}, Item: {nameof(RelaxedLoop)}";
         }
 
+        // This works because there's no Watchdog running
         public override bool Check(ISequenceItem previousItem, ISequenceItem nextItem) {
             if (TriggerRunner.Conditions.Count == 0) return false;
             return TriggerRunner.Conditions[0].RunCheck(previousItem, nextItem);
