@@ -73,8 +73,9 @@ namespace WhenPlugin.When {
         }  
 
         public async override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
-            int attempts = 1;
+            int attempts = 0;
             while (true) {
+                attempts++;
                 bool failed = false;
                 ISequenceItem failedItem = null;
                 foreach (ISequenceItem item in Items) {
@@ -93,8 +94,7 @@ namespace WhenPlugin.When {
                             // Clear status of all and start over...
                             Logger.Info(item.Name + ": failed, restarting instructions...");
                             failedItem = item;
-                            ResetInstructions();
-                            attempts++;
+                            //ResetInstructions();
                             failed = true;
                             break;
                         } else {
@@ -104,27 +104,28 @@ namespace WhenPlugin.When {
                         Logger.Warning("Exception running instruction in RUOS: " + ex);
                         failedItem = item;
                         failed = true;
-                        attempts++;
                         break;
                     }
                 }
 
                 // It's possible that an instruction was interrupted and is therefore still CREATED
                 // This happens with a PHD2 calibration, for example.
-                foreach (ISequenceItem item in Items) {
-                    if (item.Status == SequenceEntityStatus.CREATED) {
-                        Logger.Info(item.Name + ": didn't finish, restarting instructions...");
-                        failedItem = item;
-                        ResetInstructions();
-                        attempts++;
-                        failed = true;
-                        break;
+                if (!failed) {
+                    foreach (ISequenceItem item in Items) {
+                        if (item.Status == SequenceEntityStatus.CREATED) {
+                            Logger.Info(item.Name + ": didn't run, restarting instructions...");
+                            failedItem = item;
+                            failed = true;
+                            break;
+                        }
                     }
                 }
 
                 if (!failed) {
                     break;
                 }
+
+                ResetInstructions();
 
                 if (WaitExpression.Value > 0) {
                     await CoreUtil.Wait(TimeSpan.FromSeconds(WaitExpression.Value), true, token, progress, failedItem?.Name + " instruction failed; waiting to repeat");
@@ -140,7 +141,9 @@ namespace WhenPlugin.When {
         }
 
         public override bool Validate() {
-            //CommonValidate();
+            if (Instructions != null) {
+                Instructions.Validate();
+            }
 
             var i = new List<string>();
 
