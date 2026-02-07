@@ -110,7 +110,7 @@ namespace WhenPlugin.When {
             }
 
             // Execute instructions now
-            await Run(progress, token);
+            await base.Execute(progress, token);
         }
 
         public override string ToString() {
