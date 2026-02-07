@@ -628,7 +628,7 @@
             local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when conditions become unsafe" />
     </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:TemplateByReference}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:TemplateByReference}">
         <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
@@ -648,7 +648,7 @@
                 </StackPanel>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:WaitIndefinitely}">
         <nina:SequenceBlockView DataContext="{Binding}">
@@ -680,7 +680,7 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:IfTimeout}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:IfTimeout}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <Border
@@ -719,9 +719,9 @@
                 </Border>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
     
-<HierarchicalDataTemplate DataType="{x:Type local:IfFailed}" ItemsSource="{Binding Items}">
+<DataTemplate DataType="{x:Type local:IfFailed}">
     <local:PowerupsContainerView>
       <local:PowerupsContainerView.HeaderAddon>
         <Border
@@ -751,7 +751,7 @@
         </Border>
       </local:PowerupsContainerView.HeaderAddon>
     </local:PowerupsContainerView>
-  </HierarchicalDataTemplate>
+  </DataTemplate>
   
     <!-- IfThenElse DataTemplate using reusable branch style -->
     <DataTemplate DataType="{x:Type local:IfThenElse}">
@@ -903,7 +903,7 @@
         </Border>
     </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:ForEachList}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:ForEachList}">
         <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
@@ -924,10 +924,10 @@
                 </StackPanel>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
 
 
-    <HierarchicalDataTemplate DataType="{x:Type local:ForEachInArray}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:ForEachInArray}">
         <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
@@ -949,7 +949,7 @@
                 </StackPanel>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
 
 
     <DataTemplate DataType="{x:Type local:PutArray}">
@@ -1116,15 +1116,15 @@
         </nina:SequenceBlockView>
     </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:IfConstant}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:IfConstant}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <logic:ExprControl Margin="20,0,0,0" Label="Expression: " Exp="{Binding PredicateExpression}" />
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
 
-    <HierarchicalDataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}" ItemsSource="{Binding Items}">
+    <DataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}">
         <local:PowerupsContainerView>
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
@@ -1133,11 +1133,11 @@
                 </StackPanel>
             </local:PowerupsContainerView.HeaderAddon>
         </local:PowerupsContainerView>
-    </HierarchicalDataTemplate>
+    </DataTemplate>
 
-  <HierarchicalDataTemplate DataType="{x:Type local:OnceSafe}" ItemsSource="{Binding Items}">
+  <DataTemplate DataType="{x:Type local:OnceSafe}">
     <local:PowerupsContainerView AllowTriggers="False" AllowConditions="False" />
-  </HierarchicalDataTemplate>
+  </DataTemplate>
 
   <!-- DIYMeridianFlipTrigger - now using WhenBaseTemplate -->
   <DataTemplate DataType="{x:Type local:DIYMeridianFlipTrigger}">
