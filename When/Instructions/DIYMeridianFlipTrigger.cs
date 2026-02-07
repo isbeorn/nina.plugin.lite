@@ -161,9 +161,9 @@ namespace WhenPlugin.When {
             Instructions.AttachNewParent(Parent);
             Instructions.PseudoParent = this;
 
-            PauseTimeBeforeMeridian = copyMe.PauseTimeBeforeMeridian;
-            MaxMinutesAfterMeridian = copyMe.MaxMinutesAfterMeridian;
-            MinutesAfterMeridian = copyMe.MinutesAfterMeridian;
+            PauseTimeBeforeMeridian = this.PauseTimeBeforeMeridian;
+            MaxMinutesAfterMeridian = this.MaxMinutesAfterMeridian;
+            MinutesAfterMeridian = this.MinutesAfterMeridian;
         }
 
         public override object Clone() {
