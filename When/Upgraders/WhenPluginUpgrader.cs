@@ -41,6 +41,10 @@ namespace WhenPlugin.When {
                 case SequenceUpgradeStage.BeforeCreate: {
                         if (typeString == "WhenPlugin.When.CVContainer, WhenPlugin") {
                             context.Json["$type"] = "NINA.Sequencer.Container.SequentialContainer, NINA.Sequencer";
+                            return context.Json;
+                        } else if (typeString == "WhenPlugin.When.WaitUntilSafe, WhenPlugin") {
+                            context.Json["$type"] = "NINA.Sequencer.SequenceItem.SafetyMonitor.WaitUntilSafe, NINA.Sequencer";
+                            return context.Json;
                         }
                         break;
                     }
@@ -704,6 +708,7 @@ namespace WhenPlugin.When {
                     case "TemplateByReference":
                     case "SequentialContainer":   // For upgrading CVContainer
                     case "ForEachList":
+                    case "WaitUntilSafe":
                         break;
 
                     case "SafeTrigger":
