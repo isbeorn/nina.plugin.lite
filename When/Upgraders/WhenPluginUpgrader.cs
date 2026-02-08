@@ -200,6 +200,7 @@ namespace WhenPlugin.When {
 
         private static readonly IReadOnlyDictionary<string, string> SymbolUpgradeMap = new Dictionary<string, string> {
             {"TIME", "Uptime"},
+            {"EXITCODE", "LastExternalScriptExitCode" },
             {"RightAscension", "RightAscensionJ2000" },
             {"Declination", "DeclinationJ2000" },
             {"FocuserPosition", "Focuser_Position"},

@@ -288,14 +288,16 @@ namespace WhenPlugin.When {
                 return;
             }
 
+            if (ItemUtility.IsInRootContainer(Parent) && this.Parent.Status == SequenceEntityStatus.RUNNING && this.Status != SequenceEntityStatus.DISABLED) {
+                Target = DSOTarget.FindTarget(Parent);
+                if (Target != null) {
+                    UpdateChildren(Instructions);
+                }
+            }
+
             if (ShouldTrigger(null, null) && Parent != null) {
                 Logger.Info("InterruptWhen; shouldTrigger = true");
                 if (ItemUtility.IsInRootContainer(Parent) && this.Parent.Status == SequenceEntityStatus.RUNNING && this.Status != SequenceEntityStatus.DISABLED) {
-                    Target = DSOTarget.FindTarget(Parent);
-                    if (Target != null) {
-                        Logger.Info("Found Target: " + Target);
-                        UpdateChildren(Instructions);
-                    }
                     Triggered = true;
                     Logger.Info("InterruptWhen: Interrupting current Instruction Set");
 
