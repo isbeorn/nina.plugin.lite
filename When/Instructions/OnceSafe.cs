@@ -118,13 +118,12 @@ namespace WhenPlugin.When {
         }
 
         public new bool Validate() {
-            //CommonValidate();
-
+            base.Validate();
             var i = new List<string>();
-
             Issues = i;
-            return i.Count == 0;
+            return true;
         }
+
         public InputTarget DSOProxyTarget() {
             return Target;
         }

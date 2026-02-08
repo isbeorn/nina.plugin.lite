@@ -102,6 +102,7 @@ namespace WhenPlugin.When {
 
         public new bool Validate() {
 
+            base.Validate();
             //CommonValidate();
 
             var i = new List<string>();

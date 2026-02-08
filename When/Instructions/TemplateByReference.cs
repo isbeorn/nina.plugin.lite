@@ -249,7 +249,7 @@ namespace WhenPlugin.When {
 
             if (ninaTemplateController == null) return true;
 
-            //if (!Symbol.IsAttachedToRoot(this)) return true;
+            base.Validate();
 
             var i = new List<string>();
 
