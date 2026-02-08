@@ -462,7 +462,6 @@ namespace WhenPlugin.When {
         }
 
         private void CheckTarget() {
-
             InputTarget t = DSOTarget.FindTarget(Parent);
             if (t != null) {
                 Target = t;

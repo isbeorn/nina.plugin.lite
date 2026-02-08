@@ -75,7 +75,6 @@ namespace WhenPlugin.When {
             var fields = sequenceMediator.GetType().GetRuntimeFields();
             foreach (FieldInfo fi in fields) {
                 if (fi.Name.Equals("sequenceNavigation")) {
-
                     sequenceNavigationVM = (ISequenceNavigationVM)fi.GetValue(sequenceMediator);
                 }
             }
@@ -224,13 +223,13 @@ namespace WhenPlugin.When {
             }
         }
 
-        ISequenceItem RunningItem = null;
+        ISequenceItem? RunningItem = null;
 
-        private bool CanContinue(ISequenceContainer container, ISequenceItem previousItem, ISequenceItem nextItem) {
+        private bool CanContinue(ISequenceContainer container, ISequenceItem? previousItem, ISequenceItem? nextItem) {
             var conditionable = container as IConditionable;
             var canContinue = false;
             var conditions = conditionable?.GetConditionsSnapshot()?.Where(x => x.Status != SequenceEntityStatus.DISABLED).ToList();
-            if (conditions != null && conditions.Count > 0) {
+            if (conditions != null && conditions.Count > 0 && conditionable != null) {
                 canContinue = conditionable.CheckConditions(previousItem, nextItem);
             } else {
                 canContinue = container.Iterations < 1;
@@ -290,8 +289,9 @@ namespace WhenPlugin.When {
 
             if (ItemUtility.IsInRootContainer(Parent) && this.Parent.Status == SequenceEntityStatus.RUNNING && this.Status != SequenceEntityStatus.DISABLED) {
                 Target = DSOTarget.FindTarget(Parent);
-                if (Target != null) {
+                if (Target != null && Target != LastTarget) {
                     UpdateChildren(Instructions);
+                    LastTarget = Target;
                 }
             }
 
@@ -343,10 +343,10 @@ namespace WhenPlugin.When {
             return $"Trigger: {nameof(When)}";
         }
 
-        ISequenceItem NextItem;
-        ISequenceItem PreviousItem;
+        ISequenceItem? NextItem;
+        ISequenceItem? PreviousItem;
 
-        public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
+        public override bool ShouldTrigger(ISequenceItem? previousItem, ISequenceItem? nextItem) {
             if (InFlight) {
                 Logger.Trace("ShouldTrigger: FALSE (InFlight) ");
                 return false;
@@ -408,10 +408,11 @@ namespace WhenPlugin.When {
         public InputTarget DSOProxyTarget() {
             return Target;
         }
-        
-        public InputTarget Target = null;
 
-        public InputTarget FindTarget(ISequenceContainer c) {
+        public InputTarget? Target = null;
+        public InputTarget? LastTarget = null;
+
+        public InputTarget? FindTarget(ISequenceContainer c) {
             while (c != null) {
                 if (c is IDeepSkyObjectContainer dso) {
                     return dso.Target;
