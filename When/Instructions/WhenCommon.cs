@@ -75,7 +75,10 @@ namespace WhenPlugin.When {
             var fields = sequenceMediator.GetType().GetRuntimeFields();
             foreach (FieldInfo fi in fields) {
                 if (fi.Name.Equals("sequenceNavigation")) {
-                    sequenceNavigationVM = (ISequenceNavigationVM)fi.GetValue(sequenceMediator);
+                    var value = fi.GetValue(sequenceMediator);
+                    if (value is ISequenceNavigationVM navigationVM) {
+                        sequenceNavigationVM = navigationVM;
+                    }
                 }
             }
         }
