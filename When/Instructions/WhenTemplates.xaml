@@ -524,14 +524,14 @@
                     Margin="5,0,0,0"
                     VerticalAlignment="Center"
                     IsChecked="{Binding OnceOnly, Mode=TwoWay}"
-                    ToolTip="If set, this instruction will only run one time and then be disabled.  This can prevent looping behavior that may not be desirable." />
+                    ToolTip="If set, this instruction will only run once and then be disabled.  This can prevent looping behavior that may not be desirable." />
                 <TextBlock VerticalAlignment="Center" Margin="25,0,0,0" Text="Interrupt" Foreground="White" />
                 <CheckBox
                     MinWidth="40"
                     Margin="15,0,0,0"
                     VerticalAlignment="Center"
                     IsChecked="{Binding Interrupt, Mode=TwoWay}"
-                    ToolTip="If set, this instruction will interrupt the currently running instruction when the expression is true (This is the default behavior)" />
+                    ToolTip="If set,the currently running instruction will be interrupted when the Expression is true (This is the default behavior)" />
             </StackPanel>
         </ContentControl>
     </DataTemplate>
@@ -539,7 +539,7 @@
     <DataTemplate DataType="{x:Type local:InterruptTrigger}">
         <ContentControl
             Template="{StaticResource WhenBaseTemplate}"
-            local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the predicate is true" />
+            local:WhenBaseTemplateHelper.PlaceholderText="Instructions to run when the Expression is true" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:WhenUnsafe}">

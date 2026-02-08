@@ -367,11 +367,11 @@ namespace WhenPlugin.When {
             } else if (this is SetGlobalVariable) {
                 return GlobalVariables;
             } else if (Parent is CVContainer cvc) {
-                if (cvc.Parent is TemplateContainer tc) {
-                    return tc.Parent;
-                } else {
+                //if (cvc.Parent is TemplateContainer tc) {
+                //    return tc.Parent;
+                //} else {
                     return cvc.Parent;
-                }
+                //}
             } else {
                 return Parent;
             }
