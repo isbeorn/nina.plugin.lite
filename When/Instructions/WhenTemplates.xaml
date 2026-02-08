@@ -396,6 +396,7 @@
             </Border.Resources>
 
             <i:Interaction.Behaviors>
+                <behaviors:DragDropBehavior IsEnabled="True" />
                 <behaviors:DragOverBehavior AllowDragCenter="False" DragAboveSize="25" DragBelowSize="15" />
             </i:Interaction.Behaviors>
 
@@ -406,6 +407,9 @@
                         Margin="0"
                         HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
                         Background="{StaticResource SecondaryBackgroundBrush}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:DragDropBehavior IsEnabled="{Binding DataContext.CanDragAndDrop, RelativeSource={RelativeSource AncestorType={x:Type nina:SequenceView}}}" />
+                        </i:Interaction.Behaviors>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
@@ -451,6 +455,12 @@
                             </Border>
 
                             <!-- Varying content (Predicate for WhenSwitch, Trigger drop zone for DIYTrigger, etc.) -->
+                            <!--<StackPanel Orientation="Horizontal" MinWidth="40" VerticalAlignment="Center">
+                                <TextBlock Text="[Target: " />
+                                <TextBlock Text="{Binding Instructions.Target.TargetName}" />
+                                <TextBlock Text="]" />
+                            </StackPanel>-->
+
                             <ContentPresenter Content="{TemplateBinding Content}" />
                         </StackPanel>
 
