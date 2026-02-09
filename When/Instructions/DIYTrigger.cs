@@ -28,6 +28,8 @@ namespace WhenPlugin.When {
         [JsonProperty]
         public IfContainer Instructions { get; set; } = new IfContainer();
 
+        public IfContainer Runner { get; set; } = new IfContainer();
+
         [ImportingConstructor]
         public DIYTrigger() {
             DropIntoDIYTriggersCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropInSequenceTrigger);
@@ -38,6 +40,8 @@ namespace WhenPlugin.When {
             Instructions = (IfContainer)copyMe.Instructions.Clone();
             Instructions.AttachNewParent(Parent);
             Instructions.PseudoParent = this;
+            Runner = (IfContainer)copyMe.Runner.Clone();
+            Runner.PseudoParent = this;
         }
         public override object Clone() {
             return new DIYTrigger(this);
@@ -62,13 +66,13 @@ namespace WhenPlugin.When {
                     item = (ISequenceTrigger)source.Clone();
                 }
 
-                if (item.Parent != TriggerRunner) {
+                if (item.Parent != Runner) {
                     item.Parent?.Remove(item);
-                    item.AttachNewParent(TriggerRunner);
+                    item.AttachNewParent(Runner);
                 }
 
-                TriggerRunner.Triggers.Clear();
-                TriggerRunner.Triggers.Add(item);
+                Runner.Triggers.Clear();
+                Runner.Triggers.Add(item);
             }
         }
 
@@ -99,8 +103,8 @@ namespace WhenPlugin.When {
         }
         public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
             if (InFlight) return false;
-            if (TriggerRunner.Triggers.FirstOrDefault() == null) return false;
-            var trigger = TriggerRunner.Triggers.FirstOrDefault();
+            if (Runner.Triggers.FirstOrDefault() == null) return false;
+            var trigger = Runner.Triggers.FirstOrDefault();
             var result = trigger.ShouldTrigger(previousItem, nextItem);
             if (result) {
                 Logger.Info("DIY Trigger " + trigger.Name + " ShouldTrigger returning true");
@@ -110,8 +114,8 @@ namespace WhenPlugin.When {
 
         public override bool ShouldTriggerAfter(ISequenceItem previousItem, ISequenceItem nextItem) {
             if (InFlight) return false;
-            if (TriggerRunner.Triggers.FirstOrDefault() == null) return false;
-            var trigger = TriggerRunner.Triggers.FirstOrDefault();
+            if (Runner.Triggers.FirstOrDefault() == null) return false;
+            var trigger = Runner.Triggers.FirstOrDefault();
             var result = trigger.ShouldTriggerAfter(previousItem, nextItem);
             if (result) {
                 Logger.Info("DIY Trigger " + trigger.Name + " ShouldTriggerAfter returning true");
@@ -121,8 +125,8 @@ namespace WhenPlugin.When {
 
         // Per Nick Holland
         public override void SequenceBlockInitialize() {
-            if (!InFlight && TriggerRunner.Triggers.FirstOrDefault() != null) {
-                TriggerRunner.Triggers.FirstOrDefault().SequenceBlockInitialize();
+            if (!InFlight && Runner.Triggers.FirstOrDefault() != null) {
+                Runner.Triggers.FirstOrDefault().SequenceBlockInitialize();
             }
             // Also initialize the Instructions container
             Instructions.ResetAll();
@@ -130,12 +134,12 @@ namespace WhenPlugin.When {
 
         public override void AfterParentChanged() {
             // Handle TriggerRunner
-            foreach (ISequenceTrigger item in TriggerRunner.Triggers) {
-                if (item.Parent == null) item.AttachNewParent(TriggerRunner);
+            foreach (ISequenceTrigger item in Runner.Triggers) {
+                if (item.Parent == null) item.AttachNewParent(Runner);
             }
-            TriggerRunner.AttachNewParent(Parent);
-            if (TriggerRunner.Triggers.Count > 0) {
-                TriggerRunner.Triggers[0].AfterParentChanged();
+            Runner.AttachNewParent(Parent);
+            if (Runner.Triggers.Count > 0) {
+                Runner.Triggers[0].AfterParentChanged();
             }
             
             // Handle Instructions
@@ -146,8 +150,8 @@ namespace WhenPlugin.When {
         }
         public virtual bool Validate() {
             // Validate the Items (this will update their status)
-            if (TriggerRunner == null) return true;
-            foreach (ISequenceTrigger item in TriggerRunner.Triggers) {
+            if (Runner == null) return true;
+            foreach (ISequenceTrigger item in Runner.Triggers) {
                 if (item is IValidatable vitem) {
                     _ = vitem.Validate();
                 }

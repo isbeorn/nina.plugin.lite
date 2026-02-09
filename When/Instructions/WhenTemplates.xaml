@@ -843,7 +843,7 @@
             <!-- Trigger drop zone in header -->
             <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
                 <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{StaticResource ButtonForegroundBrush}" Text="Trigger:" />
-                <ItemsControl MinHeight="35" ItemsSource="{Binding TriggerRunner.Triggers}" />
+                <ItemsControl MinHeight="35" ItemsSource="{Binding Runner.Triggers}" />
                 <TextBlock
                     MinWidth="150"
                     VerticalAlignment="Center"
@@ -851,7 +851,7 @@
                     Opacity="0.4"
                     Foreground="{StaticResource ButtonForegroundBrush}"
                     Text="Drop trigger here"
-                    Visibility="{Binding TriggerRunner.Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
+                    Visibility="{Binding Runner.Triggers.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
                 <i:Interaction.Behaviors>
                     <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
                     <behaviors:DropIntoBehavior AllowedDragDropTypesString="NINA.Sequencer.Trigger.SequenceTrigger" OnDropCommand="DropIntoDIYTriggersCommand" />
