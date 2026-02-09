@@ -217,12 +217,6 @@ namespace WhenPlugin.When {
 
         private bool Critical { get; set; } = false;
 
-        private void UpdateChildren(ISequenceContainer c) {
-            foreach (var item in c.Items) {
-                item.AfterParentChanged();
-            }
-        }
-
         ISequenceItem? RunningItem = null;
 
         private bool CanContinue(ISequenceContainer container, ISequenceItem? previousItem, ISequenceItem? nextItem) {
@@ -288,11 +282,7 @@ namespace WhenPlugin.When {
             }
 
             if (ItemUtility.IsInRootContainer(Parent) && this.Parent.Status == SequenceEntityStatus.RUNNING && this.Status != SequenceEntityStatus.DISABLED) {
-                Target = DSOTarget.FindTarget(Parent);
-                if (Target != null && Target != LastTarget) {
-                    UpdateChildren(Instructions);
-                    LastTarget = Target;
-                }
+                SetTarget();
             }
 
             if (ShouldTrigger(null, null) && Parent != null) {
@@ -369,6 +359,16 @@ namespace WhenPlugin.When {
             return false;
         }
 
+        private void SetTarget() {
+            Target = DSOTarget.FindTarget(Parent);
+            if (Target != null && Target != LastTarget) {
+                Instructions.AfterParentChanged();
+                Instructions.Validate();
+                LastTarget = Target;
+            }
+        }
+
+        
         public async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
             Logger.Info("Execute");
             if (Critical) {
@@ -379,6 +379,8 @@ namespace WhenPlugin.When {
                 Logger.Info("When: InFlight; return");
                 return;
             }
+
+            Instructions.Validate();
             try {
                 while (true) {
                     Logger.Info("When: running TriggerRunner, InFlight -> true, Triggered -> false");
@@ -405,23 +407,8 @@ namespace WhenPlugin.When {
             }
         }
 
-        public InputTarget DSOProxyTarget() {
-            return Target;
-        }
-
-        public InputTarget? Target = null;
+        public InputTarget? Target { get; set; }
         public InputTarget? LastTarget = null;
-
-        public InputTarget? FindTarget(ISequenceContainer c) {
-            while (c != null) {
-                if (c is IDeepSkyObjectContainer dso) {
-                    return dso.Target;
-                } else {
-                    c = c.Parent;
-                }
-            }
-            return null;
-        }
 
         public override Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             return Execute(progress, token);

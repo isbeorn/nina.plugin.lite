@@ -22,7 +22,7 @@ namespace WhenPlugin.When {
             // Next, get running item from sequencerVM and walk up from there
             ISequenceItem r = WhenPluginManifest.GetRunningItem();
             if (r != null) {
-                t = FindTargetUp((ISequenceContainer)r);
+                t = FindTargetUp((ISequenceContainer)r.Parent);
                 if (t != null) return t;
             }
             

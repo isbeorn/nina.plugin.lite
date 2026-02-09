@@ -29,8 +29,6 @@ namespace WhenPlugin.When {
 
         [JsonProperty]
         public IfContainer Instructions { get; set; }
-        [JsonProperty]
-        public IfContainer Runner { get; set; }
 
         [ImportingConstructor]
         public InterruptTrigger() {
@@ -40,9 +38,9 @@ namespace WhenPlugin.When {
             AddItem(Instructions, new WaitIndefinitely() { Name="Wait Indefinitely", Icon = HourglassIcon }); ;
         }
 
-        private void AddItem(IfContainer Instructions, ISequenceItem item) {
-            Instructions.Items.Add(item);
-            item.AttachNewParent(Instructions);
+        private void AddItem(IfContainer instructions, ISequenceItem item) {
+            instructions.Items.Add(item);
+            //item.AttachNewParent(instructions);
         }
 
         private InterruptTrigger(InterruptTrigger copyMe) {
@@ -65,11 +63,8 @@ namespace WhenPlugin.When {
         public override async Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             InFlight = true;
             try {
-                Target = DSOTarget.FindTarget(Parent);
-                if (Target != null) {
-                    Logger.Info("Found Target: " + Target);
-                    UpdateChildren(Instructions);
-                }
+                // Is this necessary?
+                Validate();
                 await Instructions.Run(progress, token);
             } finally {
                 //InFlight = false;
@@ -86,55 +81,35 @@ namespace WhenPlugin.When {
             }
             Instructions.AttachNewParent(Parent);
         }
-
-        public InputTarget DSOProxyTarget() {
-            return Target;
-        }
         
-        public InputTarget Target = null;
-
-        public InputTarget FindTarget(ISequenceContainer c) {
-            while (c != null) {
-                if (c is IDeepSkyObjectContainer dso) {
-                    return dso.Target;
-                } else {
-                    c = c.Parent;
-                }
-            }
-            return null;
-        }
-
-        private void UpdateChildren(ISequenceContainer c) {
-            foreach (var item in c.Items) {
-                item.AfterParentChanged();
-            }
+        public InputTarget? Target {
+            get => DSOTarget.FindTarget(Parent);
+            set { }
         }
 
         public override bool ShouldTrigger(ISequenceItem previousItem, ISequenceItem nextItem) {
             return !InFlight;
         }
 
-        /// <summary>
-        /// This string will be used for logging
-        /// </summary>
-        /// <returns></returns>
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(InterruptTrigger)}";
         }
 
+        private InputTarget? LastTarget = null;
+        
         public bool Validate() {
             // Make sure a proper tree is maintained
             foreach (ISequenceItem item in Instructions.Items) {
-                item.AttachNewParent(Instructions);
-            }
-            try {
-                Target = DSOTarget.FindTarget(Parent);
-                if (Target != null) {
-                    //Logger.Info("Found Target: " + Target);
-                    UpdateChildren(Instructions);
+                if (item.Parent != Instructions) {
+                    item.AttachNewParent(Instructions);
                 }
-            } finally {
-                //InFlight = false;
+            }
+            
+            // Check our target...
+            Target = DSOTarget.FindTarget(Parent);
+            if (Target != null && Target != LastTarget) {
+                Instructions.AfterParentChanged();
+                LastTarget = Target;
             }
 
             Instructions.Validate();

@@ -47,38 +47,8 @@ namespace WhenPlugin.When {
             }
         }
 
-        public InputTarget Target {
-            get {
-                if (PseudoParent is IDSOTargetProxy w && w.DSOProxyTarget() != null) {
-                    return w.DSOProxyTarget();
-                }
-
-                ISequenceContainer parent = PseudoParent as ISequenceContainer;
-                while (parent != null) {
-                    if (parent is IDeepSkyObjectContainer dso) {
-                        return dso.Target;
-                    }
-                    parent = parent.Parent;
-                }
-
-                IProfileService profileService = WhenPluginManifest.ProfileService;
-                var profile = WhenPluginManifest.ProfileService.ActiveProfile;
-                InputTarget t = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
-
-                ISequenceContainer p = Parent;
-                if (p == null) {
-                    p = PseudoParent as ISequenceContainer;
-                }
-                if (p != null) {
-                    ContextCoordinates cc = ItemUtility.RetrieveContextCoordinates(p);
-                    if (cc != null) {
-                        t.InputCoordinates.Coordinates = cc.Coordinates;
-                        t.PositionAngle = cc.PositionAngle;
-                    }
-                }
-                return t;
-                //return null;
-            }
+        public InputTarget? Target {
+            get => ((PseudoParent is IDSOTargetProxy proxy) ? proxy.Target : null);
             set { }
         }
 

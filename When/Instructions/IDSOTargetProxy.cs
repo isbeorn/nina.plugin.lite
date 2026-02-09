@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace WhenPlugin.When {
     public interface IDSOTargetProxy {
-        public InputTarget DSOProxyTarget();
-        public InputTarget? FindTarget(ISequenceContainer c);
+        public InputTarget? Target { get; }
     }
 }
