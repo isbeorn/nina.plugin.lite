@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NINA.Astrometry;
 using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Sequencer.Container;
@@ -22,32 +23,30 @@ namespace WhenPlugin.When {
     [ExportMetadata("Category", "Powerups (Triggers)")]
     [Export(typeof(ISequenceTrigger))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class DIYTrigger : SequenceTrigger, IValidatable {
+    public class DIYTrigger : SequenceTrigger, IValidatable, IDSOTargetProxy {
         
         [JsonProperty]
-        public SequentialContainer Instructions { get; set; } = new SequentialContainer();
+        public IfContainer Instructions { get; set; } = new IfContainer();
 
         [ImportingConstructor]
         public DIYTrigger() {
             DropIntoDIYTriggersCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropInSequenceTrigger);
         }
 
+        private DIYTrigger(DIYTrigger copyMe) : this() {
+            CopyMetaData(copyMe);
+            Instructions = (IfContainer)copyMe.Instructions.Clone();
+            Instructions.AttachNewParent(Parent);
+            Instructions.PseudoParent = this;
+        }
+        public override object Clone() {
+            return new DIYTrigger(this);
+        }
+
         public override bool AllowMultiplePerSet => true;
 
         public ICommand DropIntoDIYTriggersCommand { get; set; }
 
-        public override object Clone() {
-            var clone = new DIYTrigger() {
-                Icon = Icon,
-                Name = Name,
-                Category = Category,
-                Description = Description,
-                TriggerRunner = (SequentialContainer)TriggerRunner.Clone(),
-                Instructions = (SequentialContainer)Instructions.Clone()
-            };
-
-            return clone;
-        }
 
         private static object lockObj = new object();
         public bool InFlight { get; set; }
@@ -83,19 +82,13 @@ namespace WhenPlugin.When {
             }
         }
 
-        /// <summary>
-        /// The actual running logic for when the trigger should run
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="progress"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
         public override async Task Execute(ISequenceContainer context, IProgress<ApplicationStatus> progress, CancellationToken token) {
             InFlight = true;
             Instructions.AttachNewParent(context);
             Instructions.ResetAll();
             try {
                 Logger.Info("DIY Trigger executing...");
+                SetTarget();
                 await Instructions.Run(progress, token);
             } finally {
                 InFlight = false;
@@ -164,11 +157,24 @@ namespace WhenPlugin.When {
                     _ = vitem.Validate();
                 }
             }
+
+            SetTarget();
+
             return true;
         }
 
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(DIYTrigger)}";
         }
+        private void SetTarget() {
+            Target = DSOTarget.FindTarget(Parent);
+            if (Target != null && Target != LastTarget) {
+                Instructions.AfterParentChanged();
+                Instructions.Validate();
+                LastTarget = Target;
+            }
+        }
+        public InputTarget? Target { get; set; }
+        public InputTarget? LastTarget { get; set; }
     }
 }

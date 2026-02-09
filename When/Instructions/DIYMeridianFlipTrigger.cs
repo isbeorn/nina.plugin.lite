@@ -22,7 +22,6 @@ using NINA.Core.Utility;
 using NINA.Profile.Interfaces;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.SequenceItem;
-using NINA.Sequencer.Utility;
 using NINA.Sequencer.Validations;
 using NINA.Astrometry;
 using NINA.Equipment.Interfaces.Mediator;
@@ -37,14 +36,12 @@ using System.Globalization;
 using NINA.Sequencer.Trigger;
 using NINA.Sequencer.SequenceItem.Guider;
 using NINA.Sequencer.SequenceItem.Autofocus;
-using NINA.Sequencer.SequenceItem.Platesolving;
 using System.Windows.Media;
 using System.Windows;
 using NINA.WPF.Base.Interfaces.ViewModel;
 using NINA.Equipment.Interfaces;
 using NINA.PlateSolving.Interfaces;
 using NINA.Core.Utility.WindowService;
-using NINA.Sequencer.SequenceItem.Utility;
 using NINA.Profile;
 using NINA.Equipment.Equipment.MyTelescope;
 using NINA.Core.Utility.Notification;
@@ -326,7 +323,7 @@ namespace WhenPlugin.When {
                 return false;
             }
 
-            CheckTarget();
+            SetTarget();
 
             // When side of pier is disabled - check if the last flip time was less than 11 hours ago and further check if the current position is similar to the last flip position. If all are true, no flip is required.
             if (UseSideOfPier == false && (DateTime.Now - lastFlipTime) < TimeSpan.FromHours(11) && lastFlipCoordiantes != null && (lastFlipCoordiantes - telescopeInfo.Coordinates).Distance.ArcMinutes < 20) {
@@ -461,19 +458,6 @@ namespace WhenPlugin.When {
             }
         }
 
-        private void CheckTarget() {
-            InputTarget t = DSOTarget.FindTarget(Parent);
-            if (t != null) {
-                Target = t;
-                Logger.Debug("Found Target: " + Target);
-                RaisePropertyChanged("Target");
-                UpdateChildren(Instructions);
-            } else {
-                Logger.Debug("Running target not found");
-            }
-        }
-
-
         private string TimeString(DateTime min) {
             return min.ToString("T", CultureInfo.CurrentCulture);
         }
@@ -531,7 +515,7 @@ namespace WhenPlugin.When {
                 }
             }
 
-            CheckTarget();
+            SetTarget();
 
             Issues.Clear();
             if (!valid) {
@@ -541,27 +525,15 @@ namespace WhenPlugin.When {
             return valid;
         }
 
-        private void UpdateChildren(ISequenceContainer c) {
-            foreach (var item in c.Items) {
-                item.AfterParentChanged();
+        private void SetTarget() {
+            Target = DSOTarget.FindTarget(Parent);
+            if (Target != null && Target != LastTarget) {
+                Instructions.AfterParentChanged();
+                Instructions.Validate();
+                LastTarget = Target;
             }
         }
-
-        public InputTarget DSOProxyTarget() {
-            return Target;
-        }
-
-        public InputTarget Target { get; set; }
-
-        public InputTarget FindTarget(ISequenceContainer c) {
-            while (c != null) {
-                if (c is IDeepSkyObjectContainer dso) {
-                    return dso.Target;
-                } else {
-                    c = c.Parent;
-                }
-            }
-            return null;
-        }
+        public InputTarget? Target { get; set; }
+        public InputTarget? LastTarget { get; set; }
     }
 }
