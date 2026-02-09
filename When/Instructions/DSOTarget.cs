@@ -16,26 +16,26 @@ namespace WhenPlugin.When {
 
         public static InputTarget? FindTarget(ISequenceContainer parent) {
             // Easy case, walk up from here
-            InputTarget? t = FindTargetUp(parent);
+            InputTarget? t = FindTargetAbove(parent);
             if (t != null) return t;
 
             // Next, get running item from sequencerVM and walk up from there
             ISequenceItem r = WhenPluginManifest.GetRunningItem();
             if (r != null) {
-                t = FindTargetUp((ISequenceContainer)r.Parent);
+                t = FindTargetAbove((ISequenceContainer)r.Parent);
                 if (t != null) return t;
             }
             
             // Worst case, look down from SequenceRootContainer (slow)
             ISequenceContainer sc = ItemUtility.GetRootContainer(parent);
             if (sc != null && sc.Items.Count == 3) {
-                return FindTargetDown((ISequenceContainer)sc.Items[1]);
+                return FindTargetBelow((ISequenceContainer)sc.Items[1]);
             } else {
                 return null;
             }
         }
 
-        public static InputTarget? FindTargetUp(ISequenceContainer parent) {
+        public static InputTarget? FindTargetAbove(ISequenceContainer parent) {
             if (parent != null) {
                 var container = parent as IDeepSkyObjectContainer;
                 if (container != null && container.Target != null && container.Target.InputCoordinates != null && container.Target.DeepSkyObject != null) {
@@ -53,7 +53,7 @@ namespace WhenPlugin.When {
                     }
                     return container.Target;
                 } else {
-                    return FindTargetUp(parent.Parent);
+                    return FindTargetAbove(parent.Parent);
                 }
             } else {
                 Logger.Debug("DSOTarget, Not found");
@@ -61,7 +61,7 @@ namespace WhenPlugin.When {
             }
         }
 
-        public static InputTarget? FindTargetDown(ISequenceContainer c) {
+        public static InputTarget? FindTargetBelow(ISequenceContainer c) {
             if (c != null) {
                 foreach (var item in c.Items) {
                     if (item is ISequenceContainer sc && (item.Status == SequenceEntityStatus.RUNNING || item.Status == SequenceEntityStatus.CREATED)) {
@@ -88,13 +88,13 @@ namespace WhenPlugin.When {
                                             return dso2.Target;
                                         }
                                         Logger.Debug("DSO Target, looking inside running target...");
-                                        InputTarget rt = FindTargetDown(dso2);
+                                        InputTarget rt = FindTargetBelow(dso2);
                                         if (rt != null) {
                                             Logger.Debug("DSO Target, found by looking deeper");
                                             return rt;
                                         }
                                     } else if (item2 is ISequenceContainer cont2) {
-                                        InputTarget rt = FindTargetDown(cont2);
+                                        InputTarget rt = FindTargetBelow(cont2);
                                         if (rt != null) {
                                             return rt;
                                         }
