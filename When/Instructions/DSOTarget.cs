@@ -15,14 +15,14 @@ namespace WhenPlugin.When {
     public class DSOTarget {
 
         public static InputTarget? FindTarget(ISequenceContainer parent) {
-            // Easy case, walk up from here
+            // Easy case, walk up from here; this is what ItemUtility.RetrieveContextCoordinates does
             InputTarget? t = FindTargetAbove(parent);
             if (t != null) return t;
 
             // Next, get running item from sequencerVM and walk up from there
             ISequenceItem r = WhenPluginManifest.GetRunningItem();
             if (r != null) {
-                t = FindTargetAbove((ISequenceContainer)r.Parent);
+                t = FindTargetAbove(r.Parent);
                 if (t != null) return t;
             }
             
@@ -88,13 +88,13 @@ namespace WhenPlugin.When {
                                             return dso2.Target;
                                         }
                                         Logger.Debug("DSO Target, looking inside running target...");
-                                        InputTarget rt = FindTargetBelow(dso2);
+                                        InputTarget? rt = FindTargetBelow(dso2);
                                         if (rt != null) {
                                             Logger.Debug("DSO Target, found by looking deeper");
                                             return rt;
                                         }
                                     } else if (item2 is ISequenceContainer cont2) {
-                                        InputTarget rt = FindTargetBelow(cont2);
+                                        InputTarget? rt = FindTargetBelow(cont2);
                                         if (rt != null) {
                                             return rt;
                                         }
