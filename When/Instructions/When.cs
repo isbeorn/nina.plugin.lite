@@ -116,7 +116,6 @@ namespace WhenPlugin.When {
 
         public override bool AllowMultiplePerSet => true;
 
-        public IList<string> Switches { get; set; } = null;
         public new bool Validate() {
 
             CommonValidate();
