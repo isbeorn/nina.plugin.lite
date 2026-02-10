@@ -14,8 +14,8 @@ using System.Runtime.InteropServices;
 // [MANDATORY] The name of your plugingit st
 [assembly: AssemblyTitle("Sequencer Powerups")]
 // [MANDATORY] A short description of your plugin
-//[assembly: AssemblyDescription("*** BETA RELEASE ***")]
-[assembly: AssemblyDescription("Get the most out of the Advanced Sequencer!")]
+[assembly: AssemblyDescription("*** BETA RELEASE ***")]
+//[assembly: AssemblyDescription("Get the most out of the Advanced Sequencer!")]
 
 // The following attributes are not required for the plugin per se, but are required by the official manifest meta data
 
@@ -46,9 +46,26 @@ using System.Runtime.InteropServices;
 //[Optional] An additional url to an example example screenshot of your plugin in action
 [assembly: AssemblyMetadata("AltScreenshotURL", "https://1drv.ms/u/s!AjBSqKNCEWOTgfIGHf3eIXv2hZfYAw?e=LLHMJF")]
 //[Optional] An in-depth description of your plugin
-[assembly: AssemblyMetadata("LongDescription", @"## This plugin contains a variety of instructions that enhance the power of the Advanced Sequencer.  The set of these instructions is expected to increase over time; consider them 'utility' instructions.  Many of these instructions allow you to take arbitrary sets of actions when specific circumstances arise; you specify these actions by dragging instructions into place, just as you would to create any instruction set or template.
+[assembly: AssemblyMetadata("LongDescription", @"## This plugin contains a variety of instructions that enhance the power of the Advanced Sequencer.
 
-# Complete documentation for Sequencer Powerups is at [Powerups Docs](https://marcblank.github.io)
+## Complete documentation for Sequencer Powerups 3.x is at [Powerups Docs](https://marcblank.github.io)
+
+# Powerups 4 (For NINA 3.3) Notes/Warnings
+
+Here are things you need to consider before using Powerups 4:
+
+- All + instructions (except Smart Subframe Exposure +) will automatically be converted to NINA instructions
+- Smart Subframe Exposure + has been removed; please use NINA's Take Subframe Exposure instruction
+- Constants and Variables are now referred to generically as Symbols
+- Constant/Variable containers are now plain Sequential Instruction Sets; Symbols defined in them become global in scope
+- Local Variables are now called Scoped Variables
+- Local Constants no longer exist; they are automatically converted to Scoped (Local) Variables
+- Constants defined in the Powerups plugin page are no longer available.
+- The Call and Return instructions aren't initially available
+- The SAFE Variable is no longer supported; Wait Until Safe + becomes core Wait Until Safe
+- The use of the NINAESRC environment variable is no longer supported in External Script
+- TS_ (Target Scheduler) Variables aren't available until implemented in Target Scheduler
+- Names of some Variables have been changed, but the upgrade process should rename them; you'll still want to check your sequences/templates for newly undefined Variables in case something was missed
 
 ## Comments, suggestions, bug reports, etc. are welcomed!  Contact me by DM @Marc on the NINA Discord server, or post in the #sequencer-powerups channel.
 ")]
