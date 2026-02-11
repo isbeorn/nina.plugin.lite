@@ -20,7 +20,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Send via Ground Station")]
     [ExportMetadata("Description", "Send a message via Ground Station, including Expressions.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Misc)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 

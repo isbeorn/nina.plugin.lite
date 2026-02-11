@@ -20,7 +20,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Send with GNS")]
     [ExportMetadata("Description", "Send a message with GNS, including Expressions.")]
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Misc)")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
 

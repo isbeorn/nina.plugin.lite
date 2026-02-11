@@ -1,4 +1,5 @@
-﻿using NINA.Core.Model;
+﻿using NCalc.Handlers;
+using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Equipment.Interfaces.Mediator;
 using NINA.Plugin;
@@ -66,6 +67,34 @@ namespace WhenPlugin.When {
             Plugin = this;
 
             SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
+            var fn = new SymbolFunction(
+                 key: "array_length",
+                 category: "Powerups",
+                 description: "",
+                 usageExample: "",
+                 implementation: ArrayLengthImpl,
+                 minArgs: 1,
+                 maxArgs: 1,
+                 isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
+        }
+
+        private static object ArrayLengthImpl(FunctionArgs args) {
+            object[] p = args.EvaluateParameters();
+            
+            if (p.Length != 1) {
+                throw new ArgumentException("Requires one argument");
+            }
+            string arrayName = p[0] as string;
+
+            if (arrayName == null) return -1;
+
+            Array a;
+            if (Array.Arrays.TryGetValue(arrayName, out a)) {
+                return a.Count;
+            }
+            return -1;
         }
 
         private Task ImageSaveMediator_BeforeFinalizeImageSaved(object sender, BeforeFinalizeImageSavedEventArgs e) {

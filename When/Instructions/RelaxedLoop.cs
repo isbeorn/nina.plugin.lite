@@ -22,7 +22,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Name", "Relaxed Loop")]
     [ExportMetadata("Description", "This condition will allow the current instruction to keep running before interrupting")]
     [ExportMetadata("Icon", "WandSVG")]
-    [ExportMetadata("Category", "Powerups")]
+    [ExportMetadata("Category", "Powerups (Sequence)")]
     [Export(typeof(ISequenceCondition))]
     [JsonObject(MemberSerialization.OptIn)]
     public class RelaxedLoop : SequenceCondition, IValidatable {

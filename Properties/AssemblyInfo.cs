@@ -8,11 +8,11 @@ using System.Runtime.InteropServices;
 //Should be incremented for each new release build of a plugin
 
 // Odd minor releases for Beta
-[assembly: AssemblyVersion("4.0.0.50")]
-[assembly: AssemblyFileVersion("4.0.0.50")]
+[assembly: AssemblyVersion("4.0.0.51")]
+[assembly: AssemblyFileVersion("4.0.0.51")]
 
 // [MANDATORY] The name of your plugingit st
-[assembly: AssemblyTitle("Sequencer Powerups")]
+[assembly: AssemblyTitle("Sequencer Powerups 4")]
 // [MANDATORY] A short description of your plugin
 [assembly: AssemblyDescription("*** BETA RELEASE ***")]
 //[assembly: AssemblyDescription("Get the most out of the Advanced Sequencer!")]
@@ -41,14 +41,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("Tags", "Sequencer,Utility,Powerups,Conditionals,Safety,Interrupt,If,When")]
 
 //[Optional] The url to a featured logo that will be displayed in the plugin list next to the name
-[assembly: AssemblyMetadata("FeaturedImageURL", "https://bitbucket.org/zorkmid/nina.plugin.when/downloads/Powerups.png")]
-[assembly: AssemblyMetadata("ScreenshotURL", "https://bitbucket.org/zorkmid/nina.plugin.when/downloads/LoopWhile.png")]
+[assembly: AssemblyMetadata("FeaturedImageURL", "https://github.com/marcblank/powerups4.github.io/blob/main/Powerups.png")]
+[assembly: AssemblyMetadata("ScreenshotURL", "https://github.com/marcblank/powerups4.github.io/blob/main/WBU.png")]
 //[Optional] An additional url to an example example screenshot of your plugin in action
 [assembly: AssemblyMetadata("AltScreenshotURL", "https://1drv.ms/u/s!AjBSqKNCEWOTgfIGHf3eIXv2hZfYAw?e=LLHMJF")]
 //[Optional] An in-depth description of your plugin
 [assembly: AssemblyMetadata("LongDescription", @"## This plugin contains a variety of instructions that enhance the power of the Advanced Sequencer.
 
-## Complete documentation for Sequencer Powerups 3.x is at [Powerups Docs](https://marcblank.github.io)
+## Interim documentation for Sequencer Powerups 4 is at [Powerups Docs](https://marcblank.github.io/powerups4.github.io/)
 
 # Powerups 4 (For NINA 3.3) Notes/Warnings
 
