@@ -129,18 +129,6 @@ namespace WhenPlugin.When {
                   isVolatile: false);
 
             SymbolProvider.RegisterFunction(fn);
-
-            fn = new SymbolFunction(
-                  key: "formatDate",
-                  category: "Powerups",
-                  description: "Formats a Unix timestamp (seconds since 1970-01-01) using standard .NET date format strings",
-                  usageExample: "formatDate(1609459200, 'yyyy-MM-dd HH:mm:ss') returns '2021-01-01 00:00:00'",
-                  implementation: FormatDateImpl,
-                  minArgs: 2,
-                  maxArgs: 2,
-                  isVolatile: false);
-
-            SymbolProvider.RegisterFunction(fn);
         }
 
         private static (string, Array)? GetArrayFromFunctionArgs(FunctionArgs args) {
@@ -227,33 +215,6 @@ namespace WhenPlugin.When {
                     double value = Convert.ToDouble(p[0]);
                     return value.ToString(formatString);
                 }
-            } catch (FormatException) {
-                return $"ERROR: Invalid format string '{p[1]}'";
-            } catch (Exception ex) {
-                return $"ERROR: {ex.Message}";
-            }
-        }
-
-        private static object FormatDateImpl(FunctionArgs args) {
-            object?[] p = args.EvaluateParameters();
-            
-            if (p.Length != 2) {
-                throw new ArgumentException("Requires two arguments: Unix timestamp and format string");
-            }
-            
-            if (p[0] == null || p[1] == null) {
-                return "ERROR: null argument";
-            }
-            
-            try {
-                // Convert to Unix timestamp (seconds since 1970-01-01 UTC)
-                long unixTime = Convert.ToInt64(p[0]);
-                DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime;
-                
-                string formatString = p[1].ToString() ?? "yyyy-MM-dd HH:mm:ss";
-                return dateTime.ToString(formatString);
-            } catch (ArgumentOutOfRangeException) {
-                return $"ERROR: Invalid Unix timestamp '{p[0]}'";
             } catch (FormatException) {
                 return $"ERROR: Invalid format string '{p[1]}'";
             } catch (Exception ex) {
