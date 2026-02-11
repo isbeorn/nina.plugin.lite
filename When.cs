@@ -117,6 +117,30 @@ namespace WhenPlugin.When {
                   isVolatile: false);
 
             SymbolProvider.RegisterFunction(fn);
+
+            fn = new SymbolFunction(
+                  key: "format",
+                  category: "Powerups",
+                  description: "Formats a numeric value using standard .NET format strings",
+                  usageExample: "format(3.14159, 'F2') returns '3.14'",
+                  implementation: FormatImpl,
+                  minArgs: 2,
+                  maxArgs: 2,
+                  isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
+
+            fn = new SymbolFunction(
+                  key: "formatDate",
+                  category: "Powerups",
+                  description: "Formats a Unix timestamp (seconds since 1970-01-01) using standard .NET date format strings",
+                  usageExample: "formatDate(1609459200, 'yyyy-MM-dd HH:mm:ss') returns '2021-01-01 00:00:00'",
+                  implementation: FormatDateImpl,
+                  minArgs: 2,
+                  maxArgs: 2,
+                  isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
         }
 
         private static (string, Array)? GetArrayFromFunctionArgs(FunctionArgs args) {
@@ -173,6 +197,68 @@ namespace WhenPlugin.When {
                 }
             }
             return sb.ToString();
+        }
+
+        private static object FormatImpl(FunctionArgs args) {
+            object?[] p = args.EvaluateParameters();
+            
+            if (p.Length != 2) {
+                throw new ArgumentException("Requires two arguments: value and format string");
+            }
+            
+            if (p[0] == null || p[1] == null) {
+                return "ERROR: null argument";
+            }
+            
+            try {
+                string formatString = p[1].ToString() ?? "G";
+                
+                // Try to format as different numeric types
+                if (p[0] is double d) {
+                    return d.ToString(formatString);
+                } else if (p[0] is int i) {
+                    return i.ToString(formatString);
+                } else if (p[0] is long l) {
+                    return l.ToString(formatString);
+                } else if (p[0] is decimal dec) {
+                    return dec.ToString(formatString);
+                } else {
+                    // Try to convert to double
+                    double value = Convert.ToDouble(p[0]);
+                    return value.ToString(formatString);
+                }
+            } catch (FormatException) {
+                return $"ERROR: Invalid format string '{p[1]}'";
+            } catch (Exception ex) {
+                return $"ERROR: {ex.Message}";
+            }
+        }
+
+        private static object FormatDateImpl(FunctionArgs args) {
+            object?[] p = args.EvaluateParameters();
+            
+            if (p.Length != 2) {
+                throw new ArgumentException("Requires two arguments: Unix timestamp and format string");
+            }
+            
+            if (p[0] == null || p[1] == null) {
+                return "ERROR: null argument";
+            }
+            
+            try {
+                // Convert to Unix timestamp (seconds since 1970-01-01 UTC)
+                long unixTime = Convert.ToInt64(p[0]);
+                DateTime dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTime).DateTime;
+                
+                string formatString = p[1].ToString() ?? "yyyy-MM-dd HH:mm:ss";
+                return dateTime.ToString(formatString);
+            } catch (ArgumentOutOfRangeException) {
+                return $"ERROR: Invalid Unix timestamp '{p[0]}'";
+            } catch (FormatException) {
+                return $"ERROR: Invalid format string '{p[1]}'";
+            } catch (Exception ex) {
+                return $"ERROR: {ex.Message}";
+            }
         }
 
         private Task ImageSaveMediator_BeforeFinalizeImageSaved(object sender, BeforeFinalizeImageSavedEventArgs e) {
