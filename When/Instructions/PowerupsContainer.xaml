@@ -867,7 +867,7 @@
                                         <behaviors:DragOverBehavior
                                             AllowDragAbove="False"
                                             AllowDragBelow="False"
-                                            AllowDragCenter="{Binding Items.Count, Converter={StaticResource ZeroToBooleanTrueConverter}}"
+                                            AllowDragCenter="True"
                                             DragAboveSize="0"
                                             DragBelowSize="0" />
                                     </i:Interaction.Behaviors>

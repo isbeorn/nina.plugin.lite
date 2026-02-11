@@ -776,7 +776,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:ForEachList}">
-        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="Variable(s):" />
@@ -789,7 +789,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:ForEachInArray}">
-        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
                     <logic:ExprControl Label="Array Name:" Exp="{Binding NameExprExpression}" />
