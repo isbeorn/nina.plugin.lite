@@ -1,4 +1,5 @@
 ﻿using NCalc.Handlers;
+using NINA.Astrometry.Body;
 using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Equipment.Interfaces.Mediator;
@@ -19,6 +20,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -67,34 +69,110 @@ namespace WhenPlugin.When {
             Plugin = this;
 
             SymbolProvider = symbolBroker.RegisterSymbolProvider("Powerups");
+            // Add Array related functions
             var fn = new SymbolFunction(
                  key: "array_length",
                  category: "Powerups",
-                 description: "",
-                 usageExample: "",
+                 description: "Returns the length of an Array, or -1 if the Array does not exist",
+                 usageExample: "array_length('MyArray')",
                  implementation: ArrayLengthImpl,
                  minArgs: 1,
                  maxArgs: 1,
                  isVolatile: false);
 
             SymbolProvider.RegisterFunction(fn);
+
+            fn = new SymbolFunction(
+                 key: "array_sum",
+                 category: "Powerups",
+                 description: "Returns the sum of the values in an Array, or -1 if the Array does not exist",
+                 usageExample: "array_sum('MyArray')",
+                 implementation: ArraySumImpl,
+                 minArgs: 1,
+                 maxArgs: 1,
+                 isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
+
+            fn = new SymbolFunction(
+                  key: "array_average",
+                  category: "Powerups",
+                  description: "Returns the average of the values in an Array, or -1 if the Array does not exist",
+                  usageExample: "array_average('MyArray')",
+                  implementation: ArrayAverageImpl,
+                  minArgs: 1,
+                  maxArgs: 1,
+                  isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
+            
+            fn = new SymbolFunction(
+                  key: "string_concat",
+                  category: "Powerups",
+                  description: "Returns the concatenation of any number of Strings",
+                  usageExample: "string_concat('MyArray', ' has a name of ', arrayName)",
+                  implementation: StringConcatImpl,
+                  minArgs: 2,
+                  maxArgs: 10,
+                  isVolatile: false);
+
+            SymbolProvider.RegisterFunction(fn);
         }
 
-        private static object ArrayLengthImpl(FunctionArgs args) {
-            object[] p = args.EvaluateParameters();
+        private static (string, Array)? GetArrayFromFunctionArgs(FunctionArgs args) {
+            object?[] p = args.EvaluateParameters();
             
             if (p.Length != 1) {
                 throw new ArgumentException("Requires one argument");
             }
-            string arrayName = p[0] as string;
-
-            if (arrayName == null) return -1;
-
+            string? arrayName = p[0] as string;
+            if (arrayName == null) return null;
             Array a;
             if (Array.Arrays.TryGetValue(arrayName, out a)) {
-                return a.Count;
+                return (arrayName, a);
             }
-            return -1;
+            return null;
+        }
+
+        private static object ArrayLengthImpl(FunctionArgs args) {
+            var result = GetArrayFromFunctionArgs(args);
+            return result?.Item2.Count ?? -1;
+        }
+
+        private static object ArraySumImpl(FunctionArgs args) {
+            var result = GetArrayFromFunctionArgs(args);
+            if (result == null) return -1;
+            double sum = 0;
+            foreach (var kvp in result.Value.Item2) {
+                sum += Convert.ToDouble(kvp.Value);
+            }
+            return sum;
+        }  
+
+        private static object ArrayAverageImpl(FunctionArgs args) {
+            var result = GetArrayFromFunctionArgs(args);
+            if (result == null) return -1;
+            double sum = 0;
+            int count = 0;
+            foreach (var kvp in result.Value.Item2) {
+                sum += Convert.ToDouble(kvp.Value);
+                count++;
+            }
+            return count > 0 ? sum / count : 0;
+        }
+
+        private static object StringConcatImpl(FunctionArgs args) {
+            object?[] p = args.EvaluateParameters();
+            if (p.Length < 2) {
+                throw new ArgumentException("Requires at least two arguments");
+            }
+            StringBuilder sb = new StringBuilder();
+            foreach (object? obj in p) {
+                if (obj != null) {
+                    sb.Append(obj.ToString());
+                }
+            }
+            return sb.ToString();
         }
 
         private Task ImageSaveMediator_BeforeFinalizeImageSaved(object sender, BeforeFinalizeImageSavedEventArgs e) {
