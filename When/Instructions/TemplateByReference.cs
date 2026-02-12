@@ -25,7 +25,7 @@ using System.Windows.Forms;
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "Template by Reference")]
     [ExportMetadata("Description", "Incorporate a template by reference.  Please read the description on the plugin page.")]
-    [ExportMetadata("Icon", "BoxClosedSVG")]
+    [ExportMetadata("Icon", "WandSVG")]
     [ExportMetadata("Category", "Powerups (Sequence)")]
     [Export(typeof(ISequenceContainer))]
     [Export(typeof(ISequenceItem))]

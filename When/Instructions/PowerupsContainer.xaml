@@ -840,7 +840,6 @@
                     </GroupBox.Header>
                     <!-- ListBox renders the Items collection with virtualization -->
                     <ListBox
-                      MinHeight="20"
                       Margin="5,0,0,15"
                       ItemsSource="{Binding Items}"
                       ItemTemplateSelector="{StaticResource WhenTemplateSelector}"
