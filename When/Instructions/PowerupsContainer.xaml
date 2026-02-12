@@ -37,9 +37,10 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
-        <!--  Drop area above the Sequence Container  -->
+        <!--  This gives the ability to drag and drop items above/below this container  -->
+        <behaviors:DragDropBehavior IsEnabled="True" />
+        <!--  Drop area above/below the Sequence Container  -->
         <behaviors:DragOverBehavior
-            AllowDragBelow="{Binding IsExpanded, Converter={StaticResource InverseBooleanConverter}}"
             AllowDragCenter="False"
             DragAboveSize="25"
             DragBelowSize="15" />
