@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("4.0.0.52")]
 
 // [MANDATORY] The name of your plugingit st
-[assembly: AssemblyTitle("Sequencer Powerups 4")]
+[assembly: AssemblyTitle("Sequencer Powerups")]
 // [MANDATORY] A short description of your plugin
 [assembly: AssemblyDescription("*** BETA RELEASE ***")]
 //[assembly: AssemblyDescription("Get the most out of the Advanced Sequencer!")]
