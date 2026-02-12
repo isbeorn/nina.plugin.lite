@@ -969,34 +969,35 @@
                                                 </Button>
                                             </Grid>
                                         </GroupBox.Header>
+                                        <!-- ListBox renders the Items collection with virtualization -->
+                                        <ListBox 
+                                            MinHeight="35" 
+                                            ItemsSource="{Binding Items}"
+                                            ItemTemplateSelector="{StaticResource WhenTemplateSelector}"
+                                            VirtualizingPanel.IsVirtualizing="True"
+                                            VirtualizingPanel.VirtualizationMode="Recycling"
+                                            VirtualizingPanel.ScrollUnit="Pixel"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            HorizontalContentAlignment="Stretch">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="Padding" Value="0"/>
+                                                    <Setter Property="Margin" Value="0"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <ContentPresenter />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                        </ListBox>
                                     </ninactrl:HitTestGroupBox>
-                                    <!-- ADD THIS for virtualization: -->
-                                    <ListBox 
-                                       MinHeight="35" 
-                                       ItemsSource="{Binding Items}"
-                                       VirtualizingPanel.IsVirtualizing="True"
-                                       VirtualizingPanel.VirtualizationMode="Recycling"
-                                       VirtualizingPanel.ScrollUnit="Pixel"
-                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                       Background="Transparent"
-                                       BorderThickness="0"
-                                       HorizontalContentAlignment="Stretch">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="Padding" Value="0"/>
-                                                <Setter Property="Margin" Value="0"/>
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="ListBoxItem">
-                                                            <ContentPresenter />
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                    </ListBox>
                                 </Grid>
                             </Border>
                         </DockPanel>
