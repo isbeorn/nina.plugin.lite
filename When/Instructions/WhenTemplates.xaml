@@ -966,7 +966,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:RepeatUntilAllSucceed}">
-        <local:PowerupsContainerView>
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
                     <logic:ExprControl Margin="0,2,0,0" Label="Wait " Exp="{Binding Path=WaitExpression, Mode=TwoWay}" />
