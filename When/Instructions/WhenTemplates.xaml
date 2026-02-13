@@ -656,22 +656,27 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:TemplateByReference}">
-        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="{StaticResource ButtonForegroundBrush}" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Template Name:" />
+                    <TextBlock Foreground="{StaticResource ButtonForegroundBrush}" Margin="20,0,0,0" VerticalAlignment="Center" Text="Template Name:" />
                     <ComboBox
-                        Foreground="{StaticResource ButtonForegroundBrush}"
-                        Margin="10,0,0,0"
-                        DisplayMemberPath="Container.Name"
-                        ItemsSource="{Binding SortedTemplates}"
-                        SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedValuePath="Container.Name" />
+                    Foreground="{StaticResource ButtonForegroundBrush}"
+                    Margin="10,0,0,0"
+                    DisplayMemberPath="Container.Name"
+                    ItemsSource="{Binding SortedTemplates}"
+                    SelectedItem="{Binding SelectedTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValuePath="Container.Name" />
                 </StackPanel>
             </local:PowerupsContainerView.HeaderAddon>
+
+            <!-- Render the referenced template root container itself -->
+            <local:PowerupsContainerView.SequenceContainerContent>
+                <ContentPresenter Content="{Binding Items[0]}" />
+            </local:PowerupsContainerView.SequenceContainerContent>
         </local:PowerupsContainerView>
     </DataTemplate>
-
+    
     <DataTemplate DataType="{x:Type local:WaitIndefinitely}">
         <nina:SequenceBlockView DataContext="{Binding}">
             <nina:SequenceBlockView.SequenceItemContent>
