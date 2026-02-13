@@ -146,7 +146,9 @@ namespace WhenPlugin.When {
                     Items.Clear();
                 }
                 TemplateName = selectedTemplate.Container.Name;
-                Items.Add((ISequenceContainer)SelectedTemplate.Container.Clone());
+                ISequenceContainer template = (ISequenceContainer)SelectedTemplate.Container.Clone();
+                Items.Add(template);
+                template.IsExpanded = false;
                 foreach (ISequenceItem item in Items) {
                     item.AttachNewParent(this);
                 }
