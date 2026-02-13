@@ -181,44 +181,7 @@
         </local:WhenTemplateSelector.FallbackSelector>
     </local:WhenTemplateSelector>
 
-    <!-- Reusable style for collapsible instruction sections -->
-    <Style x:Key="CollapsibleInstructionsStyle" TargetType="ContentControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ContentControl">
-                    <ninactrl:DetachingExpander IsExpanded="False">
-                        <ninactrl:DetachingExpander.Header>
-                            <TextBlock
-                                Text="{TemplateBinding Tag}"
-                                Foreground="{StaticResource ButtonForegroundBrush}"
-                                VerticalAlignment="Center"
-                                Padding="0,8" />
-                        </ninactrl:DetachingExpander.Header>
-                        <Border MinHeight="35" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
-                            <Grid Background="{StaticResource BackgroundBrush}" DataContext="{TemplateBinding Content}">
-                                <ItemsControl MinHeight="35" ItemsSource="{Binding Items}" />
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontStyle="Italic"
-                                    Opacity="0.4"
-                                    Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:CollapsibleInstructionsHelper.PlaceholderText)}"
-                                    Visibility="{Binding Items.Count, Converter={StaticResource InverseZeroToVisibilityConverter}}" />
-                                <i:Interaction.Behaviors>
-                                    <behaviors:DragOverBehavior DragAboveSize="0" DragBelowSize="0" />
-                                    <behaviors:DropIntoBehavior
-                                        AllowedDragDropTypesString="NINA.Sequencer.Container.ISequenceContainer;NINA.Sequencer.SequenceItem.ISequenceItem;NINA.Sequencer.TemplatedSequenceContainer"
-                                        OnDropCommand="DropIntoCommand" />
-                                </i:Interaction.Behaviors>
-                            </Grid>
-                        </Border>
-                    </ninactrl:DetachingExpander>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Reusable style for expandable container branches -->
+     <!-- Reusable style for expandable container branches -->
     <Style x:Key="ExpandableBranchStyle" TargetType="ContentControl">
         <Setter Property="Template">
             <Setter.Value>
