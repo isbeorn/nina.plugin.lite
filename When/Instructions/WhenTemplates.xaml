@@ -656,7 +656,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:TemplateByReference}">
-        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False">
+        <local:PowerupsContainerView AllowConditions="False" AllowTriggers="False" AllowInstructions="False" ShowSaveAsTemplateButton="False">
             <local:PowerupsContainerView.HeaderAddon>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Foreground="{StaticResource ButtonForegroundBrush}" Margin="20,0,0,0" VerticalAlignment="Center" Text="Template Name:" />

@@ -293,19 +293,20 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Click="TemplateContainerButton_Click"
-                    Style="{StaticResource SecondaryBackgroundButton}">
+                    Style="{StaticResource SecondaryBackgroundButton}"
+                    Visibility="{Binding ElementName=PowerupsContainerViewRoot, Path=ShowSaveAsTemplateButton, Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                     <Grid>
-                      <Path
-                        Margin="5"
-                        Data="{StaticResource SaveAsSVG}"
-                        Fill="{StaticResource ButtonForegroundBrush}"
-                        Stretch="Uniform"
-                        UseLayoutRounding="True" />
+                        <Path
+                          Margin="5"
+                          Data="{StaticResource SaveAsSVG}"
+                          Fill="{StaticResource ButtonForegroundBrush}"
+                          Stretch="Uniform"
+                          UseLayoutRounding="True" />
                     </Grid>
                     <Button.ToolTip>
-                      <ToolTip>
-                        <TextBlock Foreground="{StaticResource PrimaryBrush}" Text="{ns:Loc Lbl_SequenceContainer_SaveAsTemplate_Tooltip}" />
-                      </ToolTip>
+                        <ToolTip>
+                            <TextBlock Foreground="{StaticResource PrimaryBrush}" Text="{ns:Loc Lbl_SequenceContainer_SaveAsTemplate_Tooltip}" />
+                        </ToolTip>
                     </Button.ToolTip>
                   </Button>
 

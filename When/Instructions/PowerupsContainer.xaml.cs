@@ -32,6 +32,18 @@ namespace WhenPlugin.When {
     /// </summary>
     public partial class PowerupsContainerView : UserControl {
 
+        public static readonly DependencyProperty ShowSaveAsTemplateButtonProperty =
+            DependencyProperty.Register(
+                nameof(ShowSaveAsTemplateButton),
+                typeof(bool),
+                typeof(PowerupsContainerView),
+                new PropertyMetadata(true));
+
+        public bool ShowSaveAsTemplateButton {
+            get => (bool)GetValue(ShowSaveAsTemplateButtonProperty);
+            set => SetValue(ShowSaveAsTemplateButtonProperty, value);
+        }
+
         public PowerupsContainerView() {
             InitializeComponent();
         }
