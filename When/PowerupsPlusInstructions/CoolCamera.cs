@@ -51,7 +51,8 @@ namespace WhenPlugin.When {
         }
 
         public CoolCamera() {
-
+            TempExpr = new Expr(this);
+            DurExpr = new Expr(this);
         }
 
         public override object Clone() {

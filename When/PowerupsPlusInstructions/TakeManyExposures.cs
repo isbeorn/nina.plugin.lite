@@ -50,7 +50,9 @@ namespace WhenPlugin.When {
             IterExpr = new Expr(this);
         }
 
-        public TakeManyExposures() { }
+        public TakeManyExposures() {
+            IterExpr = new Expr(this);
+        }
 
         private InstructionErrorBehavior errorBehavior = InstructionErrorBehavior.ContinueOnError;
 

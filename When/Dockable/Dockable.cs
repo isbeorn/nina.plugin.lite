@@ -129,7 +129,8 @@ namespace WhenPlugin.When {
                 WhenPluginManifest.SymbolProvider.AddOrUpdateSymbol("RoofStatus", status, RoofConstants);
                 Logger.Trace("RoofStatus: " + status);
             } else {
-                Logger.Info("RoofStatus UNKNOWN");
+                // Don't spam for now
+                //Logger.Info("RoofStatus UNKNOWN");
             }
 
             ISequenceItem? runningItem = null;

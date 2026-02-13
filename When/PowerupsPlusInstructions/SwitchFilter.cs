@@ -59,6 +59,7 @@ namespace WhenPlugin.When {
 
         private void MatchFilter() {
             try {
+                if (ProfileService == null) return;
                 var idx = FInfo?.Position ?? -1;
                 FInfo = ProfileService.ActiveProfile.FilterWheelSettings.FilterWheelFilters?.FirstOrDefault(x => x.Name == FInfo?.Name);
                 if (FInfo == null && idx >= 0) {

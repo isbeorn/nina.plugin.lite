@@ -118,7 +118,15 @@ namespace WhenPlugin.When {
         }
 
         public SmartExposure () {
+            IterExpr = new Expr(this, "", "Integer");
+            DExpr = new Expr(this, "", "Integer");
             FExpr = new Expr(this, "", "Integer");
+            RExpr = new Expr(this, "", "Integer");
+
+            XExpr = new Expr(this, "", "Integer");
+            YExpr = new Expr(this, "", "Integer");
+            WExpr = new Expr(this, "", "Integer");
+            HExpr = new Expr(this, "", "Integer");
         }
 
         private InstructionErrorBehavior errorBehavior = InstructionErrorBehavior.ContinueOnError;

@@ -73,7 +73,11 @@ namespace WhenPlugin.When {
             EExpr.Default = 0;
         }
 
-        public TakeExposure() { }
+        public TakeExposure() {
+            EExpr = new Expr(this);
+            GExpr = new Expr(this, "", "Integer");
+            OExpr = new Expr(this, "", "Integer");
+        }
 
         public override object Clone() {
             var clone = new TakeExposure(this) {
