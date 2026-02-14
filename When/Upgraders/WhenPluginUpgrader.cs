@@ -211,10 +211,10 @@ namespace WhenPlugin.When {
             {"camera__YSize", "Camera_YSize" },
             {"camera__CoolerPower", "Camera_CoolerPower" },
             {"camera__CoolerOn", "Camera_CoolerOn" },
-            {"RotatorPosition", "Rotator_Position" }
-
-
+            {"RotatorPosition", "Rotator_Position" },
+            {"CurrentFilter", "CurrentFilterIndex" }
         };
+
         private static string? GetUpgradedSymbol(string oldSymbol) {
             return SymbolUpgradeMap.TryGetValue(oldSymbol, out var newSymbol) ? newSymbol : null;
         }
