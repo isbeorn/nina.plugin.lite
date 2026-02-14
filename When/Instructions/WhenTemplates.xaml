@@ -391,14 +391,14 @@
 
                         <!-- Left section (now stretches) -->
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <Path
+                            <!--<Path
                                 Width="20"
                                 Height="20"
                                 Margin="10,0,10,0"
                                 Data="{StaticResource SequenceSVG}"
                                 Fill="{StaticResource ButtonForegroundBrush}"
                                 Stretch="Uniform"
-                                VerticalAlignment="Center" />
+                                VerticalAlignment="Center" />-->
 
                             <TextBlock
                                 MinHeight="25"
