@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace WhenPlugin.When {
 
         [ImportingConstructor]
         public IfThenElse() {
-            InitializeBranches();
+            // Don't initialize branches here - will be done after deserialization or when first used
         }
 
         public IfThenElse(IfThenElse copyMe) : this() {
@@ -43,23 +44,38 @@ namespace WhenPlugin.When {
             if (Items.Count == 0) {
                 var thenBranch = new SequentialContainer { Name = "Then" };
                 var elseBranch = new SequentialContainer { Name = "Else" };
-                
+
                 thenBranch.AttachNewParent(this);
                 elseBranch.AttachNewParent(this);
-                
+
                 Items.Add(thenBranch);
                 Items.Add(elseBranch);
             }
         }
 
-        [JsonProperty]
-        public SequentialContainer ThenBranch {
-            get => Items.Count > 0 ? Items[0] as SequentialContainer : null;
+        // Called after JSON deserialization completes
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context) {
+            // If Items is empty, initialize the branches
+            // This handles the case where an empty IfThenElse is deserialized
+            InitializeBranches();
         }
 
-        [JsonProperty]
+        // These are just accessors to Items[0] and Items[1] - not serialized
+        public SequentialContainer ThenBranch {
+            get {
+                // Ensure branches are initialized when accessed
+                InitializeBranches();
+                return Items.Count > 0 ? Items[0] as SequentialContainer : null;
+            }
+        }
+
         public SequentialContainer ElseBranch {
-            get => Items.Count > 1 ? Items[1] as SequentialContainer : null;
+            get {
+                // Ensure branches are initialized when accessed
+                InitializeBranches();
+                return Items.Count > 1 ? Items[1] as SequentialContainer : null;
+            }
         }
 
         partial void AfterClone(IfThenElse original, IfThenElse clone) {
@@ -73,10 +89,16 @@ namespace WhenPlugin.When {
             }
         }
 
+        // Old properties for backward compatibility - can be read during deserialization but not written
         [JsonProperty]
         public SequentialContainer Instructions { get; set; }
+
         [JsonProperty]
         public SequentialContainer ElseInstructions { get; set; }
+
+        // Prevent these old properties from being serialized
+        public bool ShouldSerializeInstructions() => false;
+        public bool ShouldSerializeElseInstructions() => false;
 
         [IsExpression]
         public partial string Predicate { get; set; }
@@ -112,8 +134,6 @@ namespace WhenPlugin.When {
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(IfThenElse)}, Expr: {PredicateExpression}";
         }
-
-        public IList<string> Switches { get; set; } = null;
 
         public override void AfterParentChanged() {
             base.AfterParentChanged();
