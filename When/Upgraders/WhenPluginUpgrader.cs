@@ -643,7 +643,7 @@ namespace WhenPlugin.When {
                     case "GNSSend":
                         ISequenceContainer c = item.GetType().GetProperty("Condition").GetValue(item, null) as ISequenceContainer;
                         ISequenceContainer gss = item as ISequenceContainer;
-                        if (c != null) {
+                        if (c != null && c.Items.Count > 0) {
                             gss.Items.Clear();
                             for (int j = 0; j < c.Items.Count; j++) {
                                 ISequenceItem oldItem = c.Items[j];

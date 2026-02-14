@@ -56,6 +56,9 @@ namespace WhenPlugin.When {
             foreach (ISequenceTrigger trigger in clone.Triggers) {
                 trigger.AttachNewParent(clone);
             }
+            if (original.CheckInstruction != null) {
+                clone.CheckInstruction = (ISequenceItem)original.CheckInstruction.Clone();
+            }
         }
 
         [JsonIgnore]

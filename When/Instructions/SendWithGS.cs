@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Sequencer.Container;
+using NINA.Sequencer.Container.ExecutionStrategy;
 using NINA.Sequencer.DragDrop;
 using NINA.Sequencer.Generators;
 using NINA.Sequencer.Logic;
@@ -10,7 +11,9 @@ using NINA.Sequencer.SequenceItem;
 using Serilog.Debugging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,21 +25,23 @@ namespace WhenPlugin.When {
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
     [ExportMetadata("Category", "Powerups (Misc)")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
-
     public class GSSend : SequentialContainer {
 
         [ImportingConstructor]
-        public GSSend() {
+        public GSSend() : base() {
             Condition = new IfContainer();
             Instructions = new IfContainer();
             DropIntoIfCommand = new GalaSoft.MvvmLight.Command.RelayCommand<DropIntoParameters>(DropIntoCondition);
         }
+
         public GSSend(GSSend copyMe) : this() {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
                 Condition = (IfContainer)copyMe.Condition.Clone();
                 Instructions = (IfContainer)copyMe.Instructions.Clone();
+                Items = new ObservableCollection<ISequenceItem>(copyMe.Items.Select((ISequenceItem i) => i.Clone() as ISequenceItem));
             }
         }
 
@@ -56,6 +61,9 @@ namespace WhenPlugin.When {
             // get is intentionally omitted here
             set { Instructions = value; }
         }
+
+        // Prevent Condition from being serialized (old property for backward compat only)
+        public bool ShouldSerializeCondition() => false;
 
         public ICommand DropIntoIfCommand { get; set; }
 
@@ -88,6 +96,11 @@ namespace WhenPlugin.When {
 
 
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
+            if (Items.Count == 0) {
+                Status = NINA.Core.Enum.SequenceEntityStatus.FAILED;
+                return;
+            }
+
             ISequenceItem instruction = Items[0];
 
             if (instruction == null) {
@@ -134,7 +147,6 @@ namespace WhenPlugin.When {
 
             Items.Clear();
             Add(item);
-            RaisePropertyChanged("Instructions");
         }
 
         public new IList<string> Issues { get; } = new List<string>();

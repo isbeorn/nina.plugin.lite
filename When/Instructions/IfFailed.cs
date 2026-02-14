@@ -1,14 +1,16 @@
 ﻿using Newtonsoft.Json;
 using NINA.Core.Model;
+using NINA.Core.Utility;
+using NINA.Sequencer.Container;
+using NINA.Sequencer.DragDrop;
 using NINA.Sequencer.SequenceItem;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NINA.Sequencer.DragDrop;
 using System.Windows.Input;
-using NINA.Sequencer.Container;
-using NINA.Core.Utility;
 
 namespace WhenPlugin.When {
     [ExportMetadata("Name", "If Fails")]
@@ -28,6 +30,10 @@ namespace WhenPlugin.When {
             if (copyMe != null) {
                 CopyMetaData(copyMe);
              }
+            if (copyMe.CheckInstruction != null) {
+                CheckInstruction = (ISequenceItem)copyMe.CheckInstruction.Clone();
+            }
+            Items = new ObservableCollection<ISequenceItem>(copyMe.Items.Select((ISequenceItem i) => i.Clone() as ISequenceItem));
         }
 
         [JsonIgnore]

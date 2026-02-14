@@ -65,6 +65,7 @@ namespace WhenPlugin.When {
         [IsExpression]
         public partial string Predicate { get; set; }
 
+
         public override async Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
 
             Logger.Info("Predicate: " + PredicateExpression.Definition);
