@@ -92,7 +92,7 @@ namespace WhenPlugin.When {
             }
             container.Items.Clear();
             foreach (ISequenceItem item in newItems) {
-                container.Items.Add(item);
+                container.Add(item);
             }
         }
 
