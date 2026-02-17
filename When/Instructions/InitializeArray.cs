@@ -86,7 +86,7 @@ namespace WhenPlugin.When {
 
         // 3.3 Upgrade
         [JsonProperty]
-        public string iNameExpr { get; set; }
+        public Expr iNameExpr { get; set; }
         public bool ShouldSerializeiNameExpr() {
             return false; // Always return false to prevent serialization
         }

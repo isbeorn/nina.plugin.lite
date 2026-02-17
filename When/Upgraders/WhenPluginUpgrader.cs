@@ -11,7 +11,9 @@ using NINA.Sequencer.SequenceItem.Expressions;
 using NINA.Sequencer.Trigger;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using static NINA.Equipment.Equipment.MyGPS.PegasusAstro.UnityApi.DriverUranusReport;
@@ -59,11 +61,39 @@ namespace WhenPlugin.When {
                         break;
                     }
                 case SequenceUpgradeStage.AfterPopulate: {
+                        if (typeString == "WhenPlugin.When.CVContainer, WhenPlugin") {
+                            Globalize((ISequenceContainer)current);
+                            return current;
+                        }
                         return UpgradeInstruction(current, context);
+
                     }
             }
 
             return current;
+        }
+
+        private void Globalize (ISequenceContainer container) {
+            IList<ISequenceItem> newItems = new List<ISequenceItem>();
+            foreach (ISequenceItem item in container.Items) {
+                if (item is Variable sv) {
+                    GlobalVariable gv = Factory.GetItem<GlobalVariable>();
+                    gv.Name = sv.Name + " [Global Variable]";
+                    gv.Identifier = sv.Identifier;
+                    gv.OriginalDefinition = sv.OriginalDefinition;
+                    newItems.Add(gv);
+                    Logger.Info("Converted local variable '" + sv.Identifier + "' to global variable");
+                } else if (item is ISequenceContainer sc) {
+                    Globalize(sc);
+                    newItems.Add(item);
+                } else {
+                    newItems.Add(item);
+                }
+            }
+            container.Items.Clear();
+            foreach (ISequenceItem item in newItems) {
+                container.Items.Add(item);
+            }
         }
 
         public static object CreateInstruction(string originalType, JObject jObject) {
@@ -690,6 +720,9 @@ namespace WhenPlugin.When {
                             }
                             break;
                         }
+
+                    case "CVContainer":
+                        break;
 
                     // Unchanged (no Expressions)
                     case "IfContainer":
