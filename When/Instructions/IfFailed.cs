@@ -4,6 +4,7 @@ using NINA.Core.Utility;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.DragDrop;
 using NINA.Sequencer.SequenceItem;
+using NINA.Sequencer.Validations;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
@@ -110,7 +111,10 @@ namespace WhenPlugin.When {
             }
         }
         public override bool Validate() {
-            //CommonValidate();
+            base.Validate();
+            if (CheckInstruction != null && CheckInstruction is IValidatable val) {
+                val.Validate();
+            }
             return true;
         }
 

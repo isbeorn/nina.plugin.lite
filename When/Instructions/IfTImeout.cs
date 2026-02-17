@@ -205,6 +205,14 @@ namespace WhenPlugin.When {
             return base.Remove(item);
         }
 
+        public override bool Validate() {
+            base.Validate();
+            if (CheckInstruction != null && CheckInstruction is IValidatable val) {
+                val.Validate();
+            }
+            return true;
+        }
+
         public override string ToString() {
             return $"Category: {Category}, Item: {nameof(IfTimeout)}";
         }

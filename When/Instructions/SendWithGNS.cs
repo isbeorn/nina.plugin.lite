@@ -22,6 +22,7 @@ namespace WhenPlugin.When {
     [ExportMetadata("Icon", "Pen_NoFill_SVG")]
     [ExportMetadata("Category", "Powerups (Misc)")]
     [Export(typeof(ISequenceItem))]
+    [Export(typeof(ISequenceContainer))]
     [JsonObject(MemberSerialization.OptIn)]
 
     public class GNSSend : SequentialContainer {
