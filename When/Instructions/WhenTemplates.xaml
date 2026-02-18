@@ -14,6 +14,8 @@
     xmlns:ns="clr-namespace:NINA.Core.Locale;assembly=NINA.Core"
     xmlns:rules="clr-namespace:NINA.Core.Utility.ValidationRules;assembly=NINA.Core"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
+    xmlns:seq="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer"
+    xmlns:seqCond="clr-namespace:NINA.Sequencer.Conditions;assembly=NINA.Sequencer"
     xmlns:util="clr-namespace:NINA.Core.Utility;assembly=NINA.Core"
     xmlns:view="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer"
     xmlns:wpfutil="clr-namespace:NINA.WPF.Base.Utility;assembly=NINA.WPF.Base">
@@ -24,7 +26,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="SequenceContainerTemplate">
-        <nina:HierarchicalSequenceContainerView />
+        <nina:SequenceContainerView />
     </DataTemplate>
 
     <DataTemplate x:Key="SequenceItemTemplate">
@@ -531,7 +533,29 @@
                         <ItemsControl
                             MinHeight="35"
                             ItemTemplateSelector="{StaticResource WhenTemplateSelector}"
-                            ItemsSource="{Binding Items}" />
+                            ItemsSource="{Binding Items}">
+                            <ItemsControl.Resources>
+                                <ResourceDictionary>
+                                    <DataTemplate DataType="{x:Type cont:SequenceContainer}">
+                                        <seq:SequenceContainerView />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type cont:ParallelContainer}">
+                                        <seq:SequenceContainerView>
+                                            <seq:SequenceContainerView.SequenceContainerContent>
+                                                <TextBlock
+                                                    Margin="5,5,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontStyle="Italic"
+                                                    Text="{ns:Loc Lbl_SequenceContainer_ParallelContainer_Description}" />
+                                            </seq:SequenceContainerView.SequenceContainerContent>
+                                        </seq:SequenceContainerView>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type seqCond:SequenceCondition}">
+                                        <seq:SequenceBlockView />
+                                    </DataTemplate>
+                                </ResourceDictionary>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
 
                         <TextBlock
                             Margin="30,0,0,0"
